@@ -20,6 +20,7 @@ exclude_patterns:
   - "/README.md"
   - "/setup.py"
   - "/notebook/"
-  - "/tests/**/__init__.py"
+  - "**/__init__.py"
+  - "*.yml"
   - "*.txt"
   - "*.md"
