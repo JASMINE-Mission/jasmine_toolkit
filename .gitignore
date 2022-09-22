@@ -36,3 +36,4 @@ MANIFEST
 
 # test with hypothesis
 /.hypothesis
+/.pytest_cache
