@@ -7,20 +7,19 @@ __pycache__/
 *.so
 
 # Distribution / packaging
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-wheels/
-pip-wheel-metadata/
-share/python-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
+/.Python
+/build
+/develop-eggs
+/dist
+/downloads
+/eggs
+/.eggs
+/wheels
+/pip-wheel-metadata
+/*.egg-info
+/.installed.cfg
+/*.egg
+/MANIFEST
 
 # Jupyter Notebook
 .ipynb_checkpoints
