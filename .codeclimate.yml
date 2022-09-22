@@ -15,11 +15,11 @@ plugins:
   radon:
     enabled: true
 exclude_patterns:
-  - /.*
-  - /LICENSE
-  - /README.md
-  - /setup.py
-  - /notebook/
-  - /tests/**/__init__.py
-  - *.txt
-  - *.md
+  - "/.*"
+  - "/LICENSE"
+  - "/README.md"
+  - "/setup.py"
+  - "/notebook/"
+  - "/tests/**/__init__.py"
+  - "*.txt"
+  - "*.md"
