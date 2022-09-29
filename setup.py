@@ -33,7 +33,7 @@ with open('requirements.txt', 'r') as f:
 if __name__ == '__main__':
   setup(
     name='jasmine_toolkit',
-    package_dir={ "jasmine_toolkit": "src/jasmine_toolkit" },
+    package_dir={ "jasmine_toolkit": "./jasmine_toolkit" },
     version=version,
     author=author,
     author_email=email,
