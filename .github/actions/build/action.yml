@@ -1,5 +1,8 @@
+name: build
+description: Action to test the build and install procedures.
+
 runs:
-  using: "Composite"
+  using: "composite"
   steps:
     - name: Build Package
       run: |

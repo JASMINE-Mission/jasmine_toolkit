@@ -1,0 +1,26 @@
+name: validation
+
+on:
+  push:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 13 * * *'  # UTC 13:00 -> JST(22:00)
+
+jobs:
+  validation:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v3
+      with:
+        python-version: 3.9
+
+    - name: get dependencies
+      uses: ./.github/actions/get_dependencies
+
+    - name: test
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      uses: ./.github/actions/validation
