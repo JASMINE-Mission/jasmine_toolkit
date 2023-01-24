@@ -1,5 +1,5 @@
 from jasmine_toolkit.operation.pointing_plan import PointingPlan
-from jasmine_toolkit.operation.pointing_plan_factory import PointingPlanFactory
+from jasmine_toolkit.operation.pointing_plan_factory import PointingPlanFactory, EnumPointingMode
 from jasmine_toolkit.satellite.satellite import Satellite
 
 
@@ -9,8 +9,15 @@ class Mapping:
     """
     def __init__(self):
         satellite = Satellite()
-        pointing_plan_factory = PointingPlanFactory()
-        pointing_plan = pointing_plan_factory.create()
+        enum = EnumPointingMode.FOUR_FOV_IN_ORBIT
+        pointing_plan_factory = PointingPlanFactory(enum)
+        pointing_plan: PointingPlan = pointing_plan_factory.create()
+        self.data = pointing_plan.get_array()
+        self.calc_statistics()
+
+    def calc_statistics(self):
+        # TODO  This is the program for calculate statistics of observation
+        pass
 
 
 if __name__ == '__main__':
