@@ -4,6 +4,9 @@
 @startuml
 
 SatellitePosition ..> Earth
+SatellitePosition->HeliocentricPosition
+HeliocentricPosition<-ICRS
+ICRS->TopocentricCoordinate
 
 class SatellitePosition {
   + x
