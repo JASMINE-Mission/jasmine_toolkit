@@ -24,8 +24,14 @@ class PointingPlanFactory:
         self.grid = None
         self.observation_time = None
 
+    @property
     def create(self):
-        # TODO create PointingPlan object and return it.
+        """
+        Create PointingPlan object, set observation entries, and return it.
+        Returns: PointingPlan object
+
+        """
+        # TODO Fix parameters needed within the function.
         pointing_plan = PointingPlan()
         self.generate_grid()
         self.generate_observation_time()
@@ -38,7 +44,12 @@ class PointingPlanFactory:
         #   grid separation is defined from gap between detectors.
         #   generate array with initial value = 0
         #   unit may be raDian (or degree) in celestial coordinate
-        pass
+        detector_gap = self.parameters.detector_separation_x \
+                       - self.parameters.detector_format_x * self.parameters.pixel_size
+        # TODO check values of detector_separation_x / y in parameters.py
+        detector_gap = 0.0033  # parameters object provides wrong number
+        gap_on_the_sky = detector_gap / self.parameters.effective_focal_length
+        print("")
 
     def generate_observation_time(self):
         # TODO
@@ -53,3 +64,8 @@ class PointingPlanFactory:
         #   request position angle from attitude object.
         #   add number_of_observation observations (ra, dec, position_angle, time) to pointing_plan.
         pass
+
+
+if __name__ == "__main__":
+    a = PointingPlanFactory(EnumPointingMode.FOUR_FOV_IN_ORBIT)
+    a.generate_grid()

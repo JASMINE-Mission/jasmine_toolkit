@@ -1,6 +1,7 @@
 from jasmine_toolkit.operation.pointing_plan import PointingPlan
 from jasmine_toolkit.operation.pointing_plan_factory import PointingPlanFactory, EnumPointingMode
 from jasmine_toolkit.satellite.satellite import Satellite
+from jasmine_toolkit.utils.parameters import Parameters
 
 
 class Mapping:
@@ -11,7 +12,7 @@ class Mapping:
         satellite = Satellite()
         enum = EnumPointingMode.FOUR_FOV_IN_ORBIT
         pointing_plan_factory = PointingPlanFactory(enum)
-        pointing_plan: PointingPlan = pointing_plan_factory.create()
+        pointing_plan: PointingPlan = pointing_plan_factory.create
         self.data = pointing_plan.get_array()
         self.calc_statistics()
 
@@ -21,4 +22,5 @@ class Mapping:
 
 
 if __name__ == '__main__':
-    mapping = Mapping()
+    # mapping = Mapping()
+    Parameters.get_instance().average_quantum_efficiency()

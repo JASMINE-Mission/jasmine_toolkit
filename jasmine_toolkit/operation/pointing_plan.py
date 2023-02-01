@@ -1,7 +1,12 @@
+import numpy as np
+
+
 class PointingPlan:
     def __init__(self):
-        pass
+        self.pointing_entries: np.ndarray = np.array([])
 
-    def get_array(self):
-        # TODO return resulting array.
-        pass
+    def add_entry(self, entry: np.ndarray) -> np.ndarray:
+        np.vstack(self.pointing_entries, entry)
+
+    def get_array(self) -> np.ndarray:
+        return self.pointing_entries
