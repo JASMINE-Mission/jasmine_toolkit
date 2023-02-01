@@ -1,3 +1,4 @@
+from dataclasses import dataclass, field
 import dataclasses
 import numpy as np
 import json
@@ -14,8 +15,8 @@ class Efficiency:
         comment (str): Comments.
     """
     # set sample data as default
-    wavelength_grid: np.ndarray = np.array([0.9, 1.6])
-    efficiency_grid: np.ndarray = np.array([0.85, 0.85])
+    wavelength_grid: np.ndarray = field(default_factory=np.array([0.9, 1.6]))
+    efficiency_grid: np.ndarray = field(default_factory=np.array([0.85, 0.85]))
     title:      str = 'Default'
     comment:    str = 'default value'
 

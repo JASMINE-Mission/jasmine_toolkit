@@ -12,15 +12,15 @@ class Mapping:
         satellite = Satellite()
         enum = EnumPointingMode.FOUR_FOV_IN_ORBIT
         pointing_plan_factory = PointingPlanFactory(enum)
-        pointing_plan: PointingPlan = pointing_plan_factory.create
+        pointing_plan: PointingPlan = pointing_plan_factory.create()
         self.data = pointing_plan.get_array()
         self.calc_statistics()
 
     def calc_statistics(self):
-        # TODO  This is the program for calculate statistics of observation
+        # TODO  This is the program for calculate statistics of "data".
         pass
 
 
 if __name__ == '__main__':
-    # mapping = Mapping()
-    Parameters.get_instance().average_quantum_efficiency()
+    mapping = Mapping()
+    print("Hello")

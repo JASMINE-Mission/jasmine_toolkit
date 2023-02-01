@@ -95,8 +95,8 @@ class Parameters:
         self.__background_photon_flux = 8  # electrons / sec / pixel
         self.__num_detector_x = 2
         self.__num_detector_y = 2
-        self.__detector_separation_x = 0.02196  # meter
-        self.__detector_separation_y = 0.02196  # meter
+        self.__detector_separation_x = 0.02282  # meter old value is 0.02196
+        self.__detector_separation_y = 0.02282  # meter the value is fixed by Y.Y. at Feb. 1st
         self.__orbital_altitude = 6.0E5  # meter
         self.__spider_type = ''
         self.__spider_thickness = 5e-3  # meter

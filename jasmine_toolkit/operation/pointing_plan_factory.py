@@ -46,10 +46,8 @@ class PointingPlanFactory:
         #   unit may be raDian (or degree) in celestial coordinate
         detector_gap = self.parameters.detector_separation_x \
                        - self.parameters.detector_format_x * self.parameters.pixel_size
-        # TODO check values of detector_separation_x / y in parameters.py
-        detector_gap = 0.0033  # parameters object provides wrong number
         gap_on_the_sky = detector_gap / self.parameters.effective_focal_length
-        print("")
+        print(gap_on_the_sky)
 
     def generate_observation_time(self):
         # TODO
