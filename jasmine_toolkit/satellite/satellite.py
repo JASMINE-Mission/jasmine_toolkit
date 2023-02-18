@@ -1,4 +1,4 @@
-from jasmine_toolkit.satellite.attitude.attitude.attitude import Attitude
+from satellite.attitude.attitude import Attitude
 from jasmine_toolkit.satellite.orbit.orbit import Orbit
 
 
