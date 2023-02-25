@@ -1,3 +1,4 @@
 setuptools~=57.0.0
 pytest~=7.2.1
 numpy~=1.24.1
+astropy~=5.2.1
