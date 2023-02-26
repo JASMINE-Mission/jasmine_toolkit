@@ -1,39 +1,50 @@
-import datetime
 import math
+import random
 
 import astropy
 import astropy.units as u
 from astropy.coordinates import get_sun, SkyCoord
 from astropy.time import Time
 
+from jasmine_toolkit.operation.pointing_plan_factory import EnumPointingFreedom
 from jasmine_toolkit.satellite.orbit.orbit import Orbit
 from jasmine_toolkit.utils.parameters import Parameters
 
 
 class Attitude:
-    def __init__(self, orbit: Orbit):
+    def __init__(self, orbit: Orbit, mode: EnumPointingFreedom):
         self.orbit = orbit
         self.parameters = Parameters.get_instance()
-        self.galactic_center = SkyCoord(0.0 * u.deg, 0.0 * u.deg, frame='galactic')
+        self.mode = mode
 
-    def get_position_angle(self, ra: float, dec: float, time: Time) -> float:
+    def get_position_angle(self, pointing: SkyCoord, time: Time) -> float:
+        """
+        Calculate position angle in degree. Position angle is defined as the direction of north and direction of
+         +x direction (direction of sun shield) in satellite.
+        Args:
+            pointing: Telescope pointing direction on the celestial sphere in astropy.coordinates.SkyCoor.
+            time: Observation time in astropy.time.Time.
+
+        Returns:
+            position angle in radian.
+        """
+        # get solar direction
         sun = get_sun(time)
-        xsun = math.cos(sun.dec.to('rad').value) * math.cos(sun.ra.to('rad').value)
-        ysun = math.cos(sun.dec.to('rad').value) * math.sin(sun.ra.to('rad').value)
-        zsun = math.sin(sun.dec.to('rad').value)
-        print("ra:" + str(sun.ra) + "," + str(sun.dec))
-        print("xyz:"+str(xsun) + "," + str(ysun) + "," + str(zsun))
-        print(self.galactic_center.icrs)
-        return sun.dec
-
-
-if __name__ == '__main__':
-    tz = astropy.time.TimezoneInfo(9 * u.hour)  # 時間帯を決める。
-    toki = datetime.datetime(2019, 5, 16, 17, 0, 0, tzinfo=tz)
-    toki = Time(toki)
-    taiyou = get_sun(toki)
-    print(taiyou)
-    attitude = Attitude(Orbit())
-    print(attitude.get_position_angle(0., 0., toki))
-
-    print(attitude.galactic_center.icrs)
+        # calculate pointing direction in right ascension and declination
+        dec = pointing.icrs.dec.to('rad').value
+        ra = pointing.icrs.ra.to('rad').value
+        # calculate north perpendicular direction ra_np and dec_np to the pointing direction
+        ra_np = ra
+        dec_np = dec + math.pi / 2
+        if dec >= 0.0:
+            dec_np = math.pi / 2 - dec
+            if ra >= math.pi:
+                ra_np = ra - math.pi
+            else:
+                ra_np = ra + math.pi
+        if self.mode == EnumPointingFreedom.POINTING_RANDOM:
+            dec_np = dec_np + 0.34 * (random.random() - 0.5)
+        # TODO factor 0.34 which means 20 degrees in radian should be variable parameter
+        # return position angle from satellite north pole to sun
+        return astropy.coordinates.position_angle(ra_np * u.rad, dec_np * u.rad, sun.ra, sun.dec).to('deg')\
+            .value
