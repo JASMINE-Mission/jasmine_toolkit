@@ -111,6 +111,7 @@ class Parameters:
         self.__n_ref_pix_top = 8
         self.__n_ref_pix_bottom = 8
         self.__exposure_time = 12.5  # second(s)
+        self.__ltan = 6  # 6h00m00s, ltan is abbreviation of local time of ascending node
 # TODO: check it should be const or variable?
         self.__cell_pix = 13
         self.__use_M_flag = False
@@ -420,6 +421,13 @@ class Parameters:
 
     def set_exposure_time(self, value):
         self.__exposure_time = value
+
+    @property
+    def ltan(self):
+        return self.__ltan
+
+    def set_ltan(self, value):
+        self.__ltan = value
 
     @property
     def c_pix(self):
