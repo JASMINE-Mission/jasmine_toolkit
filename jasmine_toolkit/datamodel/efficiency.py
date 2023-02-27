@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+from dataclasses import field
 import dataclasses
 import numpy as np
 import json
@@ -9,8 +9,8 @@ class Efficiency:
     """This class defines the wavelength dependent efficiency.
 
     Attributes:
-        wavelength (ndarray): Wavelengths in micron.
-        efficiency (ndarray): Efficiencies.
+        wavelength_grid (ndarray): Wavelengths in micron.
+        efficiency_grid (ndarray): Efficiencies.
         title (str): Title of the data.
         comment (str): Comments.
     """
@@ -63,7 +63,7 @@ class Efficiency:
         Examples:
 
             >>> testdata = 'data/teleff.json'
-            >>> peclist = pkg_resources.resource_filename('telescope_baseline', testdata)
+            >>> speclist = pkg_resources.resource_filename('telescope_baseline', testdata)
             >>> efficiency = Efficiency.from_json(speclist)
             >>> wavref=np.linspace(0.8,1.6,1000)
             >>> val=efficiency.evaluate(wavref)
@@ -84,7 +84,7 @@ class Efficiency:
         Examples:
 
             >>> testdata = 'data/teleff.json'
-            >>> peclist = pkg_resources.resource_filename('telescope_baseline', testdata)
+            >>> speclist = pkg_resources.resource_filename('telescope_baseline', testdata)
             >>> efficiency = Efficiency.from_json(speclist)
             >>> wavref=np.linspace(0.8,1.6,1000)
             >>> weight=np.exp(-(wavref-1.2)**2.0)

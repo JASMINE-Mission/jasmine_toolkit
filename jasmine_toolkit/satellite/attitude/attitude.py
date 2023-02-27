@@ -11,9 +11,9 @@ from jasmine_toolkit.operation.pointing_freedom import EnumPointingFreedom
 
 class Attitude:
     def __init__(self, orbit: Orbit, mode: EnumPointingFreedom):
-        self.orbit = orbit
-        self.parameters = Parameters.get_instance()
-        self.mode = mode
+        self.__orbit = orbit
+        self.__parameters = Parameters.get_instance()
+        self.__mode = mode
 
     def get_position_angle(self, pointing: SkyCoord, time: Time) -> float:
         """
@@ -41,7 +41,7 @@ class Attitude:
                 ra_np = ra - math.pi
             else:
                 ra_np = ra + math.pi
-        if self.mode == EnumPointingFreedom.POINTING_RANDOM:
+        if self.__mode == EnumPointingFreedom.POINTING_RANDOM:
             dec_np = dec_np + 0.34 * (random.random() - 0.5)
         # TODO factor 0.34 which means 20 degrees in radian should be variable parameter
         # return position angle from satellite north pole to sun

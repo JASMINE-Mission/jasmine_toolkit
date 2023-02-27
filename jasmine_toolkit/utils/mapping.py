@@ -13,7 +13,7 @@ class Mapping:
         satellite = Satellite(freedom)
         pointing_plan_factory = PointingPlanFactory(mode)
         pointing_plan: PointingPlan = pointing_plan_factory.create(satellite)
-        self.data = pointing_plan.get_array()
+        self.__data = pointing_plan.get_array()
         self.calc_statistics()
 
     def calc_statistics(self):

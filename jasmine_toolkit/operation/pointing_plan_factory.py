@@ -6,11 +6,11 @@ from jasmine_toolkit.operation.pointing_mode import EnumPointingMode
 
 class PointingPlanFactory:
     def __init__(self, enum: EnumPointingMode):
-        self.mode = enum
-        self.parameters = Parameters.get_instance()
-        self.grid = None
-        self.observation_time = None
-        self.satellite = None
+        self.__mode = enum
+        self.__parameters = Parameters.get_instance()
+        self.__grid = None
+        self.__observation_time = None
+        self.__satellite = None
 
     @property
     def create(self, satellite: Satellite):
@@ -20,7 +20,7 @@ class PointingPlanFactory:
 
         """
         # TODO Fix parameters needed within the function.
-        self.satellite = satellite
+        self.__satellite = satellite
         pointing_plan = PointingPlan()
         self.generate_grid()
         self.find_next_pointing()
@@ -35,9 +35,9 @@ class PointingPlanFactory:
         #   grid separation is defined from gap between detectors.
         #   generate array with initial value = 0
         #   unit may be raDian (or degree) in celestial coordinate
-        detector_gap = self.parameters.detector_separation_x \
-                       - self.parameters.detector_format_x * self.parameters.pixel_size
-        gap_on_the_sky = detector_gap / self.parameters.effective_focal_length
+        detector_gap = self.__parameters.detector_separation_x \
+                       - self.__parameters.detector_format_x * self.__parameters.pixel_size
+        gap_on_the_sky = detector_gap / self.__parameters.effective_focal_length
         print(gap_on_the_sky)
 
     def find_next_pointing(self):
