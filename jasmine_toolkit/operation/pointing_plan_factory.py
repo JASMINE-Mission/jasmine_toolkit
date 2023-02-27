@@ -1,7 +1,7 @@
 from jasmine_toolkit.operation.pointing_plan import PointingPlan
 from jasmine_toolkit.utils.parameters import Parameters
 from jasmine_toolkit.satellite.satellite import Satellite
-from operation.pointing_mode import EnumPointingMode
+from jasmine_toolkit.operation.pointing_mode import EnumPointingMode
 
 
 class PointingPlanFactory:
@@ -20,6 +20,7 @@ class PointingPlanFactory:
 
         """
         # TODO Fix parameters needed within the function.
+        self.satellite = satellite
         pointing_plan = PointingPlan()
         self.generate_grid()
         self.find_next_pointing()
