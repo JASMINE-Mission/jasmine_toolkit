@@ -28,6 +28,7 @@ class Attitude:
         Returns:
             position angle in radian.
         """
+        # TODO all these calculation should be done via attitude quaternion
         # get solar direction
         sun = get_sun(time)
         # calculate pointing direction in right ascension and declination
