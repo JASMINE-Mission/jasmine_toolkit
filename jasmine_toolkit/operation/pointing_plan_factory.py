@@ -1,33 +1,7 @@
 from jasmine_toolkit.operation.pointing_plan import PointingPlan
-from enum import Enum
 from jasmine_toolkit.utils.parameters import Parameters
-
-
-class EnumPointingMode(Enum):
-    FOUR_FOV_IN_ORBIT = 4
-    SIX_FOV_IN_ORBIT = 6
-    EIGHT_FOV_IN_ORBIT = 8
-
-    @classmethod
-    def get_names(cls):
-        return [i.name for i in cls]
-
-    @classmethod
-    def get_values(cls):
-        return [i.value for i in cls]
-
-
-class EnumPointingFreedom(Enum):
-    POINTING_FIXED = 0
-    POINTING_RANDOM = 1
-
-    @classmethod
-    def get_names(cls):
-        return [i.name for i in cls]
-
-    @classmethod
-    def get_values(cls):
-        return [i.value for i in cls]
+from jasmine_toolkit.satellite.satellite import Satellite
+from operation.pointing_mode import EnumPointingMode
 
 
 class PointingPlanFactory:
@@ -36,9 +10,10 @@ class PointingPlanFactory:
         self.parameters = Parameters.get_instance()
         self.grid = None
         self.observation_time = None
+        self.satellite = None
 
     @property
-    def create(self):
+    def create(self, satellite: Satellite):
         """
         Create PointingPlan object, set observation entries, and return it.
         Returns: PointingPlan object
@@ -47,7 +22,9 @@ class PointingPlanFactory:
         # TODO Fix parameters needed within the function.
         pointing_plan = PointingPlan()
         self.generate_grid()
+        self.find_next_pointing()
         self.generate_observation_time()
+        self.get_position_angle()
         self.make_observation()
         return pointing_plan
 
@@ -62,10 +39,19 @@ class PointingPlanFactory:
         gap_on_the_sky = detector_gap / self.parameters.effective_focal_length
         print(gap_on_the_sky)
 
+    def find_next_pointing(self):
+        # TODO
+        #   Determine next pointing by using some algorithm.
+        #   This function may be abstract and function body is better to be implemented in child class.
+        pass
+
     def generate_observation_time(self):
         # TODO
         #   generate time sequence by using mode and orbit information
         #   array component is [time, number_of_observation]
+        pass
+
+    def get_position_angle(self):
         pass
 
     def make_observation(self):

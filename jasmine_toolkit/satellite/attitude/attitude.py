@@ -1,14 +1,12 @@
 import math
 import random
-
 import astropy
 import astropy.units as u
 from astropy.coordinates import get_sun, SkyCoord
 from astropy.time import Time
-
-from jasmine_toolkit.operation.pointing_plan_factory import EnumPointingFreedom
 from jasmine_toolkit.satellite.orbit.orbit import Orbit
 from jasmine_toolkit.utils.parameters import Parameters
+from operation.pointing_freedom import EnumPointingFreedom
 
 
 class Attitude:
