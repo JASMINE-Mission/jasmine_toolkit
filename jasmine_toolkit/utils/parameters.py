@@ -127,6 +127,10 @@ class Parameters:
         self.__filter_efficiency = Efficiency.from_json(spec_list)
 
     @property
+    def EQUATORIAL_EARTH_RADIUS(self):
+        return self.__EQUATORIAL_EARTH_RADIUS
+
+    @property
     def effective_pupil_diameter(self):
         return self.__effective_pupil_diameter
 

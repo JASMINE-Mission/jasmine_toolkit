@@ -12,7 +12,6 @@ class PointingPlanFactory:
         self.__observation_time = None
         self.__satellite = None
 
-    @property
     def create(self, satellite: Satellite):
         """
         Create PointingPlan object, set observation entries, and return it.
