@@ -125,7 +125,11 @@ class Parameters:
         f_name = "data/filter/filter" + str(int(self.__short_wavelength_limit * 1e8)).zfill(3) + ".json"
         spec_list = pkg_resources.resource_filename('jasmine_toolkit', f_name)
         self.__filter_efficiency = Efficiency.from_json(spec_list)
-        self.__earth_avoiding_angle = 0.449  # 25.7 degree = 0.449 radian / 23.5 degree = 0.41 radian
+        self.__earth_avoiding_angle = math.radians(25.7)
+        self.__minimum_l = math.radians(-1.4)
+        self.__maximum_l = math.radians(0.7)
+        self.__minimum_b = math.radians(-0.6)
+        self.__maximum_b = math.radians(0.6)
 
     @property
     def EQUATORIAL_EARTH_RADIUS(self):
@@ -441,3 +445,19 @@ class Parameters:
     @property
     def earth_avoiding_angle(self):
         return self.__earth_avoiding_angle
+
+    @property
+    def minimum_l(self):
+        return self.__minimum_l
+
+    @property
+    def maximum_l(self):
+        return self.__maximum_l
+
+    @property
+    def minimum_b(self):
+        return self.__minimum_b
+
+    @property
+    def maximum_b(self):
+        return self.__maximum_b
