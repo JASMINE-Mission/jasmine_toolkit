@@ -56,8 +56,3 @@ if __name__ == '__main__':
     mapping_mode = EnumPointingMode.FOUR_FOV_IN_ORBIT
     initial_time = Time('2028-01-01T00:00:00')
     mapping = Mapping(mapping_freedom, mapping_mode, initial_time)
-    a = np.array([[0., 0.], [0., 1.], [1., 1.]])
-    p = np.array([1.0, 0.0])
-    print(mapping.included_p(a, p))
-    p = np.array([0.1, 0.1])
-    print(mapping.included_p(a, p))
