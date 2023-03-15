@@ -40,7 +40,7 @@ class PointingPlanFactory:
         self.generate_grid()
         self.find_next_pointing()
         self.generate_observation_time()
-        self.get_position_angle()
+        # self.get_position_angle()
         self.make_observation()
         return pointing_plan
 
