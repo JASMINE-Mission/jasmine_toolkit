@@ -1,3 +1,7 @@
+import warnings
+import erfa
+from astropy.coordinates import SkyCoord
+from astropy.time import Time
 from jasmine_toolkit.operation.pointing_plan import PointingPlan
 from jasmine_toolkit.utils.parameters import Parameters
 from jasmine_toolkit.satellite.satellite import Satellite
@@ -6,11 +10,24 @@ from jasmine_toolkit.operation.pointing_mode import EnumPointingMode
 
 class PointingPlanFactory:
     def __init__(self, enum: EnumPointingMode):
-        self.__mode = enum
-        self.__parameters = Parameters.get_instance()
-        self.__grid = None
-        self.__observation_time = None
-        self.__satellite = None
+        """
+
+        Args:
+            enum: Number of field of views within the half orbit.
+
+        An attribute grid is list because the elements are Time object. It should not be nd array because ndarray can
+        only have number.
+        JASMINE mission uses time after 2027. In that case, erfaWarning ERFA function "dtf2d" yielded 1 of "dubious
+        year (Note 6)" occurs. warnings.warn('ERFA function "{}" yielded {}'.format(func_name, wmsg), For avoiding
+        this, warnings.simplefilter('ignore', category=erfa.core.ErfaWarning) is needed.
+        """
+        self.__mode: EnumPointingMode = enum
+        self.__parameters: Parameters = Parameters.get_instance()
+        self.__grid: list = None
+        self.__observation_time: Time = None
+        self.__satellite: Satellite = None
+        self.__n_b: int = 0
+        self.__n_l: int = 0
 
     def create(self, satellite: Satellite):
         """
@@ -18,7 +35,6 @@ class PointingPlanFactory:
         Returns: PointingPlan object
 
         """
-        # TODO Fix parameters needed within the function.
         self.__satellite = satellite
         pointing_plan = PointingPlan()
         self.generate_grid()
@@ -29,21 +45,31 @@ class PointingPlanFactory:
         return pointing_plan
 
     def generate_grid(self):
-        # TODO
-        #   calculate number of grids from size of observation area and grid separation
-        #   grid separation is defined from gap between detectors.
-        #   generate array with initial value = 0
-        #   unit may be raDian (or degree) in celestial coordinate
         detector_gap = self.__parameters.detector_separation_x \
                        - self.__parameters.detector_format_x * self.__parameters.pixel_size
         gap_on_the_sky = detector_gap / self.__parameters.effective_focal_length
-        print(gap_on_the_sky)
+        l_min = self.__parameters.minimum_l
+        l_max = self.__parameters.maximum_l
+        b_min = self.__parameters.minimum_b
+        b_max = self.__parameters.maximum_b
+        self.__n_l = int((l_max - l_min) / gap_on_the_sky) + 1
+        self.__n_b = int((b_max - b_min) / gap_on_the_sky) + 1
+        self.__grid = [[[] for i in range(self.__n_b)] for j in range(self.__n_l)]
+        # usage self.__grid[2][3].append(Time('2028-01-01T10:00:00'))
 
     def find_next_pointing(self):
         # TODO
-        #   Determine next pointing by using some algorithm.
         #   This function may be abstract and function body is better to be implemented in child class.
-        pass
+        l0 = -1
+        b0 = -1
+        min_count = 100000
+        for l in range(self.__n_l):
+            for b in range(self.__n_b):
+                if len(self.__grid[l][b]) < min_count:
+                    min_count = len(self.__grid[l][b])
+                    l0 = l
+                    b0 = b
+        return l0, b0
 
     def generate_observation_time(self):
         # TODO
@@ -51,8 +77,8 @@ class PointingPlanFactory:
         #   array component is [time, number_of_observation]
         pass
 
-    def get_position_angle(self):
-        pass
+    def get_position_angle(self, pointing: SkyCoord, time: Time):
+        return self.__satellite.get_position_angle(pointing, time)
 
     def make_observation(self):
         # TODO
@@ -62,7 +88,15 @@ class PointingPlanFactory:
         #   add number_of_observation observations (ra, dec, position_angle, time) to pointing_plan.
         pass
 
+    def test_function(self):
+        self.__grid[2][3].append(Time('2028-01-01T10:00:00'))
+        self.__grid[0][0].append(Time('2028-01-01T10:00:00'))
+        self.__grid[1][0].append(Time('2028-01-01T10:00:00'))
+
 
 if __name__ == "__main__":
+    warnings.simplefilter('ignore', category=erfa.core.ErfaWarning)
     a = PointingPlanFactory(EnumPointingMode.FOUR_FOV_IN_ORBIT)
     a.generate_grid()
+    a.test_function()
+    a.find_next_pointing()
