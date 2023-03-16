@@ -78,6 +78,8 @@ class PointingPlanFactory:
         pass
 
     def get_position_angle(self, pointing: SkyCoord, time: Time):
+        # TODO
+        #   consider when position angle is needed and implementation in this class is appropriate or not.
         return self.__satellite.get_position_angle(pointing, time)
 
     def make_observation(self):
