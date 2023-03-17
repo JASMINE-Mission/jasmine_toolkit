@@ -4,7 +4,7 @@ from numpy.ma import copy
 
 class PointingPlan:
     def __init__(self):
-        self.__pointing_entries: np.ndarray = np.array([1, 2, 3, 4])
+        self.__pointing_entries: np.ndarray = np.array([])
 
     def add_entry(self, entry: np.ndarray) -> np.ndarray:
         self.__pointing_entries = np.vstack(self.__pointing_entries, entry)
