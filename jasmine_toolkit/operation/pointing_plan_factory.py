@@ -35,16 +35,19 @@ class PointingPlanFactory:
         Returns: PointingPlan object
 
         """
+        # TODO
+        #   Do not change class attributes, but use local variable
+        #   variable grid is mutable. Use local variable rather than member attributes.
         self.__satellite = satellite
         pointing_plan = PointingPlan()
-        self.generate_grid()
-        self.find_next_pointing()
-        self.generate_observation_time()
+        self._generate_grid()
+        self._find_next_pointing()
+        self._generate_observation_time()
         # self.get_position_angle()
-        self.make_observation()
+        self._make_observation()
         return pointing_plan
 
-    def generate_grid(self):
+    def _generate_grid(self):
         detector_gap = self.__parameters.detector_separation_x \
                        - self.__parameters.detector_format_x * self.__parameters.pixel_size
         gap_on_the_sky = detector_gap / self.__parameters.effective_focal_length
@@ -57,9 +60,11 @@ class PointingPlanFactory:
         self.__grid = [[[] for i in range(self.__n_b)] for j in range(self.__n_l)]
         # usage self.__grid[2][3].append(Time('2028-01-01T10:00:00'))
 
-    def find_next_pointing(self):
+    def _find_next_pointing(self):
         # TODO
         #   This function may be abstract and function body is better to be implemented in child class.
+        #   It may depend on Satellite class. Calculation of "gain" is role of satellite?
+        #   callable etc.
         l0 = -1
         b0 = -1
         min_count = 100000
@@ -71,18 +76,20 @@ class PointingPlanFactory:
                     b0 = b
         return l0, b0
 
-    def generate_observation_time(self):
+    def _generate_observation_time(self):
         # TODO
         #   generate time sequence by using mode and orbit information
         #   array component is [time, number_of_observation]
+        #   separate method.
+        #   Do not implements calculation logic in factory class.
         pass
 
-    def get_position_angle(self, pointing: SkyCoord, time: Time):
+    def _get_position_angle(self, pointing: SkyCoord, time: Time):
         # TODO
         #   consider when position angle is needed and implementation in this class is appropriate or not.
         return self.__satellite.get_position_angle(pointing, time)
 
-    def make_observation(self):
+    def _make_observation(self):
         # TODO
         #   define observation grid from the previous observation by using some algorithm.
         #   apply strategy pattern or etc. for flexibility of choice of algorithms.
@@ -99,6 +106,6 @@ class PointingPlanFactory:
 if __name__ == "__main__":
     warnings.simplefilter('ignore', category=erfa.core.ErfaWarning)
     a = PointingPlanFactory(EnumPointingMode.FOUR_FOV_IN_ORBIT)
-    a.generate_grid()
+    a._generate_grid()
     a.test_function()
-    a.find_next_pointing()
+    a._find_next_pointing()
