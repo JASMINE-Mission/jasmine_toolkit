@@ -1,4 +1,5 @@
 import numpy as np
+from numpy.ma import copy
 
 
 class PointingPlan:
@@ -9,4 +10,4 @@ class PointingPlan:
         self.__pointing_entries = np.vstack(self.__pointing_entries, entry)
 
     def get_array(self) -> np.ndarray:
-        return self.__pointing_entries.copy()
+        return copy.deepcopy(self.__pointing_entries)
