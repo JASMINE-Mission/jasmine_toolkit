@@ -72,7 +72,7 @@ class ParameterMeta(type):
         return super().__new__(mcls, name, bases, d)
 
 
-class Parameter(Quantity, Singleton, metaclass=ParameterMeta):
+class Parameter(Quantity, metaclass=ParameterMeta):
     __registry = {}
 
     def __new__(cls, name, value, unit, reference):
