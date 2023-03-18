@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import sys
-from .parameter import Parameter, fix_parameters
+from .parameter import Parameter, finalize_parameters
 from .detector import *
 from .telescope import *
 

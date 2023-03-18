@@ -7,18 +7,22 @@ import numpy as np
 
 __all__ = (
     'Parameter',
-    'fix_parameters',
+    'finalize_parameters',
 )
 
 
-__parameter_fixed = Event()
+__parameter_finalized = Event()
 
 
 class ParameterProtected(RuntimeError):
     pass
 
 
-class ParameterNotFixed(RuntimeError):
+class ParameterFinalized(RuntimeError):
+    pass
+
+
+class ParameterNotFinalized(RuntimeError):
     pass
 
 
@@ -30,19 +34,31 @@ class ParameterUnitInconsistency(ValueError):
     pass
 
 
-def fix_parameters():
-    __parameter_fixed.set()
+def finalize_parameters():
+    __parameter_finalized.set()
 
 
-def not_dirty(func):
+def unfinalize_parameters():
+    __parameter_finalized.clear()
+
+
+def parameter_finalized(func):
     @functools.wraps(func)
     def wrap(*args, **params):
-        print('dirty check start')
-        print(__parameter_fixed)
-        if __parameter_fixed.is_set():
+        if __parameter_finalized.is_set():
             return func(*args, **params)
         else:
-            raise ParameterNotFixed('parameter is not fixed yet.')
+            raise ParameterNotFinalized('parameters are not finalized yet.')
+    return wrap
+
+
+def parameter_adjustable(func):
+    @functools.wraps(func)
+    def wrap(*args, **params):
+        if not __parameter_finalized.is_set():
+            return func(*args, **params)
+        else:
+            raise ParameterFinalized('parameters are already finalized.')
     return wrap
 
 
@@ -68,7 +84,7 @@ class ParameterMeta(type):
         ]
         for attr, value in vars(Quantity).items():
             if attr in protected:
-                d[attr] = not_dirty(value)
+                d[attr] = parameter_finalized(value)
         return super().__new__(mcls, name, bases, d)
 
 
@@ -133,6 +149,7 @@ class Parameter(Quantity, metaclass=ParameterMeta):
 
     __deepcopy__ = __copy__ = copy
 
+    @parameter_adjustable
     def update(self, value, unit=None, reference=None):
         unit = unit or dimensionless_unscaled
         reference = reference or 'manually updated'
@@ -148,7 +165,6 @@ class Parameter(Quantity, metaclass=ParameterMeta):
             self.data = np.array(value, dtype=np.float64).data
             self._unit_string = unit
         self._reference = reference or 'manually defined'
-        print(self.unit)
 
     @property
     def name(self):
