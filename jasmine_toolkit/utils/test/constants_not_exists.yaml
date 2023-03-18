@@ -1,0 +1,6 @@
+# description:定数の意味
+
+maneuver_time_x:
+  value: 115
+  unit: s
+

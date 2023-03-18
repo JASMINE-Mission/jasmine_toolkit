@@ -7,3 +7,13 @@ EARTH_MASS:
 
 use_M_flag:
   value: False
+
+maneuver_time:
+  value: 115
+  unit: s
+
+optics_efficiency:
+    value: __import__('jasmine_toolkit.datamodel.efficiency').datamodel.efficiency.Efficiency.from_json(__import__('pkg_resources').resource_filename('jasmine_toolkit', 'data/qe/qe170.json'))
+
+minimum_l:
+    value: __import__('math').radians(-1.4)

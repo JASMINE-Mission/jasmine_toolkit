@@ -1,7 +1,6 @@
 import jasmine_toolkit.utils.parameters2 as px
 from jasmine_toolkit.utils.parameters2 import Parameters2
 import pkg_resources
-import yaml
 
 
 #def test_dummy():
@@ -14,38 +13,54 @@ import yaml
 #        print(obj)
 
 def test_singleton():
-    print("test__sigleton")
-    print("new 1")
     p1 = Parameters2()
     assert p1 is not None
-    print("new 2")
     p2 = Parameters2()
     assert p1 == p2
+
+def test_update_from_file():
+    p = Parameters2()
+    __turn_dirty()
+    filename = pkg_resources.resource_filename('jasmine_toolkit', 'utils/test/constants_update.yaml')
+    p.apply(filename)
+    p.ready()
+    assert p.maneuver_time.value == 12345
+
+def test_update_file_in_not_exists_data():
+    p = Parameters2()
+    __turn_dirty()
+    filename = pkg_resources.resource_filename('jasmine_toolkit', 'utils/test/constants_not_exists.yaml')
+    try:
+        p.apply(filename)
+        assert False, 'no guard'
+    except AttributeError as e:
+        print(e)
 
 def test_dirty_mode():
     p = Parameters2()
     __turn_dirty()
     try:
-        d = p.dummy
+        print(p.EARTH_MASS)
         assert False, 'no guard'
     except RuntimeError as e:
         print (e)
-    p.dummy = 456
+    p.EARTH_MASS = 456
+    p.ready()
+    assert 456 == p.EARTH_MASS
 
 def test_clean_mode():
-    p = Parameters2()
-    __turn_clean()
     try:
-        p.dummy = 456
-        assert False, 'no guard'
-    except RuntimeError as e:
-        print (e)
-    d = p.dummy
+        p = Parameters2()
+        __turn_clean()
+        try:
+            p.EARTH_MASS = 456
+            assert False, 'no guard'
+        except RuntimeError as e:
+            print (e)
+        print(p.EARTH_MASS)
+    finally:
+        __reset()
 
-def test_get_yaml_data():
-    p = Parameters2()
-    p.ready()
-#    print(p.EARTH_MASS)
 
 def test_extract_description():
     d1 = {'description':'hoge'}
@@ -63,9 +78,10 @@ def test_extract_value():
     assert type(px._extract_value({'value':'5.9724E24'})) is float
     assert type(px._extract_value({'value':False})) is bool
     assert type(px._extract_value({'value':"__import__('math').radians(-1.4)"})) is float
-    complex_statement = "__import__('jasmine_toolkit.datamodel.efficiency').datamodel.efficiency.Efficiency.from_json(__import__('pkg_resources').resource_filename('jasmine_toolkit', 'data/qe/qe170.json'))"
-    print(type(px._extract_value({'value': complex_statement})))
-    print(px._extract_value({'value': complex_statement}))
+    assert type(px._extract_value({'value':"__impo__('math').radians(-1.4)"})) is str
+#    complex_statement = "__import__('jasmine_toolkit.datamodel.efficiency').datamodel.efficiency.Efficiency.from_json(__import__('pkg_resources').resource_filename('jasmine_toolkit', 'data/qe/qe170.json'))"
+#    print(type(px._extract_value({'value': complex_statement})))
+#    print(px._extract_value({'value': complex_statement}))
 
 def __turn_dirty():
     setattr(Parameters2(), '_Parameters2__is_dirty', True)
