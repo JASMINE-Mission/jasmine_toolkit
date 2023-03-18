@@ -24,6 +24,13 @@ class ProtectedModule(Module):
 # debug output
 Parameter.list_parameters()
 
+import astropy.units as u
+print('\n###update###')
+naxis1.update(1100 * u.pix)
+pixel_scale.update(300 * u.s)
+
+Parameter.list_parameters()
+
 for name in sys.modules.keys():
     if name.startswith('jasmine_toolkit.parameters'):
         module = sys.modules[name]

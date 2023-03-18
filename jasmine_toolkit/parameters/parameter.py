@@ -1,8 +1,7 @@
 #!/usr/bin/env python
-from astropy.units.core import Unit
+from astropy.units.core import Unit, dimensionless_unscaled
 from astropy.units.quantity import Quantity
-from astropy.utils import lazyproperty
-from threading import Event
+from threading import Event, Lock
 import functools
 import numpy as np
 
@@ -31,6 +30,17 @@ def not_dirty(func):
     return wrap
 
 
+class Singleton:
+    __instance = None
+    __lock = Lock()
+
+    def __new__(cls):
+        with cls.__lock:
+            if cls.__instance is None:
+                cls.instance = super().__new__(cls)
+        return cls.__instance
+
+
 class ParameterMeta(type):
     def __new__(mcls, name, bases, d):
         protected = [
@@ -46,13 +56,13 @@ class ParameterMeta(type):
         return super().__new__(mcls, name, bases, d)
 
 
-class Parameter(Quantity, metaclass=ParameterMeta):
+class Parameter(Quantity, Singleton, metaclass=ParameterMeta):
     __registry = {}
 
     def __new__(cls, name, value, unit, reference):
         name_lower = name.lower()
 
-        inst = np.array(value).view(cls)
+        inst = np.array(value, dtype=np.float64).view(cls)
         inst._name = name
         inst._value = value
         inst._unit_string = unit
@@ -103,12 +113,29 @@ class Parameter(Quantity, metaclass=ParameterMeta):
 
     __deepcopy__ = __copy__ = copy
 
+    def update(self, value, unit=None, reference=None):
+        unit = unit or dimensionless_unscaled
+        reference = reference or 'manually updated'
+
+        if isinstance(value, Quantity):
+            if not value.unit.is_equivalent(self.unit):
+                raise Exception('not compatible')
+            self.data = np.array(value.value, dtype=np.float64).data
+            self._unit_string = value.unit.to_string()
+        else:
+            if not Unit(unit).is_equivalent(self.unit):
+                raise Exception('not compatible')
+            self.data = np.array(value, dtype=np.float64).data
+            self._unit_string = unit
+        self._reference = reference or 'manually defined'
+        print(self.unit)
+
     @property
     def name(self):
         '''The full name of the constant.'''
         return self._name
 
-    @lazyproperty
+    @property
     def _unit(self):
         '''The unit(s) in which this constant is defined.'''
         return Unit(self._unit_string)
