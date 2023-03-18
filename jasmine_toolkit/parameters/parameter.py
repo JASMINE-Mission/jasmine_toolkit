@@ -14,6 +14,22 @@ __all__ = (
 __parameter_fixed = Event()
 
 
+class ParameterProtected(RuntimeError):
+    pass
+
+
+class ParameterNotFixed(RuntimeError):
+    pass
+
+
+class ParameterDuplicated(RuntimeError):
+    pass
+
+
+class ParameterUnitInconsistency(ValueError):
+    pass
+
+
 def fix_parameters():
     __parameter_fixed.set()
 
@@ -26,7 +42,7 @@ def not_dirty(func):
         if __parameter_fixed.is_set():
             return func(*args, **params)
         else:
-            raise Exception('parameter is not fixed yet.')
+            raise ParameterNotFixed('parameter is not fixed yet.')
     return wrap
 
 
@@ -69,14 +85,18 @@ class Parameter(Quantity, Singleton, metaclass=ParameterMeta):
         inst._reference = reference
 
         if name_lower in cls.__registry.keys():
-            raise Exception(f'parameter {name} already defined')
+            raise ParameterDuplicated(f'parameter {name} already defined')
         cls.__registry.update({name_lower: inst})
 
         return inst
 
     @classmethod
+    def all_parameters(cls):
+        return cls.__registry.copy()
+
+    @classmethod
     def list_parameters(cls):
-        for k, p in cls.__registry.items():
+        for k, p in cls.all_parameters():
             print(f'### {k}')
             print(p)
 
@@ -98,17 +118,17 @@ class Parameter(Quantity, Singleton, metaclass=ParameterMeta):
         )
 
     def __assign__(self, value):
-        raise Exception(f'Assigning to {self.name} is not allowed.')
+        raise ParameterProtected(f'Parameter {self.name} is protected.')
 
     def __quantity_subclass__(self, unit):
         return super().__quantity_subclass__(unit)[0], False
 
     def copy(self):
-        """
+        '''
         Return a copy of this `Constant` instance.  Since they are by
         definition immutable, this merely returns another reference to
         ``self``.
-        """
+        '''
         return self
 
     __deepcopy__ = __copy__ = copy
@@ -119,12 +139,12 @@ class Parameter(Quantity, Singleton, metaclass=ParameterMeta):
 
         if isinstance(value, Quantity):
             if not value.unit.is_equivalent(self.unit):
-                raise Exception('not compatible')
+                raise ParameterUnitInconsistency('not compatible')
             self.data = np.array(value.value, dtype=np.float64).data
             self._unit_string = value.unit.to_string()
         else:
             if not Unit(unit).is_equivalent(self.unit):
-                raise Exception('not compatible')
+                raise ParameterUnitInconsistency('not compatible')
             self.data = np.array(value, dtype=np.float64).data
             self._unit_string = unit
         self._reference = reference or 'manually defined'
