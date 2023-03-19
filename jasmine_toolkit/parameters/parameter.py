@@ -1,37 +1,21 @@
 #!/usr/bin/env python
 from astropy.units.core import Unit, dimensionless_unscaled
 from astropy.units.quantity import Quantity
-from threading import Event, Lock
+from threading import Event
 import functools
 import numpy as np
+
+from .exception import *
+
 
 __all__ = (
     'Parameter',
     'finalize_parameters',
+    'finalized_context',
 )
 
 
 __parameter_finalized = Event()
-
-
-class ParameterProtected(RuntimeError):
-    pass
-
-
-class ParameterFinalized(RuntimeError):
-    pass
-
-
-class ParameterNotFinalized(RuntimeError):
-    pass
-
-
-class ParameterDuplicated(RuntimeError):
-    pass
-
-
-class ParameterUnitInconsistency(ValueError):
-    pass
 
 
 def finalize_parameters():
@@ -40,6 +24,14 @@ def finalize_parameters():
 
 def unfinalize_parameters():
     __parameter_finalized.clear()
+
+
+class finalized_context:
+    def __enter__(self):
+        finalize_parameters()
+
+    def __exit__(self, exc_type, exc_value, tb):
+        unfinalize_parameters()
 
 
 def parameter_finalized(func):
@@ -62,25 +54,14 @@ def parameter_adjustable(func):
     return wrap
 
 
-class Singleton:
-    __instance = None
-    __lock = Lock()
-
-    def __new__(cls):
-        with cls.__lock:
-            if cls.__instance is None:
-                cls.instance = super().__new__(cls)
-        return cls.__instance
-
-
 class ParameterMeta(type):
     def __new__(mcls, name, bases, d):
         protected = [
             '_to_value',
-            '__mul__',
-            '__div__',
-            '__add__',
-            '__sub__',
+            '__add__', '__sub__',
+            '__neg__', '__pos__',
+            '__mul__', '__div__', '__truediv__', '__floordiv__',
+            '__and__', '__or__',
         ]
         for attr, value in vars(Quantity).items():
             if attr in protected:
@@ -96,7 +77,6 @@ class Parameter(Quantity, metaclass=ParameterMeta):
 
         inst = np.array(value, dtype=np.float64).view(cls)
         inst._name = name
-        inst._value = value
         inst._unit_string = unit
         inst._reference = reference
 
@@ -133,21 +113,19 @@ class Parameter(Quantity, metaclass=ParameterMeta):
             f'  Reference = {self.reference}'
         )
 
-    def __assign__(self, value):
-        raise ParameterProtected(f'Parameter {self.name} is protected.')
-
     def __quantity_subclass__(self, unit):
         return super().__quantity_subclass__(unit)[0], False
 
-    def copy(self):
-        '''
-        Return a copy of this `Constant` instance.  Since they are by
-        definition immutable, this merely returns another reference to
-        ``self``.
-        '''
-        return self
+    @property
+    def __all(self):
+        return np.full(self.shape, True)
 
-    __deepcopy__ = __copy__ = copy
+    @parameter_adjustable
+    def __assign__(self, value):
+        if isinstance(value, Quantity):
+            self.update(value)
+        else:
+            raise ParameterProtected(f'Parameter {self.name} is protected.')
 
     @parameter_adjustable
     def update(self, value, unit=None, reference=None):
@@ -156,13 +134,13 @@ class Parameter(Quantity, metaclass=ParameterMeta):
 
         if isinstance(value, Quantity):
             if not value.unit.is_equivalent(self.unit):
-                raise ParameterUnitInconsistency('not compatible')
-            self.data = np.array(value.value, dtype=np.float64).data
+                raise UnitIncompatibility('not compatible')
+            np.place(self, self.__all, value.copy())
             self._unit_string = value.unit.to_string()
         else:
             if not Unit(unit).is_equivalent(self.unit):
-                raise ParameterUnitInconsistency('not compatible')
-            self.data = np.array(value, dtype=np.float64).data
+                raise UnitIncompatibility('not compatible')
+            np.place(self, self.__all, Quantity(value, unit=unit).copy())
             self._unit_string = unit
         self._reference = reference or 'manually defined'
 
@@ -180,3 +158,13 @@ class Parameter(Quantity, metaclass=ParameterMeta):
     def reference(self):
         '''The source used for the value of this constant.'''
         return self._reference
+
+    def copy(self):
+        '''
+        Return a copy of this `Constant` instance.  Since they are by
+        definition immutable, this merely returns another reference to
+        ``self``.
+        '''
+        return self
+
+    __deepcopy__ = __copy__ = copy
