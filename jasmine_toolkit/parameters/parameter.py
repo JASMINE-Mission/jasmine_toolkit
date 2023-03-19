@@ -2,6 +2,7 @@
 from astropy.units.core import Unit, dimensionless_unscaled
 from astropy.units.quantity import Quantity
 from threading import Event
+from contextlib import contextmanager
 import functools
 import numpy as np
 
@@ -26,11 +27,11 @@ def unfinalize_parameters():
     __parameter_finalized.clear()
 
 
-class finalized_context:
-    def __enter__(self):
-        finalize_parameters()
-
-    def __exit__(self, exc_type, exc_value, tb):
+@contextmanager
+def finalized_context():
+    try:
+        yield finalize_parameters()
+    finally:
         unfinalize_parameters()
 
 
