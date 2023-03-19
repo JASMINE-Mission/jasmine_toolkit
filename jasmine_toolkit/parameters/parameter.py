@@ -73,12 +73,14 @@ class ParameterMeta(type):
 class Parameter(Quantity, metaclass=ParameterMeta):
     __registry = {}
 
-    def __new__(cls, name, value, unit, reference):
+    def __new__(cls, name, value, unit, description, reference):
         name_lower = name.lower()
 
         inst = np.array(value, dtype=np.float64).view(cls)
         inst._name = name
         inst._unit_string = unit
+        inst._unit_string_orig = unit
+        inst._description = description
         inst._reference = reference
 
         if name_lower in cls.__registry.keys():
@@ -91,12 +93,6 @@ class Parameter(Quantity, metaclass=ParameterMeta):
     def all_parameters(cls):
         return cls.__registry.copy()
 
-    @classmethod
-    def list_parameters(cls):
-        for k, p in cls.all_parameters():
-            print(f'### {k}')
-            print(p)
-
     def __repr__(self):
         return (
             f'<{self.__class__} '
@@ -108,10 +104,11 @@ class Parameter(Quantity, metaclass=ParameterMeta):
 
     def __str__(self):
         return (
-            f'  Name   = {self.name}\n'
-            f'  Value  = {self.value}\n'
-            f'  Unit  = {self.unit}\n'
-            f'  Reference = {self.reference}'
+            f'  Name        = {self.name}\n'
+            f'  Value       = {self.value}\n'
+            f'  Unit        = {self.unit}\n'
+            f'  Description = {self.description}\n'
+            f'  Reference   = {self.reference}'
         )
 
     def __quantity_subclass__(self, unit):
@@ -147,17 +144,22 @@ class Parameter(Quantity, metaclass=ParameterMeta):
 
     @property
     def name(self):
-        '''The full name of the constant.'''
+        ''' The full name of the parameter. '''
         return self._name
 
     @property
     def _unit(self):
-        '''The unit(s) in which this constant is defined.'''
-        return Unit(self._unit_string)
+        '''The unit(s) in which this parameter is defined.'''
+        return Unit(self._unit_string_orig)
+
+    @property
+    def description(self):
+        ''' The description of the parameter. '''
+        return self._description
 
     @property
     def reference(self):
-        '''The source used for the value of this constant.'''
+        ''' The source used for the value of this parameter. '''
         return self._reference
 
     def copy(self):

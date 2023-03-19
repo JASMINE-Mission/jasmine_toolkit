@@ -6,4 +6,8 @@ __all__ = (
 )
 
 effective_focal_length = Parameter(
-    'effective_focal_length', 3776.0, 'mm', 'temp')
+    'effective_focal_length',
+    3776.0,
+    'mm',
+    '',
+    'default value')

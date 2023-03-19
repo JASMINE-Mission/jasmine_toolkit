@@ -8,6 +8,12 @@ module = sys.modules['jasmine_toolkit.parameters']
 Module = type(module)
 
 
+def print_parameters():
+    for k, p in Parameter.all_parameters().items():
+        print(f'# {k} ###')
+        print(p)
+
+
 class ProtectedModule(Module):
     def __setattr__(self, attr, val):
         exists = getattr(self, attr, None)
