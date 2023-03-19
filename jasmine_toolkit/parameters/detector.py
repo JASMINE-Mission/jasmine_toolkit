@@ -7,6 +7,23 @@ __all__ = (
     'pixel_scale',
 )
 
-naxis1 = Parameter('naxis1', 1200, 'pixel', 'temp')
-naxis2 = Parameter('naxis2', 1200, 'pixel', 'temp')
-pixel_scale = Parameter('pixel_scale', 10, 'um', 'temp')
+naxis1 = Parameter(
+    'naxis1',
+    1200,
+    'pixel',
+    '',
+    'default value')
+
+naxis2 = Parameter(
+    'naxis2',
+    1200,
+    'pixel',
+    '',
+    'default value')
+
+pixel_scale = Parameter(
+    'pixel_scale',
+    10,
+    'um',
+    '',
+    'default value')
