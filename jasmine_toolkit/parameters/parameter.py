@@ -79,7 +79,6 @@ class Parameter(Quantity, metaclass=ParameterMeta):
         inst = np.array(value, dtype=np.float64).view(cls)
         inst._name = name
         inst._unit_string = unit
-        inst._unit_string_orig = unit
         inst._description = description
         inst._reference = reference
 
@@ -134,12 +133,10 @@ class Parameter(Quantity, metaclass=ParameterMeta):
             if not value.unit.is_equivalent(self.unit):
                 raise UnitIncompatibility('not compatible')
             np.place(self, self.__all, value.copy())
-            self._unit_string = value.unit.to_string()
         else:
             if not Unit(unit).is_equivalent(self.unit):
                 raise UnitIncompatibility('not compatible')
             np.place(self, self.__all, Quantity(value, unit=unit).copy())
-            self._unit_string = unit
         self._reference = reference or 'manually defined'
 
     @property
@@ -149,8 +146,8 @@ class Parameter(Quantity, metaclass=ParameterMeta):
 
     @property
     def _unit(self):
-        '''The unit(s) in which this parameter is defined.'''
-        return Unit(self._unit_string_orig)
+        '''The original unit(s) in which this parameter is defined.'''
+        return Unit(self._unit_string)
 
     @property
     def description(self):
