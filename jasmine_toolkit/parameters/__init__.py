@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import sys
-from .parameter import Parameter, finalize_parameters
+from .parameter import *
 from .detector import *
 from .telescope import *
 
@@ -18,7 +18,8 @@ class ProtectedModule(Module):
                 raise NameError(f'"{attr}" is not defined.')
         if hasattr(exists, '__assign__'):
             exists.__assign__(val)
-        super().__setattr__(attr, val)
+        else:
+            super().__setattr__(attr, val)
 
 
 for name in sys.modules.keys():
