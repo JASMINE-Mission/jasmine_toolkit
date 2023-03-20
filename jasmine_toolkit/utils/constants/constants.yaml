@@ -1,7 +1,7 @@
 # description:定数の意味
 
 EARTH_MASS:
-  description: 地球の重量
+  description: Earth mass
   value: 5.9724E24
   unit: kg
 
