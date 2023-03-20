@@ -1,6 +1,7 @@
 from astropy.constants import Constant
 import pkg_resources
 import yaml
+import codecs
 
 
 # TODO 規格の切り返したい場合は、このクラスから切り離した方が良いです
@@ -62,7 +63,7 @@ class Parameters2:
         self.__load_file(filename, False)
 
     def __load_file(self, filename, init):
-        with open(filename) as file:
+        with codecs.open(filename, encoding='utf-8') as file:
             obj = yaml.safe_load(file)
 #            print(obj)
             for name, val in obj.items():
