@@ -4,8 +4,8 @@ from .parameter import *
 from .detector import *
 from .telescope import *
 
-module = sys.modules['jasmine_toolkit.parameters']
-Module = type(module)
+__module = sys.modules['jasmine_toolkit.parameters']
+__Module = type(__module)
 
 
 def print_parameters():
@@ -14,7 +14,7 @@ def print_parameters():
         print(p)
 
 
-class ProtectedModule(Module):
+class ProtectedModule(__Module):
     def __setattr__(self, attr, val):
         exists = getattr(self, attr, None)
         if exists is None:
@@ -28,7 +28,9 @@ class ProtectedModule(Module):
             super().__setattr__(attr, val)
 
 
-for name in sys.modules.keys():
-    if name.startswith('jasmine_toolkit.parameters'):
-        module = sys.modules[name]
-        module.__class__ = ProtectedModule
+for __name in sys.modules.keys():
+    if __name.startswith('jasmine_toolkit.parameters'):
+        __module = sys.modules[__name]
+        __module.__class__ = ProtectedModule
+
+del __name, __module, __Module

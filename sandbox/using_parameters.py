@@ -4,7 +4,7 @@ import jasmine_toolkit.parameters as p
 
 
 def double(x):
-  print(x * 2)
+    print(x * 2)
 
 
 print('### show the default parameters ###')
@@ -24,6 +24,6 @@ p.print_parameters()
 
 
 with p.finalized_context():
-  double(p.naxis1)
-  double(p.naxis2)
-  double(p.pixel_scale.to(u.km))
+    double(p.naxis1)
+    double(p.naxis2)
+    double(p.pixel_scale.to(u.km))
