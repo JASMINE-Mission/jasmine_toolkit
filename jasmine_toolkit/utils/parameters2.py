@@ -20,7 +20,9 @@ class Parameters2:
         '__constants',
         '__load_file',
         'ready',
-        'apply'
+        'apply',
+        '_translate_value',
+        '_extract_value'
     )
     def __new__(cls, *args, **kwargs):
         if Parameters2.__instance is None:
@@ -30,11 +32,12 @@ class Parameters2:
     def __init__(self):
         if not Parameters2.__instance is None:
             return
-        self.__is_dirty = True
+        self.__is_dirty = False
         self.__constants = {}
         filename = pkg_resources.resource_filename('jasmine_toolkit', 'utils/constants/constants.yaml')
         self.__load_file(filename, True)
 #        print(self.__constants)
+        self.__is_dirty = True
         Parameters2.__instance = self
 
     def __setattr__(self, name, value):
@@ -68,7 +71,7 @@ class Parameters2:
 #            print(obj)
             for name, val in obj.items():
                 if init or name in self.__constants:
-                    v = _translate_value(name, val)
+                    v = self._translate_value(name, val)
                     self.__constants[name] = v
                 else:
                     raise AttributeError(f"'{__class__}' object has no attribute '{name}'")
@@ -80,49 +83,47 @@ class Parameters2:
             else:
                 raise RuntimeError('setter don\'t call!!')
 
+    def _translate_value(self, key, dic):
+        description = _extract_description(dic)
+        description = description if not description == '' else key
+        unit = _extract_unit(dic)
+        value = self._extract_value(dic)
+        if type(value) == float or type(value) == int:
+            #TODO uncertainty support.
+            return JasmineConstant(key, description, value, unit, 0.0)
+        return value
 
-def _translate_value(key, dic):
-    description = _extract_description(dic)
-    description = description if not description == '' else key
-    unit = _extract_unit(dic)
-    value = _extract_value(dic)
-    if type(value) == float or type(value) == int:
-        #TODO uncertainty support.
-        return JasmineConstant(key, description, value, unit, 0.0)
-    return value
+    def _extract_value(self, dic):
+        val = _extract_value(dic, 'value')
+        if not type(val) is str:
+            return val
+        try:
+            return float(val) if _maybe_real(val) else int(val)
+        except ValueError:
+            pass
+        try:
+            v = eval(val)
+#            print(f'{val} -> {v}')
+#            print(type(v))
+            return v
+        except BaseException as e:
+#            print(e)
+            return val
 
+def _maybe_real(val):
+    return '.' in val or 'e' in val.lower()
 
 def _extract_description(dic):
-    return __extract_value(dic, 'description')
+    return _extract_value(dic, 'description')
 
 
 def _extract_unit(dic):
-    return __extract_value(dic, 'unit')
+    return _extract_value(dic, 'unit')
 
 
-def _extract_value(dic):
-    val = __extract_value(dic, 'value')
-    if type(val) is bool:
-        return val
-    try:
-        return int(val)
-    except ValueError:
-        pass
-    try:
-        return float(val)
-    except ValueError:
-        pass
-    try:
-        v = eval(val)
-#        print(v)
-#        print(type(v))
-        return v
-    except BaseException:
-        return val
-
-
-def __extract_value(dic, key):
-    return dic[key] if key in dic else ''
+def _extract_value(dic, key):
+    ret = dic[key] if key in dic else ''
+    return ret if not ret is None else ''
 
 
 Parameters2()   # Python 3.7以降なら__new__自体がスレッドセーフなのでいらないらしいです
