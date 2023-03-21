@@ -87,6 +87,11 @@ def test_extract_value():
 #    print(type(px._extract_value({'value': complex_statement})))
 #    print(px._extract_value({'value': complex_statement}))
 
+def test_specificated_property():
+    p = Parameters2()
+    p.ready()
+    print(p.average_filter_efficiency)
+
 
 def __turn_dirty():
     setattr(Parameters2(), '_Parameters2__is_dirty', True)
