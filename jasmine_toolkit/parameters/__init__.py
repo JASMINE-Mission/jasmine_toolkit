@@ -1,4 +1,8 @@
 #!/usr/bin/env python
+''' JASMINE Parameter Module
+
+Fill in a nice introduction of the module here.
+'''
 import sys
 from .parameter import *
 from .detector import *
@@ -9,9 +13,8 @@ __Module = type(__module)
 
 
 def print_parameters():
-    for k, p in Parameter.all_parameters().items():
-        print(f'# {k} ###')
-        print(p)
+    for p in Parameter.all_parameters().values():
+        print(p.info)
 
 
 class ProtectedModule(__Module):
