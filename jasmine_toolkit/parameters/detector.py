@@ -11,19 +11,22 @@ naxis1 = Parameter(
     'naxis1',
     1200,
     'pixel',
-    '',
-    'default value')
+    'the NAXI1 size of the detector.',
+    'default value',
+)
 
 naxis2 = Parameter(
     'naxis2',
     1200,
     'pixel',
-    '',
-    'default value')
+    'the NAXIS2 size of the detector.',
+    'default value',
+)
 
 pixel_scale = Parameter(
     'pixel_scale',
     10,
     'um',
-    '',
-    'default value')
+    'the pixel scale of the detector.',
+    'default value',
+)

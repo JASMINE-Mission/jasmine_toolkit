@@ -76,9 +76,13 @@ class Parameter(Quantity, metaclass=ParameterMeta):
     def __new__(cls, name, value, unit, description, reference):
         name_lower = name.lower()
 
-        inst = np.array(value, dtype=np.float64).view(cls)
+        if isinstance(value, np.ndarray):
+            inst = np.array(value).view(cls)
+        else:
+            inst = np.array(value, dtype=np.float64).view(cls)
         inst._name = name
         inst._unit_string = unit
+        inst._unit = Unit(unit)
         inst._description = description
         inst._reference = reference
 
@@ -94,21 +98,33 @@ class Parameter(Quantity, metaclass=ParameterMeta):
 
     def __repr__(self):
         return (
-            f'<{self.__class__} '
+            f'<{self.__class__.__name__} '
             f'name={self.name!r} '
             f'value={self.value} '
             f'unit={str(self.unit)!r} '
             f'reference={self.reference!r}>'
         )
 
-    def __str__(self):
+    @property
+    def info(self):
         return (
-            f'  Name        = {self.name}\n'
-            f'  Value       = {self.value}\n'
-            f'  Unit        = {self.unit}\n'
-            f'  Description = {self.description}\n'
-            f'  Reference   = {self.reference}'
+            f'[{self.name}]\n'
+            f'  value       = {self.value}\n'
+            f'  unit        = {self.unit}\n'
+            f'  description = {self.description}\n'
+            f'  reference   = {self.reference}'
         )
+
+    @property
+    def __doc__(self):
+        return f'''
+        Parameter - {self.name}
+
+        Description
+          {self.description}
+
+        - current Value: {self}
+        - reference: {self.reference}'''
 
     def __quantity_subclass__(self, unit):
         return super().__quantity_subclass__(unit)[0], False
@@ -126,16 +142,20 @@ class Parameter(Quantity, metaclass=ParameterMeta):
 
     @parameter_adjustable
     def update(self, value, unit=None, reference=None):
-        unit = unit or dimensionless_unscaled
         reference = reference or 'manually updated'
 
         if isinstance(value, Quantity):
             if not value.unit.is_equivalent(self.unit):
-                raise UnitIncompatibility('not compatible')
+                raise UnitIncompatibility(
+                    f'units ({self.unit}, {value.unit}) are not compatible')
+            self._set_unit(value.unit)
             np.place(self, self.__all, value.copy())
         else:
+            unit = unit or dimensionless_unscaled
             if not Unit(unit).is_equivalent(self.unit):
-                raise UnitIncompatibility('not compatible')
+                raise UnitIncompatibility(
+                    f'units ({self.unit}, {unit}) are not compatible')
+            self._set_unit(unit)
             np.place(self, self.__all, Quantity(value, unit=unit).copy())
         self._reference = reference or 'manually defined'
 
@@ -143,11 +163,6 @@ class Parameter(Quantity, metaclass=ParameterMeta):
     def name(self):
         ''' The full name of the parameter. '''
         return self._name
-
-    @property
-    def _unit(self):
-        '''The original unit(s) in which this parameter is defined.'''
-        return Unit(self._unit_string)
 
     @property
     def description(self):
@@ -158,6 +173,17 @@ class Parameter(Quantity, metaclass=ParameterMeta):
     def reference(self):
         ''' The source used for the value of this parameter. '''
         return self._reference
+
+    def __array_finalize__(self, obj):
+        attr_list = (
+            '_name',
+            '_value',
+            '_unit_string',
+            '_description',
+            '_reference',
+        )
+        for attr in attr_list:
+            setattr(self, attr, getattr(obj, attr, None))
 
     def copy(self):
         '''
