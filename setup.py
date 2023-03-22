@@ -5,8 +5,11 @@ from setuptools import setup, find_packages
 import os,sys,re
 
 
+from jasmine_toolkit import version
+
+
 with open('README.md', 'r') as fd:
-  version = '0.0.1'
+  version = version
   author = 'Ryou Ohsawa'
   email = 'ryou.ohsawa@nao.ac.jp'
   description = ''
