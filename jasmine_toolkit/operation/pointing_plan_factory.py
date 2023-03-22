@@ -58,7 +58,7 @@ class PointingPlanFactory:
         # usage self.__grid[l][b].append(Time('2028-01-01T10:00:00'))
 
     @staticmethod
-    def _find_next_pointing(self, grid: list):
+    def _find_next_pointing(grid: list):
         # TODO
         #   This function may be abstract and function body is better to be implemented in child class.
         #   It may depend on Satellite class. Calculation of "gain" is role of satellite?
