@@ -41,9 +41,7 @@ class Mapping:
             a0 = polygon[i] - target
             a1 = polygon[j] - target
             outer = np.cross(a0, a1) / (np.linalg.norm(a0, ord=2) * np.linalg.norm(a1, ord=2))
-            print(math.asin(outer[2]))
             win = win + math.asin(outer[2])
-        print(win)
         if 0.1 > win > -0.1:
             return False
         else:
