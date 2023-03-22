@@ -23,11 +23,8 @@ class PointingPlanFactory:
         """
         self.__mode: EnumPointingMode = enum
         self.__parameters: Parameters = Parameters.get_instance()
-        self.__grid: list = None
         self.__observation_time: Time = None
         self.__satellite: Satellite = None
-        self.__n_b: int = 0
-        self.__n_l: int = 0
 
     def create(self, satellite: Satellite):
         """
@@ -40,14 +37,14 @@ class PointingPlanFactory:
         #   variable grid is mutable. Use local variable rather than member attributes.
         self.__satellite = satellite
         pointing_plan = PointingPlan()
-        self._generate_grid()
-        self._find_next_pointing()
+        grid = self._generate_grid()
+        self._find_next_pointing(grid)
         self._generate_observation_time()
         # self.get_position_angle()
         self._make_observation()
         return pointing_plan
 
-    def _generate_grid(self):
+    def _generate_grid(self) -> list[list[list]]:
         detector_gap = self.__parameters.detector_separation_x \
                        - self.__parameters.detector_format_x * self.__parameters.pixel_size
         gap_on_the_sky = detector_gap / self.__parameters.effective_focal_length
@@ -55,12 +52,13 @@ class PointingPlanFactory:
         l_max = self.__parameters.maximum_l
         b_min = self.__parameters.minimum_b
         b_max = self.__parameters.maximum_b
-        self.__n_l = int((l_max - l_min) / gap_on_the_sky) + 1
-        self.__n_b = int((b_max - b_min) / gap_on_the_sky) + 1
-        self.__grid = [[[] for i in range(self.__n_b)] for j in range(self.__n_l)]
-        # usage self.__grid[2][3].append(Time('2028-01-01T10:00:00'))
+        n_l = int((l_max - l_min) / gap_on_the_sky) + 1
+        n_b = int((b_max - b_min) / gap_on_the_sky) + 1
+        return [[[] for i in range(n_b)] for j in range(n_l)]
+        # usage self.__grid[l][b].append(Time('2028-01-01T10:00:00'))
 
-    def _find_next_pointing(self):
+    @staticmethod
+    def _find_next_pointing(self, grid: list):
         # TODO
         #   This function may be abstract and function body is better to be implemented in child class.
         #   It may depend on Satellite class. Calculation of "gain" is role of satellite?
@@ -68,10 +66,12 @@ class PointingPlanFactory:
         l0 = -1
         b0 = -1
         min_count = 100000
-        for l in range(self.__n_l):
-            for b in range(self.__n_b):
-                if len(self.__grid[l][b]) < min_count:
-                    min_count = len(self.__grid[l][b])
+        n_l = len(grid)
+        n_b = len(grid[0])
+        for l in range(n_l):
+            for b in range(n_b):
+                if len(grid[l][b]) < min_count:
+                    min_count = len(grid[l][b])
                     l0 = l
                     b0 = b
         return l0, b0
@@ -98,14 +98,15 @@ class PointingPlanFactory:
         pass
 
     def test_function(self):
-        self.__grid[2][3].append(Time('2028-01-01T10:00:00'))
-        self.__grid[0][0].append(Time('2028-01-01T10:00:00'))
-        self.__grid[1][0].append(Time('2028-01-01T10:00:00'))
+        # self.__grid[2][3].append(Time('2028-01-01T10:00:00'))
+        # self.__grid[0][0].append(Time('2028-01-01T10:00:00'))
+        # self.__grid[1][0].append(Time('2028-01-01T10:00:00'))
+        pass
 
 
 if __name__ == "__main__":
     warnings.simplefilter('ignore', category=erfa.core.ErfaWarning)
     a = PointingPlanFactory(EnumPointingMode.FOUR_FOV_IN_ORBIT)
-    a._generate_grid()
-    a.test_function()
-    a._find_next_pointing()
+    print(type(a._generate_grid()))
+    # a.test_function()
+    # a._find_next_pointing()
