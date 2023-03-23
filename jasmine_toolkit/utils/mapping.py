@@ -17,9 +17,11 @@ class Mapping:
     """
     client class for generate mapping strategy.
     """
-    def __init__(self, freedom: EnumPointingFreedom, mode: EnumPointingMode, initial_time: Time):
+
+    def __init__(self, freedom: EnumPointingFreedom, mode: EnumPointingMode,
+                 initial_time: Time):
         satellite = Satellite(freedom, initial_time)
-        pointing_plan_factory = PointingPlanFactory(mode)
+        pointing_plan_factory = PointingPlanFactory(mode, initial_time)
         pointing_plan: PointingPlan = pointing_plan_factory.create(satellite)
         self.__data = pointing_plan.get_array()
         self.calc_statistics()
@@ -40,7 +42,8 @@ class Mapping:
                 j = 0
             a0 = polygon[i] - target
             a1 = polygon[j] - target
-            outer = np.cross(a0, a1) / (np.linalg.norm(a0, ord=2) * np.linalg.norm(a1, ord=2))
+            outer = np.cross(a0, a1) / (
+                        np.linalg.norm(a0, ord=2) * np.linalg.norm(a1, ord=2))
             win = win + math.asin(outer[2])
         if 0.1 > win > -0.1:
             return False
@@ -50,7 +53,6 @@ class Mapping:
 
 if __name__ == '__main__':
     warnings.simplefilter('ignore', category=erfa.core.ErfaWarning)
-    mapping_freedom = EnumPointingFreedom.POINTING_FIXED
-    mapping_mode = EnumPointingMode.FOUR_FOV_IN_ORBIT
-    initial_time = Time('2028-01-01T00:00:00')
-    mapping = Mapping(mapping_freedom, mapping_mode, initial_time)
+    mapping = Mapping(EnumPointingFreedom.POINTING_FIXED,
+                      EnumPointingMode.FOUR_FOV_IN_ORBIT,
+                      Time('2028-01-01T00:00:00'))
