@@ -27,13 +27,15 @@ class Orbit:
         self.__ltan = p.ltan  # in hour
         self.__orbital_period = p.orbital_period  # in second
         self.__initial_time = initial_time
-        self.__initial_orbit_vector_lon = astropy.coordinates.get_sun(initial_time).ra.to('rad').value \
+        self.__initial_orbit_vector_lon = astropy.coordinates.get_sun(
+            initial_time).ra.to('rad').value \
                                           + (self.__ltan + 6.0) * math.pi / 12
         if self.__initial_orbit_vector_lon > 2.0 * math.pi:
             self.__initial_orbit_vector_lon = self.__initial_orbit_vector_lon - 2.0 * math.pi
         self.__orbital_radius = p.EQUATORIAL_EARTH_RADIUS + p.orbital_altitude
         self.__cos_angle_max = math.cos(math.pi / 2 - p.earth_avoiding_angle
-                                        + math.acos(p.EQUATORIAL_EARTH_RADIUS / self.__orbital_radius))
+                                        + math.acos(
+            p.EQUATORIAL_EARTH_RADIUS / self.__orbital_radius))
         self.__target = SkyCoord(l=0.0 * u.deg, b=0.0 * u.deg, frame="galactic")
 
     def satellite_direction(self, time: Time) -> tuple:
@@ -41,8 +43,10 @@ class Orbit:
         delta = self._calc_delta()
         theta = self._calc_theta(time)
         satellite_dec = math.asin(math.sin(theta) * math.cos(delta))
-        ra_y = -math.sin(alpha) * math.sin(delta) * math.sin(theta) + math.cos(alpha) * math.cos(theta)
-        ra_x = -math.sin(theta) * math.sin(delta) * math.cos(alpha) - math.sin(alpha) * math.cos(theta)
+        ra_y = -math.sin(alpha) * math.sin(delta) * math.sin(theta) + math.cos(
+            alpha) * math.cos(theta)
+        ra_x = -math.sin(theta) * math.sin(delta) * math.cos(alpha) - math.sin(
+            alpha) * math.cos(theta)
         satellite_ra = math.atan2(ra_x, ra_y)
         return satellite_ra, satellite_dec
 
@@ -79,8 +83,10 @@ class Orbit:
         sat_ra, sat_dec = self.satellite_direction(time)
         p_ra = pointing.icrs.ra.to('rad').value
         p_dec = pointing.icrs.dec.to('rad').value
-        inner_product_of_p_and_sat = math.cos(sat_ra) * math.cos(p_ra) * math.cos(sat_dec) * math.cos(p_dec)\
-                                     + math.cos(sat_dec) * math.cos(p_dec) * math.sin(sat_ra) * math.sin(p_ra)\
+        inner_product_of_p_and_sat = math.cos(sat_ra) * math.cos(
+            p_ra) * math.cos(sat_dec) * math.cos(p_dec) \
+                                     + math.cos(sat_dec) * math.cos(
+            p_dec) * math.sin(sat_ra) * math.sin(p_ra) \
                                      + math.sin(sat_dec) * math.sin(p_dec)
         if inner_product_of_p_and_sat > self.__cos_angle_max:
             return True
@@ -95,5 +101,6 @@ if __name__ == '__main__':
     t1 = Time('2028-01-01T00:20:00')
     orbit = Orbit(t0)
     print(orbit.next_observable_time(t0, dt))
-    print(orbit.is_observable(t1, SkyCoord(l=0.0 * u.deg, b=0.0 * u.deg, frame='galactic')))
+    print(orbit.is_observable(t1, SkyCoord(l=0.0 * u.deg, b=0.0 * u.deg,
+                                           frame='galactic')))
     print(orbit.next_observable_time(t1, dt))

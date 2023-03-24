@@ -461,3 +461,7 @@ class Parameters:
     @property
     def maximum_b(self):
         return self.__maximum_b
+
+    @property
+    def read_time(self):
+        return self.__n_col_ch * self.__n_row_ch / self.__pixel_sampling_frequency

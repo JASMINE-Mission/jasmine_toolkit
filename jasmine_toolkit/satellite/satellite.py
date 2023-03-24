@@ -1,5 +1,5 @@
 from astropy.coordinates import SkyCoord
-from astropy.time import Time
+from astropy.time import Time, TimeDelta
 from jasmine_toolkit.satellite.attitude.attitude import Attitude
 from jasmine_toolkit.satellite.orbit.orbit import Orbit
 from jasmine_toolkit.operation.pointing_freedom import EnumPointingFreedom
@@ -12,3 +12,6 @@ class Satellite:
 
     def get_position_angle(self, pointing: SkyCoord, time: Time):
         return self.__attitude.get_position_angle(pointing, time)
+
+    def next_observable_time(self, time: Time, dt: TimeDelta) -> Time:
+        return self.__orbit.next_observable_time(time, dt)
