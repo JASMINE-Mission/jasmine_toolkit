@@ -1,5 +1,3 @@
-import warnings
-import erfa
 from astropy.coordinates import SkyCoord
 from astropy.time import Time, TimeDelta
 
@@ -23,14 +21,6 @@ class PointingPlanFactory:
 
         An attribute grid is list because the elements are Time object. It
         should not be nd array because ndarray can only have number.
-        JASMINE mission uses time after 2027. In that case, erfaWarning ERFA
-        function "dtf2d" yielded 1 of "dubious year (Note 6)" occurs.
-
-        warnings.warn('ERFA function "{}" yielded {}'.format(func_name, wmsg),
-
-        For avoiding this, the below is needed,
-
-        warnings.simplefilter('ignore', category=erfa.core.ErfaWarning).
         """
         self.__mode: EnumPointingMode = enum
         self.__start: Time = start
@@ -144,8 +134,8 @@ class PointingPlanFactory:
 
 
 if __name__ == "__main__":
-    warnings.simplefilter('ignore', category=erfa.core.ErfaWarning)
-    it = Time('2020-01-01T00:00:00')
+    # warnings.simplefilter('ignore', category=erfa.core.ErfaWarning)
+    it = Time('2020-01-01T00:00:00', scale="tcb")
     a: PointingPlanFactory \
         = PointingPlanFactory(EnumPointingMode.FOUR_FOV_IN_ORBIT, it)
     a.create(Satellite(EnumPointingFreedom.POINTING_FIXED, it))

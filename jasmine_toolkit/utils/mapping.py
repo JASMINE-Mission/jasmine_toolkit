@@ -1,16 +1,14 @@
 import math
-import warnings
 
-import erfa
 import numpy as np
 from astropy.time import Time
 from numpy import ndarray
 
+from jasmine_toolkit.operation.pointing_freedom import EnumPointingFreedom
+from jasmine_toolkit.operation.pointing_mode import EnumPointingMode
 from jasmine_toolkit.operation.pointing_plan import PointingPlan
 from jasmine_toolkit.operation.pointing_plan_factory import PointingPlanFactory
 from jasmine_toolkit.satellite.satellite import Satellite
-from jasmine_toolkit.operation.pointing_freedom import EnumPointingFreedom
-from jasmine_toolkit.operation.pointing_mode import EnumPointingMode
 
 
 class Mapping:
@@ -52,7 +50,6 @@ class Mapping:
 
 
 if __name__ == '__main__':
-    warnings.simplefilter('ignore', category=erfa.core.ErfaWarning)
     mapping = Mapping(EnumPointingFreedom.POINTING_FIXED,
                       EnumPointingMode.FOUR_FOV_IN_ORBIT,
-                      Time('2028-01-01T00:00:00'))
+                      Time('2028-01-01T00:00:00', scale="tcb"))

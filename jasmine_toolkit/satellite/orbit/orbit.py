@@ -1,11 +1,9 @@
 import math
-import warnings
 
 import astropy.coordinates
+import astropy.units as u
 from astropy.coordinates import SkyCoord
 from astropy.time import Time, TimeDelta
-import astropy.units as u
-import erfa
 
 from jasmine_toolkit.utils.parameters import Parameters
 
@@ -95,10 +93,9 @@ class Orbit:
 
 
 if __name__ == '__main__':
-    warnings.simplefilter('ignore', category=erfa.core.ErfaWarning)
-    t0 = Time('2028-01-01T00:00:00')
+    t0 = Time('2028-01-01T00:00:00', scale="tcb")
     dt = TimeDelta(60.0 * u.second)
-    t1 = Time('2028-01-01T00:20:00')
+    t1 = Time('2028-01-01T00:20:00', scale="tcb")
     orbit = Orbit(t0)
     print(orbit.next_observable_time(t0, dt))
     print(orbit.is_observable(t1, SkyCoord(l=0.0 * u.deg, b=0.0 * u.deg,
