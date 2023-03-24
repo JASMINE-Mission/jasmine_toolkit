@@ -4,10 +4,10 @@ import yaml
 import codecs
 import numpy as np
 
-# TODO 規格の切り返したい場合は、このクラスから切り離した方が良いです
-# 規格の切り替えはこの辺で行ってます
-# see https://github.com/astropy/astropy/blob/main/astropy/constants/config.py
 class JasmineConstant(Constant):
+    # TODO 規格の切り返したい場合は、このクラスから切り離した方が良いです
+    # 規格の切り替えはこの辺で行ってます
+    # see https://github.com/astropy/astropy/blob/main/astropy/constants/config.py
     default_reference = "JASMINE"
     _registry = {}
     _has_incompatible_units = set()
@@ -36,7 +36,8 @@ class Parameters2:
             return
         self.__is_dirty = False
         self.__constants = {}
-        filename = pkg_resources.resource_filename('jasmine_toolkit', 'utils/constants/constants.yaml')
+        filename = pkg_resources.resource_filename(
+            'jasmine_toolkit', 'utils/constants/constants.yaml')
         self.__load_file(filename, True)
         # print(self.__constants)
         self.__is_dirty = True
@@ -83,7 +84,9 @@ class Parameters2:
                     v = self._translate_value(name, val)
                     self.__constants[name] = v
                 else:
-                    raise AttributeError(f"'{__class__}' object has no attribute '{name}'")
+                    cls_name = __class__.__name__
+                    raise AttributeError(
+                        f"'{cls_name}' object has no attribute '{name}'")
 
     def __check_dirty(self, check):
         if self.__is_dirty == check:
@@ -111,8 +114,9 @@ class Parameters2:
         except ValueError:
             pass
         try:
+            # print(val)
             v = eval(val)
-            # print(f'{val} -> {v}')
+            # print(v)
             # print(type(v))
             return v
         except BaseException as e:

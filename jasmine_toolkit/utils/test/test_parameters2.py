@@ -4,20 +4,12 @@ import pkg_resources
 
 
 
-#def test_dummy():
-#    filename = pkg_resources.resource_filename('jasmine_toolkit', 'utils/constants/constants.yaml')
-#    print(filename)
-#    print(type(filename))
-#    print(eval("__import__('math').radians(-1.4)"))
-#    with open(filename) as file:
-#        obj = yaml.safe_load(file)
-#        print(obj)
-
 def test_singleton():
     p1 = Parameters2()
     assert p1 is not None
     p2 = Parameters2()
     assert p1 == p2
+
 
 def test_update_from_file():
     p = Parameters2()
@@ -27,15 +19,18 @@ def test_update_from_file():
     p.ready()
     assert p.maneuver_time.value == 12345
 
+
 def test_update_file_in_not_exists_data():
     p = Parameters2()
     __turn_dirty()
-    filename = pkg_resources.resource_filename('jasmine_toolkit', 'utils/test/constants_not_exists.yaml')
+    filename = pkg_resources.resource_filename(
+        'jasmine_toolkit', 'utils/test/constants_not_exists.yaml')
     try:
         p.apply(filename)
         assert False, 'no guard'
     except AttributeError as e:
         print(e)
+
 
 def test_dirty_mode():
     p = Parameters2()
@@ -48,6 +43,7 @@ def test_dirty_mode():
     p.EARTH_MASS = 456
     p.ready()
     assert 456 == p.EARTH_MASS
+
 
 def test_clean_mode():
     try:
@@ -68,10 +64,12 @@ def test_extract_description():
     assert 'hoge' == px._extract_description(d1)
     assert '' == px._extract_description({})
 
+
 def test_extract_unit():
     d1 = {'unit':'kg'}
     assert 'kg' == px._extract_unit(d1)
     assert '' == px._extract_unit({})
+
 
 def test_extract_value():
     p = Parameters2()
@@ -83,9 +81,10 @@ def test_extract_value():
     assert type(p._extract_value({'value':False})) is bool
     assert type(p._extract_value({'value':"__import__('math').radians(-1.4)"})) is float
     assert type(p._extract_value({'value':"__impo__('math').radians(-1.4)"})) is str
-#    complex_statement = "__import__('jasmine_toolkit.datamodel.efficiency').datamodel.efficiency.Efficiency.from_json(__import__('pkg_resources').resource_filename('jasmine_toolkit', 'data/qe/qe170.json'))"
-#    print(type(px._extract_value({'value': complex_statement})))
-#    print(px._extract_value({'value': complex_statement}))
+    # complex_statement = "__import__('jasmine_toolkit.datamodel.efficiency').datamodel.efficiency.Efficiency.from_json(__import__('pkg_resources').resource_filename('jasmine_toolkit', 'data/qe/qe170.json'))"
+    # print(type(px._extract_value({'value': complex_statement})))
+    # print(px._extract_value({'value': complex_statement}))
+
 
 def test_specificated_property():
     p = Parameters2()
