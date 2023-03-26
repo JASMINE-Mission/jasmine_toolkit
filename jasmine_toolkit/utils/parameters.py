@@ -82,11 +82,11 @@ class Parameters:
         self.__maneuver_time = 115  # second
         self.__large_maneuver_time = 220  # second
         self.__full_well_electron = 100000
-# TODO: Definition of magnitude should be contains colour
+        # TODO: Definition of magnitude should be contains colour
         self.__saturation_magnitude = 10.0
         self.__standard_magnitude = 12.5
         self.__faint_end_magnitude = 14.5
-# TODO: check whether attitude control error depends on exposure time or not.
+        # TODO: check whether attitude control error depends on exposure time or not.
         self.__attitude_control_error_mas = 300  # mas / 12.5 seconds
         self.__long_wavelength_limit = 1.6e-6  # meter
         self.__short_wavelength_limit = 1.0e-6  # meter
@@ -96,7 +96,8 @@ class Parameters:
         self.__num_detector_x = 2
         self.__num_detector_y = 2
         self.__detector_separation_x = 0.02282  # meter old value is 0.02196
-        self.__detector_separation_y = 0.02282  # meter the value is fixed by Y.Y. at Feb. 1st
+        self.__detector_separation_y = 0.02282  # meter the value is fixed by
+        # Y.Y. at Feb. 1st
         self.__orbital_altitude = 6.0E5  # meter
         self.__spider_type = ''
         self.__spider_thickness = 5e-3  # meter
@@ -111,18 +112,22 @@ class Parameters:
         self.__n_ref_pix_top = 8
         self.__n_ref_pix_bottom = 8
         self.__exposure_time = 12.5  # second(s)
-        self.__ltan = 6  # 6h00m00s, ltan is abbreviation of local time of ascending node
-# TODO: check it should be const or variable?
+        self.__ltan = 6  # 6h00m00s, ltan is abbreviation of local time of
+        # ascending node
+        # TODO: check it should be const or variable?
         self.__cell_pix = 13
         self.__use_M_flag = False
         self.__reference_wavelength = 1.4e-6
-        spec_list = pkg_resources.resource_filename('jasmine_toolkit', 'data/teleff.json')
+        spec_list = pkg_resources.resource_filename('jasmine_toolkit',
+                                                    'data/teleff.json')
         self.__optics_efficiency = Efficiency.from_json(spec_list)
         # detector temperature
-        spec_list = pkg_resources.resource_filename('jasmine_toolkit', 'data/qe/qe170.json')
+        spec_list = pkg_resources.resource_filename('jasmine_toolkit',
+                                                    "data/qe/qe170.json")
         self.__quantum_efficiency = Efficiency.from_json(spec_list)
         # filter cut on wavelength ???
-        f_name = "data/filter/filter" + str(int(self.__short_wavelength_limit * 1e8)).zfill(3) + ".json"
+        f_name = "data/filter/filter" + str(
+            int(self.__short_wavelength_limit * 1e8)).zfill(3) + ".json"
         spec_list = pkg_resources.resource_filename('jasmine_toolkit', f_name)
         self.__filter_efficiency = Efficiency.from_json(spec_list)
         self.__earth_avoiding_angle = math.radians(25.7)
@@ -211,7 +216,7 @@ class Parameters:
     def long_wavelength_limit(self):
         return self.__long_wavelength_limit
 
-# TODO: long wavelength limit should be set from quantum_efficiency
+    # TODO: long wavelength limit should be set from quantum_efficiency
     def set_long_wavelength_limit(self, value):
         assert self.__short_wavelength_limit < value
         self.__long_wavelength_limit = value
@@ -222,25 +227,29 @@ class Parameters:
 
     def set_short_wavelength_limit(self, value):
         f_name = "data/filter/filter" + str(int(value * 1e8)).zfill(3) + ".json"
-        spec_list = pkg_resources.resource_filename('telescope_baseline', f_name)
+        spec_list = pkg_resources.resource_filename('telescope_baseline',
+                                                    f_name)
         self.__filter_efficiency = Efficiency.from_json(spec_list)
         self.__short_wavelength_limit = value
 
     @property
     def average_filter_efficiency(self):
-        wave_ref = np.linspace(self.__short_wavelength_limit * 1e6, self.__long_wavelength_limit * 1e6, 1000)
+        wave_ref = np.linspace(self.__short_wavelength_limit * 1e6,
+                               self.__long_wavelength_limit * 1e6, 1000)
         weight = np.ones(1000)
         return self.__filter_efficiency.weighted_mean(wave_ref, weight)
 
     @property
     def average_telescope_throughput(self):
-        wave_ref = np.linspace(self.__short_wavelength_limit * 1e6, self.__long_wavelength_limit * 1e6, 1000)
+        wave_ref = np.linspace(self.__short_wavelength_limit * 1e6,
+                               self.__long_wavelength_limit * 1e6, 1000)
         weight = np.ones(1000)
         return self.__optics_efficiency.weighted_mean(wave_ref, weight)
 
     @property
     def average_quantum_efficiency(self):
-        wave_ref = np.linspace(self.__short_wavelength_limit * 1e6, self.__long_wavelength_limit * 1e6, 1000)
+        wave_ref = np.linspace(self.__short_wavelength_limit * 1e6,
+                               self.__long_wavelength_limit * 1e6, 1000)
         weight = np.ones(1000)
         return self.__quantum_efficiency.weighted_mean(wave_ref, weight)
 
@@ -283,7 +292,7 @@ class Parameters:
     def set_dark_current(self, value):
         self.__dark_current = value
 
-# TODO: The unit of background photon flux should be independent of diameter and band
+    # TODO: The unit of background photon flux should be independent of diameter and band
     @property
     def background_photon_flux(self):
         return self.__background_photon_flux
@@ -330,7 +339,9 @@ class Parameters:
 
     @property
     def orbital_period(self):
-        return 2 * math.pi * math.pow(self.__EQUATORIAL_EARTH_RADIUS + self.orbital_altitude, 1.5) / math.sqrt(
+        return 2 * math.pi * math.pow(
+            self.__EQUATORIAL_EARTH_RADIUS + self.orbital_altitude,
+            1.5) / math.sqrt(
             self.__CONST_OF_GRAVITATION * self.__EARTH_MASS)
 
     @property
@@ -339,8 +350,11 @@ class Parameters:
 
     @property
     def earth_c1(self):
-        return -3 * math.pi * self.__EARTH_J2 * math.pow(self.__EQUATORIAL_EARTH_RADIUS / 1000, 2) \
-               * self.__ONE_YEAR * math.sqrt(self.earth_mu) / 2 / math.pi * 180 / math.pi / math.pow(10000, 1.5)
+        return -3 * math.pi * self.__EARTH_J2 * math.pow(
+            self.__EQUATORIAL_EARTH_RADIUS / 1000, 2) \
+            * self.__ONE_YEAR * math.sqrt(
+                self.earth_mu) / 2 / math.pi * 180 / math.pi / math.pow(10000,
+                                                                        1.5)
 
     @property
     def earth_c2(self):
@@ -352,9 +366,12 @@ class Parameters:
 
     @property
     def inclination(self):
-        return math.acos(self.earth_c2 * math.pow((self.__EQUATORIAL_EARTH_RADIUS + self.__orbital_altitude) /
-                                                  1000, 3.5)
-                         * math.pow(1 - self.orbital_eccentricity * self.orbital_eccentricity, 2) * math.sqrt(1000))
+        return math.acos(self.earth_c2 * math.pow(
+            (self.__EQUATORIAL_EARTH_RADIUS + self.__orbital_altitude) /
+            1000, 3.5)
+                         * math.pow(
+            1 - self.orbital_eccentricity * self.orbital_eccentricity,
+            2) * math.sqrt(1000))
 
     @property
     def spider_type(self):
