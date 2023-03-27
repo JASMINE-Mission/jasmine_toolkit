@@ -47,5 +47,5 @@ class Attitude:
         #  parameter
         # return position angle from satellite north pole to sun
         return astropy.coordinates.position_angle(ra_np * u.rad, dec_np * u.rad,
-                                                  sun.ra, sun.dec).to('deg') \
+                                                  sun.ra, sun.dec).to('rad') \
             .value

@@ -1,12 +1,10 @@
 import math
 
-import astropy
 import numpy as np
 from astropy.coordinates import SkyCoord, Angle
 import astropy.units as u
 from astropy.time import Time
 from numpy import ndarray
-
 from jasmine_toolkit.utils.parameters import Parameters
 
 
@@ -15,6 +13,7 @@ class PointingPlan:
         self.__grid = None
         self.__pointing: SkyCoord = None
         self.__gap_on_the_sky = 0
+        self.__grid_coord = None
         self._generate_grid()
 
     def add_entry(self, entry: np.ndarray) -> np.ndarray:
@@ -46,21 +45,38 @@ class PointingPlan:
         b_max = p.maximum_b
         n_l = int((l_max - l_min) / self.__gap_on_the_sky) + 1
         n_b = int((b_max - b_min) / self.__gap_on_the_sky) + 1
+        self.__grid_coord = np.ndarray((n_l, n_b, 2))
+        for i in range(n_l):
+            for j in range(n_b):
+                ll = l_min + self.__gap_on_the_sky * i
+                b = b_min + self.__gap_on_the_sky * j
+                c = SkyCoord(l=ll * u.rad, b=b * u.rad, frame='galactic')
+                ra = c.icrs.ra.rad
+                dec = c.icrs.dec.rad
+                self.__grid_coord[i][j][0] = ra
+                self.__grid_coord[i][j][1] = dec
         self.__grid = [[[] for i in range(n_b)] for j in range(n_l)]
 
     def find_next_pointing(self) -> SkyCoord:
+        # TODO
+        #   The code is implemented that always the algorithm is used for
+        #   searching next FOV. It should be changed that successive two FOV
+        #   should overlap half of its FOV.
         l0 = -1
         b0 = -1
         min_count = 100000
         n_l = len(self.__grid)
         n_b = len(self.__grid[0])
+        # tmp = np.ndaarray((n_l, n_b))
         for ll in range(n_l):
             for b in range(n_b):
+                # tmp[ll][j] = len(self.__grid[ll][b])
                 if len(self.__grid[ll][b]) < min_count:
                     min_count = len(self.__grid[ll][b])
                     l0 = ll
                     b0 = b
         p = Parameters.get_instance()
+        print(str(l0) + ", " + str(b0))
         coord_l = p.minimum_l + l0 * self.__gap_on_the_sky
         coord_b = p.minimum_b + b0 * self.__gap_on_the_sky
         self.__pointing = SkyCoord(l=coord_l * u.rad, b=coord_b * u.rad,
@@ -71,12 +87,11 @@ class PointingPlan:
         polygon = self._get_field_of_view(self.__pointing, pa)
         n_l = len(self.__grid)
         n_b = len(self.__grid[0])
-        target = np.array(
-            [self.__pointing.icrs.ra.rad, self.__pointing.icrs.dec.rad])
         for ll in range(n_l):
             for b in range(n_b):
-                if self.included_p(polygon, target):
+                if self.included_p(polygon, self.__grid_coord[ll][b]):
                     self.__grid[ll][b].append([t, num_exposure])
+        pass
 
     @staticmethod
     def included_p(polygon: ndarray, target: ndarray):
@@ -92,7 +107,12 @@ class PointingPlan:
             a1 = polygon[j] - target
             outer = np.cross(a0, a1) / (
                     np.linalg.norm(a0, ord=2) * np.linalg.norm(a1, ord=2))
-            win = win + math.asin(outer[2])
+            arg = outer[2]
+            if arg > 1.0:
+                arg = 1.0
+            elif arg < -1.0:
+                arg = -1.0
+            win = win + math.asin(arg)
         if 0.1 > win > -0.1:
             return False
         else:
@@ -101,27 +121,28 @@ class PointingPlan:
     def _get_field_of_view(self, pointing, pa):
         p: Parameters = Parameters.get_instance()
         detector_x = p.detector_format_x * (
-            p.num_detector_x - 1) * p.pixel_size + p.detector_separation_x
+                p.num_detector_x - 1) * p.pixel_size + p.detector_separation_x
         detector_y = p.detector_format_y * (
-            p.num_detector_y - 1) * p.pixel_size + p.detector_separation_y
+                p.num_detector_y - 1) * p.pixel_size + p.detector_separation_y
         fov_x = detector_x / p.effective_focal_length
         fov_y = detector_y / p.effective_focal_length
         ne = np.array([fov_x / 2, fov_y / 2])
         se = np.array([fov_x / 2, -fov_y / 2])
         sw = np.array([-fov_x / 2, -fov_y / 2])
         nw = np.array([-fov_x / 2, fov_y / 2])
-        rot = np.array([[math.cos(pa), math.sin(pa)], [-math.sin(pa), math.cos(pa)]])
-        pa = np.array([pointing.icrs.ra.rad, pointing.icrs.dec.rad])
-        ne = np.dot(rot, ne) + pa
-        se = np.dot(rot, se) + pa
-        sw = np.dot(rot, sw) + pa
-        nw = np.dot(rot, nw) + pa
+        rot = np.array(
+            [[math.cos(pa), math.sin(pa)], [-math.sin(pa), math.cos(pa)]])
+        po = np.array([pointing.icrs.ra.rad, pointing.icrs.dec.rad])
+        ne = np.dot(rot, ne) + po
+        se = np.dot(rot, se) + po
+        sw = np.dot(rot, sw) + po
+        nw = np.dot(rot, nw) + po
         return np.array([ne, se, sw, nw])
 
 
 if __name__ == '__main__':
     p = PointingPlan()
-    pointing = SkyCoord(ra=1.0 * u.deg, dec=0.0 * u.deg)
-    polygon = p._get_field_of_view(pointing, math.pi / 4)
-    print(polygon)
-    print(type(polygon))
+    # pointing = SkyCoord(ra=1.0 * u.deg, dec=0.0 * u.deg)
+    # polygon = p._get_field_of_view(pointing, math.pi / 4)
+    # p.find_next_pointing()
+    pass
