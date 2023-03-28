@@ -25,6 +25,7 @@ class PointingPlanFactory:
         self.__end: Time = start + duration
         self.__satellite: Satellite = None
         p: Parameters = Parameters.get_instance()
+        self.__mode = enum
         self.__time_per_a_fov = (p.orbital_period * 0.5 + p.maneuver_time) \
             / enum.value
         self.__num_exposure_per_field = int(
@@ -40,11 +41,20 @@ class PointingPlanFactory:
         self.__satellite = satellite
         pointing_plan: PointingPlan = PointingPlan()
         t = self.__start
+        fov_count = -2
         while t < self.__end:
-            pointing = pointing_plan.find_next_pointing()
+            flag = 0
+            fov_count = fov_count + 1
+            if fov_count < 0:
+                flag = -1
+            elif fov_count == self.__mode.value:
+                fov_count = 0
+            pointing = pointing_plan.find_next_pointing() # need flag
             t = self._generate_observation_time(t)
             pa = self._get_position_angle(pointing, t)
-            pointing_plan.make_observation(t, pa, self.__num_exposure_per_field)
+            # TODO should implement
+            # n = self._number_of_exposure() max value is __num_exposure_per_field
+            pointing_plan.make_observation(t, pa, self.__num_exposure_per_field) # last arg should be n
             t = t + TimeDelta(self.__time_per_a_fov * u.second)
             print(t)
         return pointing_plan
