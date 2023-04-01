@@ -3,12 +3,13 @@ import pkg_resources
 import yaml
 import codecs
 import numpy as np
+import importlib
 
-class JasmineConstant(Constant):
+class _TemporaryConstant(Constant):
     # TODO 規格の切り返したい場合は、このクラスから切り離した方が良いです
     # 規格の切り替えはこの辺で行ってます
     # see https://github.com/astropy/astropy/blob/main/astropy/constants/config.py
-    default_reference = "JASMINE"
+    default_reference = "Temporary Constant"
     _registry = {}
     _has_incompatible_units = set()
 
@@ -34,11 +35,17 @@ class Parameters2:
     def __init__(self):
         if Parameters2.__instance is not None:
             return
-        self.__is_dirty = False
+        self.__is_dirty = False # TODO ファイル読み込みしないならここでTrueにして良い
         self.__constants = {}
-        filename = pkg_resources.resource_filename(
-            'jasmine_toolkit', 'utils/constants/constants.yaml')
-        self.__load_file(filename, True)
+        # TODO 定数の規格を切り替えるならimportlibを一工夫する
+        const = importlib.import_module("jasmine_toolkit.utils.constants.jasmine_constant")
+        for name in dir(const):
+            if name.startswith("__"):
+                continue
+            self.__constants[name] = getattr(const, name)
+        # filename = pkg_resources.resource_filename(
+        #     'jasmine_toolkit', 'utils/constants/constants.yaml')
+        # self.__load_file(filename, True)
         # print(self.__constants)
         self.__is_dirty = True
         Parameters2.__instance = self
@@ -102,7 +109,7 @@ class Parameters2:
         value = self._extract_value(dic)
         if type(value) == float or type(value) == int:
             # TODO uncertainty support.
-            return JasmineConstant(key, description, value, unit, 0.0)
+            return _TemporaryConstant(key, description, value, unit, 0.0)
         return value
 
     def _extract_value(self, dic):
