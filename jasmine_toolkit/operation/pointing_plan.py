@@ -5,6 +5,8 @@ from astropy.coordinates import SkyCoord, Angle
 import astropy.units as u
 from astropy.time import Time
 from numpy import ndarray
+
+from jasmine_toolkit.operation.fov_change_mode import EnumFovChangeMode
 from jasmine_toolkit.utils.parameters import Parameters
 
 
@@ -12,7 +14,6 @@ class PointingPlan:
     def __init__(self):
         self.__grid = None
         self.__pointing: SkyCoord = None
-        self.__gap_on_the_sky = 0
         self.__grid_coord = None
         p: Parameters = Parameters.get_instance()
         detector_x = p.detector_format_x * (
@@ -21,6 +22,9 @@ class PointingPlan:
                 p.num_detector_y - 1) * p.pixel_size + p.detector_separation_y
         self.__fov_x = detector_x / p.effective_focal_length
         self.__fov_y = detector_y / p.effective_focal_length
+        detector_gap = p.detector_separation_x \
+                       - p.detector_format_x * p.pixel_size
+        self.__gap_on_the_sky = detector_gap / p.effective_focal_length
         self._generate_grid()
 
     def add_entry(self, entry: np.ndarray) -> np.ndarray:
@@ -43,9 +47,6 @@ class PointingPlan:
 
         """
         p = Parameters.get_instance()
-        detector_gap = p.detector_separation_x \
-                       - p.detector_format_x * p.pixel_size
-        self.__gap_on_the_sky = detector_gap / p.effective_focal_length
         l_min = p.minimum_l
         l_max = p.maximum_l
         b_min = p.minimum_b
@@ -74,7 +75,6 @@ class PointingPlan:
         min_count = 100000
         n_l = len(self.__grid)
         n_b = len(self.__grid[0])
-        # tmp = np.ndaarray((n_l, n_b))
         for ll in range(n_l):
             for b in range(n_b):
                 # tmp[ll][j] = len(self.__grid[ll][b])
@@ -83,7 +83,6 @@ class PointingPlan:
                     l0 = ll
                     b0 = b
         p = Parameters.get_instance()
-        print(str(l0) + ", " + str(b0))
         coord_l = p.minimum_l + l0 * self.__gap_on_the_sky
         coord_b = p.minimum_b + b0 * self.__gap_on_the_sky
         self.__pointing = SkyCoord(l=coord_l * u.rad, b=coord_b * u.rad,
@@ -109,6 +108,23 @@ class PointingPlan:
             return SkyCoord(l=0 * u.rad, b=0 * u.rad, frame="galactic")
         return SkyCoord(ra=self.__grid_coord[ll][b][0] * u.rad,
                         dec=self.__grid_coord[ll][b][1] * u.rad, frame="icrs")
+
+    def pointing_by_small_maneuver(self, pointing: SkyCoord, mode: EnumFovChangeMode):
+        ll, b = self._coord_to_grid(pointing)
+        if mode == EnumFovChangeMode.VERTICAL:
+            b = b + int(self.__fov_y * 0.5 / self.__gap_on_the_sky)
+        elif mode == EnumFovChangeMode.HORIZONTAL:
+            ll = ll + int(self.__fov_x * 0.5 / self.__gap_on_the_sky)
+        if b < 0:
+            b = 0
+        if b >= len(self.__grid[0]):
+            b = len(self.__grid[0]) - 1
+        if ll < 0:
+            ll = 0
+        if ll >= len(self.__grid):
+            ll = len(self.__grid) - 1
+        return SkyCoord(ra=self.__grid_coord[ll][b][0] * u.rad,
+                        dec=self.__grid_coord[ll][b][1] * u.rad, frame='icrs')
 
     def make_observation(self, t: Time, pa: Angle, num_exposure: int):
         polygon = self._get_field_of_view(self.__pointing, pa)

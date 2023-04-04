@@ -71,15 +71,10 @@ class PointingPlanFactory:
                 t = satellite.next_observable_time(t, dt)
         pointing = pointing_plan.find_next_pointing()
         for os in observation_sequence:
-            if os[2] == EnumFovChangeMode.VERTICAL:
-                # vertical small maneuver
-                pass
-            elif os[2] == EnumFovChangeMode.HORIZONTAL:
-                # horizontal small maneuver
-                pass
-            else:
+            if os[2] == EnumFovChangeMode.NEW:
                 pointing = pointing_plan.find_next_pointing()
-                pass
+            else:
+                pointing = pointing_plan.pointing_by_small_maneuver(pointing, os[2])
             pa = satellite.get_position_angle(pointing, os[0])
             pointing_plan.make_observation(os[0], pa, os[1])
         return pointing_plan
