@@ -14,6 +14,13 @@ class PointingPlan:
         self.__pointing: SkyCoord = None
         self.__gap_on_the_sky = 0
         self.__grid_coord = None
+        p: Parameters = Parameters.get_instance()
+        detector_x = p.detector_format_x * (
+                p.num_detector_x - 1) * p.pixel_size + p.detector_separation_x
+        detector_y = p.detector_format_y * (
+                p.num_detector_y - 1) * p.pixel_size + p.detector_separation_y
+        self.__fov_x = detector_x / p.effective_focal_length
+        self.__fov_y = detector_y / p.effective_focal_length
         self._generate_grid()
 
     def add_entry(self, entry: np.ndarray) -> np.ndarray:
@@ -83,6 +90,26 @@ class PointingPlan:
                                    frame='galactic')
         return self.__pointing
 
+    def _coord_to_grid(self, coord: SkyCoord):
+        coord_l = coord.galactic.l.rad
+        coord_b = coord.galactic.b.rad
+        if coord_l > math.pi:
+            coord_l = coord_l - math.pi * 2
+        p: Parameters = Parameters.get_instance()
+        ll = (coord_l - p.minimum_l) / self.__gap_on_the_sky
+        b = (coord_b - p.minimum_b) / self.__gap_on_the_sky
+        if ll < 0 or ll >= len(self.__grid_coord)\
+                or b < 0 or b >= len(self.__grid_coord[0]):
+            return 0, 0
+        return int(ll + 0.5), int(b + 0.5)
+
+    def _grid_to_coord(self, ll: int, b:int):
+        if ll < 0 or ll >= len(self.__grid_coord)\
+                or b < 0 or b >= len(self.__grid_coord[0]):
+            return SkyCoord(l=0 * u.rad, b=0 * u.rad, frame="galactic")
+        return SkyCoord(ra=self.__grid_coord[ll][b][0] * u.rad,
+                        dec=self.__grid_coord[ll][b][1] * u.rad, frame="icrs")
+
     def make_observation(self, t: Time, pa: Angle, num_exposure: int):
         polygon = self._get_field_of_view(self.__pointing, pa)
         n_l = len(self.__grid)
@@ -91,7 +118,6 @@ class PointingPlan:
             for b in range(n_b):
                 if self.included_p(polygon, self.__grid_coord[ll][b]):
                     self.__grid[ll][b].append([t, num_exposure])
-        pass
 
     @staticmethod
     def included_p(polygon: ndarray, target: ndarray):
@@ -119,17 +145,10 @@ class PointingPlan:
             return True
 
     def _get_field_of_view(self, pointing, pa):
-        p: Parameters = Parameters.get_instance()
-        detector_x = p.detector_format_x * (
-                p.num_detector_x - 1) * p.pixel_size + p.detector_separation_x
-        detector_y = p.detector_format_y * (
-                p.num_detector_y - 1) * p.pixel_size + p.detector_separation_y
-        fov_x = detector_x / p.effective_focal_length
-        fov_y = detector_y / p.effective_focal_length
-        ne = np.array([fov_x / 2, fov_y / 2])
-        se = np.array([fov_x / 2, -fov_y / 2])
-        sw = np.array([-fov_x / 2, -fov_y / 2])
-        nw = np.array([-fov_x / 2, fov_y / 2])
+        ne = np.array([self.__fov_x / 2, self.__fov_y / 2])
+        se = np.array([self.__fov_x / 2, -self.__fov_y / 2])
+        sw = np.array([-self.__fov_x / 2, -self.__fov_y / 2])
+        nw = np.array([-self.__fov_x / 2, self.__fov_y / 2])
         rot = np.array(
             [[math.cos(pa), math.sin(pa)], [-math.sin(pa), math.cos(pa)]])
         po = np.array([pointing.icrs.ra.rad, pointing.icrs.dec.rad])
@@ -141,7 +160,12 @@ class PointingPlan:
 
 
 if __name__ == '__main__':
-    p = PointingPlan()
+    pp = PointingPlan()
+    coord = pp._grid_to_coord(100, 100)
+    print(coord.galactic)
+    coord = pp._grid_to_coord(10, 10)
+    print(coord.galactic)
+    print(pp._coord_to_grid(coord))
     # pointing = SkyCoord(ra=1.0 * u.deg, dec=0.0 * u.deg)
     # polygon = p._get_field_of_view(pointing, math.pi / 4)
     # p.find_next_pointing()

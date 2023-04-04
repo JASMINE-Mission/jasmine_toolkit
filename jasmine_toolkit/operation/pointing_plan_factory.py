@@ -2,6 +2,7 @@ import astropy.units as u
 from astropy.coordinates import SkyCoord
 from astropy.time import Time, TimeDelta
 
+from jasmine_toolkit.operation.fov_change_mode import EnumFovChangeMode
 from jasmine_toolkit.operation.pointing_freedom import EnumPointingFreedom
 from jasmine_toolkit.operation.pointing_mode import EnumPointingMode
 from jasmine_toolkit.operation.pointing_plan import PointingPlan
@@ -45,40 +46,42 @@ class PointingPlanFactory:
         t = self.__start
         observation_sequence = []
         fov_count = 0
-        # if fov_count is even, observing after small maneuver
-        #   fov_count = 0 means vertical, fov_count = 2 means horizontal
-        #   shift of FOV
-        # if fov_count is odd, observing after large maneuver
         while t < self.__end:
-            n = satellite.observation_count(t, dt, self.__max_exposure_per_field)
-            # print(str(n) + ", " + str(t) + ", " + str(fov_count))
-            observation_sequence.append([t, n, fov_count])
-            t = t + dt * n
+            n = satellite.observation_count(t, dt,
+                                            self.__max_exposure_per_field)
+            td = dt * n
+            if fov_count == 1:
+                td = td + TimeDelta(p.large_maneuver_time * u.second)
+                fov_mode = EnumFovChangeMode.VERTICAL
+            elif fov_count == 3:
+                td = td + TimeDelta(p.large_maneuver_time * u.second)
+                fov_mode = EnumFovChangeMode.HORIZONTAL
+            else:
+                td = td + TimeDelta(p.maneuver_time * u.second)
+                fov_mode = EnumFovChangeMode.NEW
+            if not n == 0:
+                observation_sequence.append([t + dt * n / 2, n, fov_mode])
             fov_count = fov_count + 1
             if fov_count == 4:
                 fov_count = 0
-            if fov_count == 1 or fov_count == 3:
-                t = t + TimeDelta(p.large_maneuver_time * u.second)
-            else:
-                t = t + TimeDelta(p.maneuver_time * u.second)
+            t = t + td
             if not n == self.__max_exposure_per_field:
                 fov_count = 0
+                fov_mode = EnumFovChangeMode.NEW
                 t = satellite.next_observable_time(t, dt)
+        pointing = pointing_plan.find_next_pointing()
         for os in observation_sequence:
-            print(os[2])
-#            if os[2] == 0:
-            pass
-        while t < self.__end:
-            pointing: SkyCoord = pointing_plan.find_next_pointing()
-            # t = self._find_next_observation_time(t)
-            t = satellite.next_observable_time(t, dt)
-            # pa = self._get_position_angle(pointing, t)
-            pa = satellite.get_position_angle(pointing, t)
-            # TODO should implement
-            # n = self._number_of_exposure() max value is __num_exposure_per_field
-            pointing_plan.make_observation(t, pa, self.__max_exposure_per_field) # last arg should be n
-            t = t + TimeDelta(self.__time_per_a_fov * u.second)
-            print(t)
+            if os[2] == EnumFovChangeMode.VERTICAL:
+                # vertical small maneuver
+                pass
+            elif os[2] == EnumFovChangeMode.HORIZONTAL:
+                # horizontal small maneuver
+                pass
+            else:
+                pointing = pointing_plan.find_next_pointing()
+                pass
+            pa = satellite.get_position_angle(pointing, os[0])
+            pointing_plan.make_observation(os[0], pa, os[1])
         return pointing_plan
 
 
