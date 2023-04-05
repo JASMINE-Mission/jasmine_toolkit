@@ -23,7 +23,7 @@ class PointingPlan:
         self.__fov_x = detector_x / p.effective_focal_length
         self.__fov_y = detector_y / p.effective_focal_length
         detector_gap = p.detector_separation_x \
-                       - p.detector_format_x * p.pixel_size
+            - p.detector_format_x * p.pixel_size
         self.__gap_on_the_sky = detector_gap / p.effective_focal_length
         self._generate_grid()
 
@@ -102,14 +102,15 @@ class PointingPlan:
             return 0, 0
         return int(ll + 0.5), int(b + 0.5)
 
-    def _grid_to_coord(self, ll: int, b:int):
+    def _grid_to_coord(self, ll: int, b: int):
         if ll < 0 or ll >= len(self.__grid_coord)\
                 or b < 0 or b >= len(self.__grid_coord[0]):
             return SkyCoord(l=0 * u.rad, b=0 * u.rad, frame="galactic")
         return SkyCoord(ra=self.__grid_coord[ll][b][0] * u.rad,
                         dec=self.__grid_coord[ll][b][1] * u.rad, frame="icrs")
 
-    def pointing_by_small_maneuver(self, pointing: SkyCoord, mode: EnumFovChangeMode):
+    def pointing_by_small_maneuver(self, pointing: SkyCoord,
+                                   mode: EnumFovChangeMode):
         ll, b = self._coord_to_grid(pointing)
         if mode == EnumFovChangeMode.VERTICAL:
             b = b + int(self.__fov_y * 0.5 / self.__gap_on_the_sky)
@@ -173,16 +174,3 @@ class PointingPlan:
         sw = np.dot(rot, sw) + po
         nw = np.dot(rot, nw) + po
         return np.array([ne, se, sw, nw])
-
-
-if __name__ == '__main__':
-    pp = PointingPlan()
-    coord = pp._grid_to_coord(100, 100)
-    print(coord.galactic)
-    coord = pp._grid_to_coord(10, 10)
-    print(coord.galactic)
-    print(pp._coord_to_grid(coord))
-    # pointing = SkyCoord(ra=1.0 * u.deg, dec=0.0 * u.deg)
-    # polygon = p._get_field_of_view(pointing, math.pi / 4)
-    # p.find_next_pointing()
-    pass

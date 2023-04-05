@@ -4,7 +4,6 @@ import astropy
 import astropy.units as u
 from astropy.coordinates import get_sun, SkyCoord
 from astropy.time import Time
-from jasmine_toolkit.utils.parameters import Parameters
 from jasmine_toolkit.operation.pointing_freedom import EnumPointingFreedom
 
 
