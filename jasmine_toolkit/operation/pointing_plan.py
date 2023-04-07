@@ -1,4 +1,5 @@
 import math
+from itertools import product
 
 import numpy as np
 from astropy.coordinates import SkyCoord, Angle
@@ -23,7 +24,7 @@ class PointingPlan:
         self.__fov_x = detector_x / p.effective_focal_length
         self.__fov_y = detector_y / p.effective_focal_length
         detector_gap = p.detector_separation_x \
-            - p.detector_format_x * p.pixel_size
+                       - p.detector_format_x * p.pixel_size
         self.__gap_on_the_sky = detector_gap / p.effective_focal_length
         self._generate_grid()
 
@@ -75,13 +76,11 @@ class PointingPlan:
         min_count = 100000
         n_l = len(self.__grid)
         n_b = len(self.__grid[0])
-        for ll in range(n_l):
-            for b in range(n_b):
-                # tmp[ll][j] = len(self.__grid[ll][b])
-                if len(self.__grid[ll][b]) < min_count:
-                    min_count = len(self.__grid[ll][b])
-                    l0 = ll
-                    b0 = b
+        for ll, b in product(range(n_l), range(n_b)):
+            if len(self.__grid[ll][b]) < min_count:
+                min_count = len(self.__grid[ll][b])
+                l0 = ll
+                b0 = b
         p = Parameters.get_instance()
         coord_l = p.minimum_l + l0 * self.__gap_on_the_sky
         coord_b = p.minimum_b + b0 * self.__gap_on_the_sky
@@ -97,13 +96,13 @@ class PointingPlan:
         p: Parameters = Parameters.get_instance()
         ll = (coord_l - p.minimum_l) / self.__gap_on_the_sky
         b = (coord_b - p.minimum_b) / self.__gap_on_the_sky
-        if ll < 0 or ll >= len(self.__grid_coord)\
+        if ll < 0 or ll >= len(self.__grid_coord) \
                 or b < 0 or b >= len(self.__grid_coord[0]):
             return 0, 0
         return int(ll + 0.5), int(b + 0.5)
 
     def _grid_to_coord(self, ll: int, b: int):
-        if ll < 0 or ll >= len(self.__grid_coord)\
+        if ll < 0 or ll >= len(self.__grid_coord) \
                 or b < 0 or b >= len(self.__grid_coord[0]):
             return SkyCoord(l=0 * u.rad, b=0 * u.rad, frame="galactic")
         return SkyCoord(ra=self.__grid_coord[ll][b][0] * u.rad,
@@ -114,16 +113,16 @@ class PointingPlan:
         ll, b = self._coord_to_grid(pointing)
         if mode == EnumFovChangeMode.VERTICAL:
             b = b + int(self.__fov_y * 0.5 / self.__gap_on_the_sky)
+            if b < 0:
+                b = 0
+            if b >= len(self.__grid[0]):
+                b = len(self.__grid[0]) - 1
         elif mode == EnumFovChangeMode.HORIZONTAL:
             ll = ll + int(self.__fov_x * 0.5 / self.__gap_on_the_sky)
-        if b < 0:
-            b = 0
-        if b >= len(self.__grid[0]):
-            b = len(self.__grid[0]) - 1
-        if ll < 0:
-            ll = 0
-        if ll >= len(self.__grid):
-            ll = len(self.__grid) - 1
+            if ll < 0:
+                ll = 0
+            if ll >= len(self.__grid):
+                ll = len(self.__grid) - 1
         return SkyCoord(ra=self.__grid_coord[ll][b][0] * u.rad,
                         dec=self.__grid_coord[ll][b][1] * u.rad, frame='icrs')
 
@@ -131,10 +130,9 @@ class PointingPlan:
         polygon = self._get_field_of_view(self.__pointing, pa)
         n_l = len(self.__grid)
         n_b = len(self.__grid[0])
-        for ll in range(n_l):
-            for b in range(n_b):
-                if self.included_p(polygon, self.__grid_coord[ll][b]):
-                    self.__grid[ll][b].append([t, num_exposure])
+        for ll, b in product(range(n_l), range(n_b)):
+            if self.included_p(polygon, self.__grid_coord[ll][b]):
+                self.__grid[ll][b].append([t, num_exposure])
 
     @staticmethod
     def included_p(polygon: ndarray, target: ndarray):

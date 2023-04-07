@@ -10,7 +10,8 @@ class Satellite:
     def __init__(self, mode: EnumPointingFreedom, initial_time: Time):
         self.__orbit = Orbit(initial_time)
         self.__attitude = Attitude(mode)
-        self.__target = SkyCoord(l=0.0 * u.deg, b=0.0 * u.deg, frame="galactic")
+        self.__target = SkyCoord(l=0.0 * u.deg, b=0.0 * u.deg,
+                                 frame="galactic")
 
     def get_position_angle(self, pointing: SkyCoord, time: Time):
         return self.__attitude.get_position_angle(pointing, time)

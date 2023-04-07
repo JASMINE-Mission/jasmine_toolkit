@@ -83,21 +83,10 @@ class Orbit:
         p_dec = pointing.icrs.dec.to('rad').value
         inner_product_of_p_and_sat = math.cos(sat_ra) * math.cos(
             p_ra) * math.cos(sat_dec) * math.cos(p_dec) \
-                                     + math.cos(sat_dec) * math.cos(
+                + math.cos(sat_dec) * math.cos(
             p_dec) * math.sin(sat_ra) * math.sin(p_ra) \
-                                     + math.sin(sat_dec) * math.sin(p_dec)
+                + math.sin(sat_dec) * math.sin(p_dec)
         if inner_product_of_p_and_sat > self.__cos_angle_max:
             return True
         else:
             return False
-
-
-if __name__ == '__main__':
-    t0 = Time('2028-01-01T00:00:00', scale="tcb")
-    dt = TimeDelta(60.0 * u.second)
-    t1 = Time('2028-01-01T00:20:00', scale="tcb")
-    orbit = Orbit(t0)
-    print(orbit.next_observable_time(t0, dt))
-    print(orbit.is_observable(t1, SkyCoord(l=0.0 * u.deg, b=0.0 * u.deg,
-                                           frame='galactic')))
-    print(orbit.next_observable_time(t1, dt))
