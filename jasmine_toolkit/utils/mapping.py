@@ -1,8 +1,10 @@
-import time
+import math
 
-from astropy.coordinates import get_sun
-from astropy.time import Time, TimeDelta
 import astropy.units as u
+import numpy as np
+from astropy.coordinates import get_sun, SkyCoord
+from astropy.time import Time, TimeDelta
+
 from jasmine_toolkit.operation.pointing_freedom import EnumPointingFreedom
 from jasmine_toolkit.operation.pointing_mode import EnumPointingMode
 from jasmine_toolkit.operation.pointing_plan import PointingPlan
@@ -27,27 +29,26 @@ class Mapping:
 
     def calc_statistics(self, tc: Time):
         # TODO  This is the program for calculate statistics of "data".
+        gal: SkyCoord = SkyCoord(l=0.0 * u.rad, b=0.0 * u.rad, frame='galactic')
+        lg = gal.barycentricmeanecliptic.lon.rad
+        bg = gal.barycentricmeanecliptic.lat.rad
+        matrix_a = []
         for i in range(len(self.__data)):
             for j in range(len(self.__data[0])):
+                matrix_a = np.ndarray((len(self.__data[i][j]) * 2, 5))
                 for k in range(len(self.__data[i][j])):
                     t = self.__data[i][j][k][0]
-                    print(str((t - tc).to('yr').value) + "," + str(get_sun(t)))
-
-
-if __name__ == '__main__':
-    m = Mapping()
-    # m.run(EnumPointingFreedom.POINTING_FIXED,
-    #       EnumPointingMode.FOUR_FOV_IN_ORBIT,
-    #       Time('2028-01-01T00:00:00', scale="tcb"),
-    #       TimeDelta(0.02 * u.d))
-    a = [[[]]]
-    t = Time('2020-01-01T00:00:00')
-    dt = TimeDelta(0.1 * u.yr)
-    for i in range(30):
-        a[0][0].append([t, 1])
-        t = t + dt
-    m._Mapping__data = a
-    print(len(a[0][0]) - 1)
-    duration = a[0][0][len(a[0][0]) - 1][0] - a[0][0][0][0]
-    tc = a[0][0][0][0] + duration * 0.5
-    m.calc_statistics(tc)
+                    t0 = (t - tc).to('yr').value
+                    sun: SkyCoord = get_sun(t)
+                    ls = sun.geocentricmeanecliptic.lon.rad
+                    matrix_a[2 * k][0] = 1
+                    matrix_a[2 * k][1] = 0
+                    matrix_a[2 * k][2] = t0
+                    matrix_a[2 * k][3] = 0
+                    matrix_a[2 * k][4] = math.sin(lg - ls)
+                    matrix_a[2 * k + 1][0] = 0
+                    matrix_a[2 * k + 1][1] = 1
+                    matrix_a[2 * k + 1][2] = 0
+                    matrix_a[2 * k + 1][3] = t0
+                    matrix_a[2 * k + 1][4] = math.cos(lg - ls) * math.sin(bg)
+        return np.linalg.inv(np.dot(matrix_a.T, matrix_a))

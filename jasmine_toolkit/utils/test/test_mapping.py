@@ -1,3 +1,5 @@
+import math
+
 import astropy.units as u
 from astropy.time import Time, TimeDelta
 
@@ -16,10 +18,14 @@ def test_run():
 
 def test_statistics():
     m = Mapping()
-    a = [[]]
+    a = [[[]]]
     t = Time('2020-01-01T00:00:00')
     dt = TimeDelta(0.1 * u.yr)
     for i in range(30):
-        a.append([Time()])
+        a[0][0].append([t, 1])
+        t = t + dt
     m._Mapping__data = a
-    print(m._Mapping__data)
+    duration = a[0][0][len(a[0][0]) - 1][0] - a[0][0][0][0]
+    tc = a[0][0][0][0] + duration * 0.5
+    stat = m.calc_statistics(tc)
+    assert math.isclose(math.sqrt(stat[4][4] * len(a[0][0])), 1.5, abs_tol=0.1)
