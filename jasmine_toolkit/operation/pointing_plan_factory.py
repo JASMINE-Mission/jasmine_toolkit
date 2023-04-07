@@ -1,9 +1,7 @@
 import astropy.units as u
-from astropy.coordinates import SkyCoord
 from astropy.time import Time, TimeDelta
 
 from jasmine_toolkit.operation.fov_change_mode import EnumFovChangeMode
-from jasmine_toolkit.operation.pointing_freedom import EnumPointingFreedom
 from jasmine_toolkit.operation.pointing_mode import EnumPointingMode
 from jasmine_toolkit.operation.pointing_plan import PointingPlan
 from jasmine_toolkit.satellite.satellite import Satellite
@@ -59,6 +57,8 @@ class PointingPlanFactory:
             else:
                 td = td + TimeDelta(p.maneuver_time * u.second)
                 fov_mode = EnumFovChangeMode.NEW
+            if not n == self.__max_exposure_per_field:
+                fov_mode = EnumFovChangeMode.NEW
             if not n == 0:
                 observation_sequence.append([t + dt * n / 2, n, fov_mode])
             fov_count = fov_count + 1
@@ -67,21 +67,14 @@ class PointingPlanFactory:
             t = t + td
             if not n == self.__max_exposure_per_field:
                 fov_count = 0
-                fov_mode = EnumFovChangeMode.NEW
                 t = satellite.next_observable_time(t, dt)
         pointing = pointing_plan.find_next_pointing()
         for os in observation_sequence:
             if os[2] == EnumFovChangeMode.NEW:
                 pointing = pointing_plan.find_next_pointing()
             else:
-                pointing = pointing_plan.pointing_by_small_maneuver(pointing, os[2])
+                pointing = pointing_plan.pointing_by_small_maneuver(pointing,
+                                                                    os[2])
             pa = satellite.get_position_angle(pointing, os[0])
             pointing_plan.make_observation(os[0], pa, os[1])
         return pointing_plan
-
-
-if __name__ == '__main__':
-    start_time = Time('2028-01-01T00:00:00', scale="tcb")
-    ppf = PointingPlanFactory(EnumPointingMode.FOUR_FOV_IN_ORBIT, start_time,
-                              TimeDelta(0.2 * u.d))
-    pp = ppf.create(Satellite(EnumPointingFreedom.POINTING_FIXED, start_time))

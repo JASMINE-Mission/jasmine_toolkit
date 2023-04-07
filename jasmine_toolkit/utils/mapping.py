@@ -1,5 +1,5 @@
 from astropy.time import Time, TimeDelta
-import astropy.units as u
+
 from jasmine_toolkit.operation.pointing_freedom import EnumPointingFreedom
 from jasmine_toolkit.operation.pointing_mode import EnumPointingMode
 from jasmine_toolkit.operation.pointing_plan import PointingPlan
@@ -23,10 +23,3 @@ class Mapping:
     def calc_statistics(self):
         # TODO  This is the program for calculate statistics of "data".
         pass
-
-
-if __name__ == '__main__':
-    mapping = Mapping(EnumPointingFreedom.POINTING_FIXED,
-                      EnumPointingMode.FOUR_FOV_IN_ORBIT,
-                      Time('2028-01-01T00:00:00', scale="tcb"),
-                      TimeDelta(0.5 * u.d))
