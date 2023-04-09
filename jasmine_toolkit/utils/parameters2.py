@@ -14,6 +14,13 @@ class _TemporaryConstant(Constant):
     _has_incompatible_units = set()
 
 
+_formulas = set([])
+def constant_formula(func):
+    def wrapper(*args, **kwargs):
+        return func(*args, **kwargs)
+    _formulas.add(wrapper)
+    return wrapper
+
 class Parameters2:
     __instance = None
     __ignore_list = (
@@ -39,6 +46,7 @@ class Parameters2:
         self.__constants = {}
         # TODO 定数の規格を切り替えるならimportlibを一工夫する
         const = importlib.import_module("jasmine_toolkit.utils.constants.jasmine_constant")
+        # print(dir(const))
         for name in dir(const):
             if name.startswith("__"):
                 continue
@@ -63,7 +71,11 @@ class Parameters2:
         if not name.endswith(Parameters2.__ignore_list):
             self.__check_dirty(True)
             if name in self.__constants:
-                return self.__constants[name]
+                ret = self.__constants[name]
+                try:
+                    return ret if ret not in _formulas else ret()
+                except TypeError:
+                    return ret
         return object.__getattribute__(self, name)
 
     def is_dirty(self):

@@ -1,7 +1,7 @@
 from astropy.constants import Constant
 import pkg_resources
 from jasmine_toolkit.datamodel.efficiency import Efficiency
-
+from jasmine_toolkit.utils.parameters2 import Parameters2, constant_formula
 
 class JasmineConstant(Constant):
     # TODO 規格の切り返したい場合は、このクラスから切り離した方が良いです
@@ -14,6 +14,14 @@ class JasmineConstant(Constant):
 
 EARTH_MASS = JasmineConstant(
     "EARTH_MASS", "Earth mass", 5.9724E24, "kg", 0.0
+)
+
+effective_pupil_diameter = JasmineConstant(
+    "effective_pupil_diameter", "effective_pupil_diameter", 0.36, "m", 0.0
+)
+
+f_number = JasmineConstant(
+    "f_number", "f_number", 12.14, "", 0.0
 )
 
 maneuver_time = JasmineConstant(
@@ -33,3 +41,9 @@ __f_name = "data/filter/filter" + str(int(
 __spec_list = pkg_resources.resource_filename('jasmine_toolkit', __f_name)
 
 filter_efficiency = Efficiency.from_json(__spec_list)
+
+
+@constant_formula
+def effective_focal_length():
+    p = Parameters2()
+    return p.f_number * p.effective_pupil_diameter

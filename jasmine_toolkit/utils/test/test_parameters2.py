@@ -92,6 +92,18 @@ def test_specificated_property():
     print(p.average_filter_efficiency)
 
 
+def test_formula():
+    p = Parameters2()
+    p.ready()
+    before = p.effective_focal_length
+    print(before)
+    __turn_dirty()
+    p.f_number = 0
+    p.ready()
+    after = p.effective_focal_length
+    print(after)
+    assert(before != after)
+
 def __turn_dirty():
     setattr(Parameters2(), '_Parameters2__is_dirty', True)
 
