@@ -15,7 +15,7 @@ from jasmine_toolkit.utils.parameters import Parameters
 class PointingPlan:
     def __init__(self):
         self.__grid = None
-        self.__plan: list = []
+        self.__plan: ndarray = np.empty((0, 3))
         self.__grid_coord = None
         self.__pointing: SkyCoord = None
         p: Parameters = Parameters.get_instance()
@@ -39,13 +39,25 @@ class PointingPlan:
         return self.__grid
 
     def save_grid(self, filename: string):
-        pass
+        f = open(filename, 'w')
+        for i in range(len(self.__grid)):
+            for j in range(len(self.__grid[0])):
+                print(str(i) + ',' + str(j), end=',', file=f)
+                for k in range(len(self.__grid[i][j])):
+                    print(str(self.__grid[i][j][k][0]) + ','
+                          + str(self.__grid[i][j][k][1]), end=',', file=f)
+                print('', file=f)
 
     def get_plan(self) -> list:
         return self.__plan
 
     def save_plan(self, filename: string):
-        pass
+        f = open(filename, 'w')
+        for i in range(len(self.__plan)):
+            print(str(self.__plan[i][0]) + ','
+                  + str(self.__plan[i][1].galactic.l.deg) + ','
+                  + str(self.__plan[i][1].galactic.b.deg) + ','
+                  + str(self.__plan[i][2]), file=f)
 
     def _generate_grid(self):
         """
@@ -135,7 +147,8 @@ class PointingPlan:
                         dec=self.__grid_coord[ll][b][1] * u.rad, frame='icrs')
 
     def make_observation(self, t: Time, pa: Angle, num_exposure: int):
-        self.__plan.append([t, self.__pointing, pa])
+        self.__plan = np.append(self.__plan,
+                                np.array([[t, self.__pointing, pa]]), axis=0)
         polygon = self._get_field_of_view(self.__pointing, pa)
         n_l = len(self.__grid)
         n_b = len(self.__grid[0])
@@ -184,8 +197,12 @@ class PointingPlan:
 
 
 if __name__ == '__main__':
-    array = np.array([[1, 2, 3]])
+    array = np.empty((0, 3))
+    print(array)
     array = np.append(array, np.array([[1, 2, 3]]), axis=0)
+    print(array)
     array = np.append(array, np.array([[4, 5, 6]]), axis=0)
+    print(array)
     array = np.append(array, np.array([[7, 8, 9]]), axis=0)
+    print(array)
     pass
