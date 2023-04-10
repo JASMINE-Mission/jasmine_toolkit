@@ -54,8 +54,10 @@ class Mapping:
                 matrix_a[2 * k + 1][2] = 0
                 matrix_a[2 * k + 1][3] = t0
                 matrix_a[2 * k + 1][4] = math.cos(lg - ls) * math.sin(bg)
-            dispersion = np.linalg.inv(np.dot(matrix_a.T, matrix_a))
-            answer.append([i, j, dispersion[4][4]])
+            inv_parameter_dispersion = np.dot(matrix_a.T, matrix_a)
+            if not np.linalg.det(inv_parameter_dispersion) == 0:
+                dispersion = np.linalg.inv(inv_parameter_dispersion)
+                answer.append([int(i), int(j), dispersion[4][4]])
         return answer
 
 
@@ -66,4 +68,6 @@ if __name__ == '__main__':
     m.run(EnumPointingFreedom.POINTING_FIXED,
           EnumPointingMode.FOUR_FOV_IN_ORBIT, initial_time, duration)
     tc = initial_time + duration * 0.5
-    m.calc_statistics(tc)
+    ans = m.calc_statistics(tc)
+    ans_nd = np.array(ans)
+    np.savetxt("ans.csv", ans_nd, delimiter=',')
