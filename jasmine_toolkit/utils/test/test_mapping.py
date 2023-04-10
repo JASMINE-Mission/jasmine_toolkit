@@ -28,4 +28,4 @@ def test_statistics():
     duration = a[0][0][len(a[0][0]) - 1][0] - a[0][0][0][0]
     tc = a[0][0][0][0] + duration * 0.5
     stat = m.calc_statistics(tc)
-    assert math.isclose(math.sqrt(stat[4][4] * len(a[0][0])), 1.5, abs_tol=0.1)
+    assert math.isclose(math.sqrt(stat[0][2] * len(a[0][0])), 1.5, abs_tol=0.1)

@@ -12,6 +12,6 @@ def test_create():
     ppf = PointingPlanFactory(EnumPointingMode.FOUR_FOV_IN_ORBIT, start_time,
                               TimeDelta(0.02 * u.d))
     pp = ppf.create(s)
-    array = pp.get_array()
+    array = pp.get_grid()
     assert len(array) == 49
     assert len(array[0]) == 28
