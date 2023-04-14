@@ -71,6 +71,16 @@ class Orbit:
         return delta
 
     def next_observable_time(self, time: Time, dt: TimeDelta) -> Time:
+        cos_theta = 1
+        target_ra = self.__target.icrs.ra.to('rad').value
+        target_dec = self.__target.icrs.dec.to('rad').value
+        while cos_theta * cos_theta > 0.5:
+            sun_ra = astropy.coordinates.get_sun(time).ra.to('rad').value
+            sun_dec = astropy.coordinates.get_sun(time).dec.to('rad').value
+            cos_theta = math.cos(sun_dec) * math.cos(target_dec)\
+                        * math.cos(sun_ra - target_ra)\
+                        + math.sin(sun_dec) * math.sin(target_dec)
+            time = time + TimeDelta(1 * u.d)
         while not self.is_observable(time, self.__target):
             time = time + dt
         return time
