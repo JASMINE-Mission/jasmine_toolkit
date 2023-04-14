@@ -65,7 +65,7 @@ class Mapping:
 if __name__ == '__main__':
     m = Mapping()
     initial_time_0 = Time('2028-03-01T00:00:00', scale="tcb")
-    duration_0 = TimeDelta(0.1 * u.day)
+    duration_0 = TimeDelta(3 * u.yr)
     m.run(EnumPointingFreedom.POINTING_FIXED,
           EnumPointingMode.FOUR_FOV_IN_ORBIT, initial_time_0, duration_0)
     tc = initial_time_0 + duration_0 * 0.5
