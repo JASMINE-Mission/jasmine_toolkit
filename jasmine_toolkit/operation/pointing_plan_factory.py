@@ -76,7 +76,8 @@ class PointingPlanFactory:
             if not n == self.__max_exposure_per_field:
                 fov_mode = EnumFovChangeMode.NEW
             if not n == 0:
-                self.__observation_sequence.append([t + dt * n / 2, n, fov_mode])
+                self.__observation_sequence.append([t + dt * n / 2,
+                                                    n, fov_mode])
             fov_count = fov_count + 1
             if fov_count == 4:
                 fov_count = 0
