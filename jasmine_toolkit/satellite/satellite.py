@@ -19,7 +19,7 @@ class Satellite:
     def next_observable_time(self, time: Time, dt: TimeDelta) -> Time:
         return self.__orbit.next_observable_time(time, dt)
 
-    def observation_count(self, t: Time, dt:TimeDelta, max_obs: int):
+    def observation_count(self, t: Time, dt: TimeDelta, max_obs: int):
         n: int = 0
         while self.__orbit.is_observable(t, self.__target) and n < max_obs:
             t = t + dt

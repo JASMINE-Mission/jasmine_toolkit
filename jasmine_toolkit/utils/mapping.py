@@ -32,7 +32,8 @@ class Mapping:
 
     def calc_statistics(self, tc: Time):
         # TODO  This is the program for calculate statistics of "data".
-        gal: SkyCoord = SkyCoord(l=0.0 * u.rad, b=0.0 * u.rad, frame='galactic')
+        gal: SkyCoord = SkyCoord(l=0.0 * u.rad, b=0.0 * u.rad,
+                                 frame='galactic')
         lg = gal.barycentricmeanecliptic.lon.rad
         bg = gal.barycentricmeanecliptic.lat.rad
         answer = []
