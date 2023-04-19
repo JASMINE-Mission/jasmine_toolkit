@@ -27,6 +27,7 @@ class PointingPlanFactory:
         p: Parameters = Parameters.get_instance()
         self.__mode = enum
         self.__time_per_a_fov = p.orbital_period * 0.5 / enum.value
+        self.__observation_sequence = []
         self.__max_exposure_per_field = int(
             (self.__time_per_a_fov - p.maneuver_time) /
             (p.exposure_time + p.read_time))
@@ -41,8 +42,23 @@ class PointingPlanFactory:
         pointing_plan: PointingPlan = PointingPlan()
         p: Parameters = Parameters.get_instance()
         dt = TimeDelta(13.5 * u.second)
+        self._set_time_sequence(dt, p, satellite)
+        self._set_pointing_and_pa(pointing_plan, satellite)
+        return pointing_plan
+
+    def _set_pointing_and_pa(self, pointing_plan, satellite):
+        pointing = pointing_plan.find_next_pointing()
+        for os in self.__observation_sequence:
+            if os[2] == EnumFovChangeMode.NEW:
+                pointing = pointing_plan.find_next_pointing()
+            else:
+                pointing = pointing_plan.pointing_by_small_maneuver(pointing,
+                                                                    os[2])
+            pa = satellite.get_position_angle(pointing, os[0])
+            pointing_plan.make_observation(os[0], pa, os[1])
+
+    def _set_time_sequence(self, dt, p, satellite):
         t = self.__start
-        observation_sequence = []
         fov_count = 0
         while t < self.__end:
             n = satellite.observation_count(t, dt,
@@ -60,7 +76,8 @@ class PointingPlanFactory:
             if not n == self.__max_exposure_per_field:
                 fov_mode = EnumFovChangeMode.NEW
             if not n == 0:
-                observation_sequence.append([t + dt * n / 2, n, fov_mode])
+                self.__observation_sequence.append([t + dt * n / 2,
+                                                    n, fov_mode])
             fov_count = fov_count + 1
             if fov_count == 4:
                 fov_count = 0
@@ -68,13 +85,3 @@ class PointingPlanFactory:
             if not n == self.__max_exposure_per_field:
                 fov_count = 0
                 t = satellite.next_observable_time(t, dt)
-        pointing = pointing_plan.find_next_pointing()
-        for os in observation_sequence:
-            if os[2] == EnumFovChangeMode.NEW:
-                pointing = pointing_plan.find_next_pointing()
-            else:
-                pointing = pointing_plan.pointing_by_small_maneuver(pointing,
-                                                                    os[2])
-            pa = satellite.get_position_angle(pointing, os[0])
-            pointing_plan.make_observation(os[0], pa, os[1])
-        return pointing_plan

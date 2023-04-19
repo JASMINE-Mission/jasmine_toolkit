@@ -26,7 +26,7 @@ class PointingPlan:
         self.__fov_x = detector_x / p.effective_focal_length
         self.__fov_y = detector_y / p.effective_focal_length
         detector_gap = p.detector_separation_x \
-                       - p.detector_format_x * p.pixel_size
+            - p.detector_format_x * p.pixel_size
         self.__gap_on_the_sky = detector_gap / p.effective_focal_length
         self._generate_grid()
 
@@ -40,15 +40,15 @@ class PointingPlan:
 
     def save_grid(self, filename: string):
         f = open(filename, 'w')
-        for i in range(len(self.__grid)):
-            for j in range(len(self.__grid[0])):
-                print(str(i) + ',' + str(j), end=',', file=f)
-                for k in range(len(self.__grid[i][j])):
-                    print(str(self.__grid[i][j][k][0]) + ','
-                          + str(self.__grid[i][j][k][1]), end=',', file=f)
-                print('', file=f)
+        for i, j in product(range(len(self.__grid)),
+                            range(len(self.__grid[0]))):
+            print(str(i) + ',' + str(j), end=',', file=f)
+            for k in range(len(self.__grid[i][j])):
+                print(str(self.__grid[i][j][k][0]) + ','
+                      + str(self.__grid[i][j][k][1]), end=',', file=f)
+            print('', file=f)
 
-    def get_plan(self) -> list:
+    def get_plan(self) -> ndarray:
         return self.__plan
 
     def save_plan(self, filename: string):
@@ -132,19 +132,19 @@ class PointingPlan:
                                    mode: EnumFovChangeMode):
         ll, b = self._coord_to_grid(pointing)
         if mode == EnumFovChangeMode.VERTICAL:
-            b = b + int(self.__fov_y * 0.5 / self.__gap_on_the_sky)
-            if b < 0:
-                b = 0
-            if b >= len(self.__grid[0]):
-                b = len(self.__grid[0]) - 1
+            b = self._calc_pointing_bl(b, self.__fov_y, len(self.__grid[0]))
         elif mode == EnumFovChangeMode.HORIZONTAL:
-            ll = ll + int(self.__fov_x * 0.5 / self.__gap_on_the_sky)
-            if ll < 0:
-                ll = 0
-            if ll >= len(self.__grid):
-                ll = len(self.__grid) - 1
+            ll = self._calc_pointing_bl(ll, self.__fov_x, len(self.__grid))
         return SkyCoord(ra=self.__grid_coord[ll][b][0] * u.rad,
                         dec=self.__grid_coord[ll][b][1] * u.rad, frame='icrs')
+
+    def _calc_pointing_bl(self, b, fov: float, array_length: float):
+        b = b + int(fov * 0.5 / self.__gap_on_the_sky)
+        if b < 0:
+            b = 0
+        if b >= array_length:
+            b = array_length - 1
+        return b
 
     def make_observation(self, t: Time, pa: Angle, num_exposure: int):
         self.__plan = np.append(self.__plan,
@@ -171,10 +171,8 @@ class PointingPlan:
             outer = np.cross(a0, a1) / (
                     np.linalg.norm(a0, ord=2) * np.linalg.norm(a1, ord=2))
             arg = outer[2]
-            if arg > 1.0:
-                arg = 1.0
-            elif arg < -1.0:
-                arg = -1.0
+            if abs(arg) > 1.0:
+                arg = np.sign(arg)
             win = win + math.asin(arg)
         if 0.1 > win > -0.1:
             return False

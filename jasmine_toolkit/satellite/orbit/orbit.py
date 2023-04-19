@@ -10,15 +10,17 @@ from jasmine_toolkit.utils.parameters import Parameters
 
 class Orbit:
     """
-    A class that represents the orbit of a satellite.This class is specialized for SSO (Sun Synchronous Orbit), but
-    should have subclasses that can represent different trajectories. It assumes that the necessary orbital information
-    can be obtained from parameters.py.
+    A class that represents the orbit of a satellite.This class is
+    specialized for SSO (Sun Synchronous Orbit), but should have subclasses
+    that can represent different trajectories. It assumes that the necessary
+    orbital information can be obtained from parameters.py.
     """
 
     def __init__(self, initial_time: Time):
         """
 
-        @param initial_time: Time at which the satellite first passes the phase 0 position.
+        @param initial_time: Time at which the satellite first passes the
+        phase 0 position.
         """
         p = Parameters.get_instance()
         self.__inclination = p.inclination  # in radian
@@ -26,14 +28,15 @@ class Orbit:
         self.__orbital_period = p.orbital_period  # in second
         self.__initial_time = initial_time
         self.__initial_orbit_vector_lon = astropy.coordinates.get_sun(
-            initial_time).ra.to('rad').value \
-                                          + (self.__ltan + 6.0) * math.pi / 12
+            initial_time).ra.to('rad').value + (self.__ltan + 6.0) * math.pi \
+            / 12
         if self.__initial_orbit_vector_lon > 2.0 * math.pi:
-            self.__initial_orbit_vector_lon = self.__initial_orbit_vector_lon - 2.0 * math.pi
+            self.__initial_orbit_vector_lon = self.__initial_orbit_vector_lon \
+                                              - 2.0 * math.pi
         self.__orbital_radius = p.EQUATORIAL_EARTH_RADIUS + p.orbital_altitude
-        self.__cos_angle_max = math.cos(math.pi / 2 - p.earth_avoiding_angle
-                                        + math.acos(
-            p.EQUATORIAL_EARTH_RADIUS / self.__orbital_radius))
+        self.__cos_angle_max = math.cos(math.pi / 2 - p.earth_avoiding_angle +
+                                        math.acos(p.EQUATORIAL_EARTH_RADIUS /
+                                                  self.__orbital_radius))
         self.__target = SkyCoord(l=0.0 * u.deg, b=0.0 * u.deg, frame="galactic")
 
     def satellite_direction(self, time: Time) -> tuple:
@@ -81,9 +84,9 @@ class Orbit:
         while cos_theta * cos_theta > 0.5:
             sun_ra = astropy.coordinates.get_sun(time).ra.to('rad').value
             sun_dec = astropy.coordinates.get_sun(time).dec.to('rad').value
-            cos_theta = math.cos(sun_dec) * math.cos(target_dec)\
-                        * math.cos(sun_ra - target_ra)\
-                        + math.sin(sun_dec) * math.sin(target_dec)
+            cos_theta = math.cos(sun_dec) * math.cos(target_dec) \
+                * math.cos(sun_ra - target_ra) \
+                + math.sin(sun_dec) * math.sin(target_dec)
             time = time + TimeDelta(1 * u.d)
         while not self.is_observable(time, self.__target):
             time = time + dt
@@ -97,9 +100,9 @@ class Orbit:
         p_dec = pointing.icrs.dec.to('rad').value
         inner_product_of_p_and_sat = math.cos(sat_ra) * math.cos(
             p_ra) * math.cos(sat_dec) * math.cos(p_dec) \
-                + math.cos(sat_dec) * math.cos(
+            + math.cos(sat_dec) * math.cos(
             p_dec) * math.sin(sat_ra) * math.sin(p_ra) \
-                + math.sin(sat_dec) * math.sin(p_dec)
+            + math.sin(sat_dec) * math.sin(p_dec)
         if inner_product_of_p_and_sat > self.__cos_angle_max:
             return True
         else:
