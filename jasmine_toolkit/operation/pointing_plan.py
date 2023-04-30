@@ -170,14 +170,16 @@ class PointingPlan:
             a1 = polygon[j] - target
             outer = np.cross(a0, a1) / (
                     np.linalg.norm(a0, ord=2) * np.linalg.norm(a1, ord=2))
-            arg = outer[2]
-            if abs(arg) > 1.0:
-                arg = np.sign(arg)
+            arg = PointingPlan._calc_arg(outer)
             win = win + math.asin(arg)
-        if 0.1 > win > -0.1:
-            return False
-        else:
-            return True
+        return not 0.1 > win > -0.1
+
+    @staticmethod
+    def _calc_arg(outer):
+        arg = outer[2]
+        if abs(arg) > 1.0:
+            arg = np.sign(arg)
+        return arg
 
     def _get_field_of_view(self, pointing, pa):
         ne = np.array([self.__fov_x / 2, self.__fov_y / 2])

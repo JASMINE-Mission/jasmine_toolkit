@@ -10,10 +10,10 @@ from jasmine_toolkit.utils.mapping import Mapping
 
 def test_run():
     m = Mapping()
-    m.run(EnumPointingFreedom.POINTING_FIXED,
-          EnumPointingMode.FOUR_FOV_IN_ORBIT,
-          Time('2028-01-01T00:00:00', scale="tcb"),
-          TimeDelta(0.02 * u.d))
+    m.make_data(EnumPointingFreedom.POINTING_FIXED,
+                EnumPointingMode.FOUR_FOV_IN_ORBIT,
+                Time('2028-01-01T00:00:00', scale="tcb"),
+                TimeDelta(0.02 * u.d))
 
 
 def test_statistics():
@@ -27,5 +27,5 @@ def test_statistics():
     m._Mapping__data = a
     duration = a[0][0][len(a[0][0]) - 1][0] - a[0][0][0][0]
     tc = a[0][0][0][0] + duration * 0.5
-    stat = m.calc_statistics(tc)
+    stat = Mapping.calc_statistics(tc, a)
     assert math.isclose(math.sqrt(stat[0][2] * len(a[0][0])), 1.5, abs_tol=0.1)
