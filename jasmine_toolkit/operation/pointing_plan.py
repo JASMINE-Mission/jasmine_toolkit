@@ -116,14 +116,16 @@ class PointingPlan:
         p: Parameters = Parameters.get_instance()
         ll = (coord_l - p.minimum_l) / self.__gap_on_the_sky
         b = (coord_b - p.minimum_b) / self.__gap_on_the_sky
-        if ll < 0 or ll >= len(self.__grid_coord) \
-                or b < 0 or b >= len(self.__grid_coord[0]):
+        if self._check_range(b, ll):
             return 0, 0
         return int(ll + 0.5), int(b + 0.5)
 
+    def _check_range(self, b, ll):
+        return ll < 0 or ll >= len(self.__grid_coord) \
+            or b < 0 or b >= len(self.__grid_coord[0])
+
     def _grid_to_coord(self, ll: int, b: int):
-        if ll < 0 or ll >= len(self.__grid_coord) \
-                or b < 0 or b >= len(self.__grid_coord[0]):
+        if self._check_range(b, ll):
             return SkyCoord(l=0 * u.rad, b=0 * u.rad, frame="galactic")
         return SkyCoord(ra=self.__grid_coord[ll][b][0] * u.rad,
                         dec=self.__grid_coord[ll][b][1] * u.rad, frame="icrs")
