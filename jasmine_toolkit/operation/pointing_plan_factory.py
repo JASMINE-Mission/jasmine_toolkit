@@ -60,19 +60,18 @@ class PointingPlanFactory:
     def _set_time_sequence(self, dt, p, satellite):
         t = self.__start
         fov_count = 0
-        strategy = [EnumFovChangeMode.NEW, EnumFovChangeMode.VERTICAL,
-                    EnumFovChangeMode.NEW, EnumFovChangeMode.HORIZONTAL]
+        strategy = [(EnumFovChangeMode.NEW, p.maneuver_time),
+                    (EnumFovChangeMode.VERTICAL, p.large_maneuver_time),
+                    (EnumFovChangeMode.NEW, p.maneuver_time),
+                    (EnumFovChangeMode.HORIZONTAL, p.large_maneuver_time)]
 
         while t < self.__end:
-            fov_mod = fov_count % 4
+            fov_mod = fov_count % len(strategy)
             n = satellite.observation_count(t, dt,
                                             self.__max_exposure_per_field)
             td = dt * n
-            if fov_mod % 2 == 0:
-                td = td + TimeDelta(p.maneuver_time * u.second)
-            else:
-                td = td + TimeDelta(p.large_maneuver_time * u.second)
-            fov_mode = strategy[fov_mod]
+            fov_mode = strategy[fov_mod][0]
+            td = td + TimeDelta(strategy[fov_mod][1] * u.second)
 
             if not n == 0:
                 self.__observation_sequence.append([t + dt * n / 2,
