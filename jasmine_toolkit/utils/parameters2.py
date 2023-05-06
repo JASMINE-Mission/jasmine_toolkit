@@ -5,21 +5,25 @@ import codecs
 import numpy as np
 import importlib
 
+
 class _TemporaryConstant(Constant):
     # TODO 規格の切り返したい場合は、このクラスから切り離した方が良いです
     # 規格の切り替えはこの辺で行ってます
-    # see https://github.com/astropy/astropy/blob/main/astropy/constants/config.py
+    # see https://onl.sc/BTGXenG (astropyのconfig.py)
     default_reference = "Temporary Constant"
     _registry = {}
     _has_incompatible_units = set()
 
 
 _formulas = set([])
+
+
 def constant_formula(func):
     def wrapper(*args, **kwargs):
         return func(*args, **kwargs)
     _formulas.add(wrapper)
     return wrapper
+
 
 class Parameters2:
     __instance = None
@@ -42,7 +46,7 @@ class Parameters2:
     def __init__(self):
         if Parameters2.__instance is not None:
             return
-        self.__is_dirty = False # TODO ファイル読み込みしないならここでTrueにして良い
+        self.__is_dirty = False  # TODO ファイル読み込みしないならここでTrueにして良い
         self.__constants = {}
         # TODO 定数の規格を切り替えるならimportlibを一工夫する
         const = importlib.import_module("jasmine_toolkit.utils.constants.jasmine_constant")

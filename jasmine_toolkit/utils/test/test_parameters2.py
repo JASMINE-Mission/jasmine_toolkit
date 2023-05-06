@@ -111,9 +111,9 @@ def test_formulas():
     p.filter_efficiency
     p.effective_focal_length
     p.average_filter_efficiency
-    #p.average_telescope_throughput
-    #p.average_quantum_efficiency
-    #p.total_efficiency
+    p.average_telescope_throughput
+    p.average_quantum_efficiency
+    p.total_efficiency
     p.detector_format_x
     p.detector_format_y
     p.orbital_period

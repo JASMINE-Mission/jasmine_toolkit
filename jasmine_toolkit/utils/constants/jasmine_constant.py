@@ -2,6 +2,7 @@ from astropy.constants import Constant
 import math
 import pkg_resources
 import numpy as np
+import warnings
 from jasmine_toolkit.datamodel.efficiency import Efficiency
 from jasmine_toolkit.utils.parameters2 import Parameters2, constant_formula
 
@@ -268,24 +269,27 @@ def average_filter_efficiency():
     wave_ref = np.linspace(p.short_wavelength_limit.value * 1e6,
                            p.long_wavelength_limit.value * 1e6, 1000)
     weight = np.ones(1000)
+    warnings.warn('unit is lost.')
     return p.filter_efficiency.weighted_mean(wave_ref, weight)
 
 
 @constant_formula
 def average_telescope_throughput():
     p = __p()
-    wave_ref = np.linspace(p.short_wavelength_limit.value() * 1e6,
-                           p.long_wavelength_limit.value() * 1e6, 1000)
+    wave_ref = np.linspace(p.short_wavelength_limit.value * 1e6,
+                           p.long_wavelength_limit.value * 1e6, 1000)
     weight = np.ones(1000)
+    warnings.warn('unit is lost.')
     return p.optics_efficiency.weighted_mean(wave_ref, weight)
 
 
 @constant_formula
 def average_quantum_efficiency():
     p = __p()
-    wave_ref = np.linspace(p.short_wavelength_limit * 1e6,
-                           p.long_wavelength_limit * 1e6, 1000)
+    wave_ref = np.linspace(p.short_wavelength_limit.value * 1e6,
+                           p.long_wavelength_limit.value * 1e6, 1000)
     weight = np.ones(1000)
+    warnings.warn('unit is lost.')
     return p.quantum_efficiency.weighted_mean(wave_ref, weight)
 
 
