@@ -70,16 +70,22 @@ def test_extract_unit():
     assert '' == px._extract_unit({})
 
 
-def test_extract_value():
+def test_extract_num_value():
     p = Parameters2()
-    assert type(p._extract_value({'value': ''})) is str
     assert type(p._extract_value({'value': '100'})) is int
     assert type(p._extract_value({'value': '5.97'})) is float
     assert type(p._extract_value({'value': '5.9724E24'})) is float
     assert type(p._extract_value({'value': '6.6743E-11'})) is float
+
+
+def test_extract_not_num_value():
+    p = Parameters2()
+    assert type(p._extract_value({'value': ''})) is str
     assert type(p._extract_value({'value': False})) is bool
-    assert type(p._extract_value({'value': "__import__('math').radians(-1.4)"})) is float
-    assert type(p._extract_value({'value': "__impo__('math').radians(-1.4)"})) is str
+    assert type(p._extract_value(
+        {'value': "__import__('math').radians(-1.4)"})) is float
+    assert type(p._extract_value(
+        {'value': "__impo__('math').radians(-1.4)"})) is str
 
 
 def test_specificated_property():
