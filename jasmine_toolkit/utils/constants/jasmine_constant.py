@@ -263,34 +263,29 @@ def effective_focal_length():
     return p.f_number * p.effective_pupil_diameter
 
 
-@constant_formula
-def average_filter_efficiency():
-    p = __p()
+def __weighted_mean(p, efficiency):
     wave_ref = np.linspace(p.short_wavelength_limit.value * 1e6,
                            p.long_wavelength_limit.value * 1e6, 1000)
     weight = np.ones(1000)
     warnings.warn('unit is lost.')
-    return p.filter_efficiency.weighted_mean(wave_ref, weight)
+    return efficiency.weighted_mean(wave_ref, weight)
+
+@constant_formula
+def average_filter_efficiency():
+    p = __p()
+    return __weighted_mean(p, p.filter_efficiency)
 
 
 @constant_formula
 def average_telescope_throughput():
     p = __p()
-    wave_ref = np.linspace(p.short_wavelength_limit.value * 1e6,
-                           p.long_wavelength_limit.value * 1e6, 1000)
-    weight = np.ones(1000)
-    warnings.warn('unit is lost.')
-    return p.optics_efficiency.weighted_mean(wave_ref, weight)
+    return __weighted_mean(p, p.optics_efficiency)
 
 
 @constant_formula
 def average_quantum_efficiency():
     p = __p()
-    wave_ref = np.linspace(p.short_wavelength_limit.value * 1e6,
-                           p.long_wavelength_limit.value * 1e6, 1000)
-    weight = np.ones(1000)
-    warnings.warn('unit is lost.')
-    return p.quantum_efficiency.weighted_mean(wave_ref, weight)
+    return __weighted_mean(p, p.quantum_efficiency)
 
 
 @constant_formula
