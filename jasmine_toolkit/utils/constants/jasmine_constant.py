@@ -353,10 +353,10 @@ def inclination():
 @constant_formula
 def c_pix():
     p = __p()
-    return p.reference_wavelength * p.f_number / p.pixel_size   # noqa
+    return p.reference_wavelength * p.f_number / p.pixel_size  # noqa
 
 
 @constant_formula
 def read_time():
     p = __p()
-    return p.n_col_ch * p.n_row_ch / p.pixel_sampling_frequency # noqa
+    return p.n_col_ch * p.n_row_ch / p.pixel_sampling_frequency  # noqa
