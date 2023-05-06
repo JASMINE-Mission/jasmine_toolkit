@@ -270,6 +270,7 @@ def __weighted_mean(p, efficiency):
     warnings.warn('unit is lost.')
     return efficiency.weighted_mean(wave_ref, weight)
 
+
 @constant_formula
 def average_filter_efficiency():
     p = __p()

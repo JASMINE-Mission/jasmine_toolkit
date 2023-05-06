@@ -3,7 +3,6 @@ from jasmine_toolkit.utils.parameters2 import Parameters2
 import pkg_resources
 
 
-
 def test_singleton():
     p1 = Parameters2()
     assert p1 is not None
@@ -39,7 +38,7 @@ def test_dirty_mode():
         print(p.EARTH_MASS)
         assert False, 'no guard'
     except RuntimeError as e:
-        print (e)
+        print(e)
     p.EARTH_MASS = 456
     p.ready()
     assert 456 == p.EARTH_MASS
@@ -53,37 +52,34 @@ def test_clean_mode():
             p.EARTH_MASS = 456
             assert False, 'no guard'
         except RuntimeError as e:
-            print (e)
+            print(e)
         print(p.EARTH_MASS)
     finally:
         __reset()
 
 
 def test_extract_description():
-    d1 = {'description':'hoge'}
+    d1 = {'description': 'hoge'}
     assert 'hoge' == px._extract_description(d1)
     assert '' == px._extract_description({})
 
 
 def test_extract_unit():
-    d1 = {'unit':'kg'}
+    d1 = {'unit': 'kg'}
     assert 'kg' == px._extract_unit(d1)
     assert '' == px._extract_unit({})
 
 
 def test_extract_value():
     p = Parameters2()
-    assert type(p._extract_value({'value':''})) is str
-    assert type(p._extract_value({'value':'100'})) is int
-    assert type(p._extract_value({'value':'5.97'})) is float
-    assert type(p._extract_value({'value':'5.9724E24'})) is float
-    assert type(p._extract_value({'value':'6.6743E-11'})) is float
-    assert type(p._extract_value({'value':False})) is bool
-    assert type(p._extract_value({'value':"__import__('math').radians(-1.4)"})) is float
-    assert type(p._extract_value({'value':"__impo__('math').radians(-1.4)"})) is str
-    # complex_statement = "__import__('jasmine_toolkit.datamodel.efficiency').datamodel.efficiency.Efficiency.from_json(__import__('pkg_resources').resource_filename('jasmine_toolkit', 'data/qe/qe170.json'))"
-    # print(type(px._extract_value({'value': complex_statement})))
-    # print(px._extract_value({'value': complex_statement}))
+    assert type(p._extract_value({'value': ''})) is str
+    assert type(p._extract_value({'value': '100'})) is int
+    assert type(p._extract_value({'value': '5.97'})) is float
+    assert type(p._extract_value({'value': '5.9724E24'})) is float
+    assert type(p._extract_value({'value': '6.6743E-11'})) is float
+    assert type(p._extract_value({'value': False})) is bool
+    assert type(p._extract_value({'value': "__import__('math').radians(-1.4)"})) is float
+    assert type(p._extract_value({'value': "__impo__('math').radians(-1.4)"})) is str
 
 
 def test_specificated_property():
@@ -124,11 +120,14 @@ def test_formulas():
     p.c_pix
     p.read_time
 
+
 def __turn_dirty():
     setattr(Parameters2(), '_Parameters2__is_dirty', True)
 
+
 def __turn_clean():
     setattr(Parameters2(), '_Parameters2__is_dirty', False)
+
 
 def __reset():
     setattr(Parameters2, '__instance', None)
