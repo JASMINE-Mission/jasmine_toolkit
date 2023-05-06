@@ -71,12 +71,15 @@ class Parameters2:
         if not name.endswith(Parameters2.__ignore_list):
             self.__check_dirty(True)
             if name in self.__constants:
-                ret = self.__constants[name]
-                try:
-                    return ret if ret not in _formulas else ret()
-                except TypeError:
-                    return ret
+                return self.__get_value(name)
         return object.__getattribute__(self, name)
+
+    def __get_value(self, name):
+        ret = self.__constants[name]
+        try:
+            return ret if ret not in _formulas else ret()
+        except TypeError:
+            return ret
 
     def is_dirty(self):
         return self.__is_dirty
