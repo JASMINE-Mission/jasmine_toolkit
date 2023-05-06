@@ -18,6 +18,7 @@ class JasmineConstant(Constant):
 def __p():
     return Parameters2()
 
+
 EARTH_MASS = JasmineConstant(
     "EARTH_MASS", "Earth mass", 5.9724E24, "kg", 0.0
 )
@@ -201,17 +202,21 @@ reference_wavelength = JasmineConstant(
     "reference_wavelength", "reference_wavelength", 1.4e-6, "", 0.0
 )
 
+
 def __make_optics_efficiency():
     spec_list = pkg_resources.resource_filename(
         'jasmine_toolkit', 'data/teleff.json')
     return Efficiency.from_json(spec_list)
 
+
 optics_efficiency = __make_optics_efficiency()
+
 
 def __make_quantum_efficiency():
     spec_list = pkg_resources.resource_filename(
         'jasmine_toolkit', "data/qe/qe170.json")
     return Efficiency.from_json(spec_list)
+
 
 quantum_efficiency = __make_quantum_efficiency()
 
@@ -287,7 +292,8 @@ def average_quantum_efficiency():
 @constant_formula
 def total_efficiency():
     p = __p()
-    return p.average_telescope_throughput * p.average_filter_efficiency * p.average_quantum_efficiency
+    return p.average_telescope_throughput * \
+           p.average_filter_efficiency * p.average_quantum_efficiency
 
 
 @constant_formula
@@ -353,4 +359,3 @@ def c_pix():
 def read_time():
     p = __p()
     return p.n_col_ch * p.n_row_ch / p.pixel_sampling_frequency
-
