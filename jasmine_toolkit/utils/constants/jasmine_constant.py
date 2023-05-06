@@ -5,13 +5,15 @@ import numpy as np
 from jasmine_toolkit.datamodel.efficiency import Efficiency
 from jasmine_toolkit.utils.parameters2 import Parameters2, constant_formula
 
+
 class JasmineConstant(Constant):
     # TODO 規格の切り返したい場合は、このクラスから切り離した方が良いです
     # 規格の切り替えはこの辺で行ってます
-    # see https://github.com/astropy/astropy/blob/main/astropy/constants/config.py
+    # see https://onl.sc/BTGXenG (astropyのconfig.py)
     default_reference = "JASMINE"
     _registry = {}
     _has_incompatible_units = set()
+
 
 def __p():
     return Parameters2()
@@ -213,6 +215,7 @@ def __make_quantum_efficiency():
 
 quantum_efficiency = __make_quantum_efficiency()
 
+
 @constant_formula
 def filter_efficiency():
     p = __p()
@@ -247,10 +250,12 @@ maximum_b = JasmineConstant(
     math.radians(0.6), "", 0.0
 )
 
+
 @constant_formula
 def effective_focal_length():
     p = __p()
     return p.f_number * p.effective_pupil_diameter
+
 
 @constant_formula
 def average_filter_efficiency():
@@ -260,6 +265,7 @@ def average_filter_efficiency():
     weight = np.ones(1000)
     return p.filter_efficiency.weighted_mean(wave_ref, weight)
 
+
 @constant_formula
 def average_telescope_throughput():
     p = __p()
@@ -267,6 +273,7 @@ def average_telescope_throughput():
                            p.long_wavelength_limit.value() * 1e6, 1000)
     weight = np.ones(1000)
     return p.optics_efficiency.weighted_mean(wave_ref, weight)
+
 
 @constant_formula
 def average_quantum_efficiency():
@@ -276,20 +283,24 @@ def average_quantum_efficiency():
     weight = np.ones(1000)
     return p.quantum_efficiency.weighted_mean(wave_ref, weight)
 
+
 @constant_formula
 def total_efficiency():
     p = __p()
     return p.average_telescope_throughput * p.average_filter_efficiency * p.average_quantum_efficiency
+
 
 @constant_formula
 def detector_format_x():
     p = __p()
     return p.n_row_ch - p.n_ref_pix_top - p.n_ref_pix_bottom
 
+
 @constant_formula
 def detector_format_y():
     p = __p()
     return p.n_col_ch * p.n_ch - p.n_ref_pix_left - p.n_ref_pix_right
+
 
 @constant_formula
 def orbital_period():
@@ -299,10 +310,12 @@ def orbital_period():
         1.5) / math.sqrt(
         p.CONST_OF_GRAVITATION * p.EARTH_MASS)
 
+
 @constant_formula
 def earth_mu():
     p = __p()
     return p.CONST_OF_GRAVITATION * p.EARTH_MASS
+
 
 @constant_formula
 def earth_c1():
@@ -312,10 +325,12 @@ def earth_c1():
         * p.ONE_YEAR * math.sqrt(
             p.earth_mu) / 2 / math.pi * 180 / math.pi / math.pow(10000, 1.5)
 
+
 @constant_formula
 def earth_c2():
     p = __p()
     return 360 / p.earth_c1
+
 
 @constant_formula
 def inclination():
@@ -327,10 +342,12 @@ def inclination():
         1 - p.orbital_eccentricity * p.orbital_eccentricity,
         2) * math.sqrt(1000))
 
+
 @constant_formula
-def c_pix(self):
+def c_pix():
     p = __p()
     return p.reference_wavelength * p.f_number / p.pixel_size
+
 
 @constant_formula
 def read_time():
