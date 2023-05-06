@@ -292,8 +292,8 @@ def average_quantum_efficiency():
 @constant_formula
 def total_efficiency():
     p = __p()
-    return p.average_telescope_throughput * \
-           p.average_filter_efficiency * p.average_quantum_efficiency
+    return p.average_telescope_throughput \
+           * p.average_filter_efficiency * p.average_quantum_efficiency
 
 
 @constant_formula
