@@ -104,6 +104,26 @@ def test_formula():
     print(after)
     assert(before != after)
 
+
+def test_formulas():
+    p = Parameters2()
+    p.ready()
+    p.filter_efficiency
+    p.effective_focal_length
+    p.average_filter_efficiency
+    #p.average_telescope_throughput
+    #p.average_quantum_efficiency
+    #p.total_efficiency
+    p.detector_format_x
+    p.detector_format_y
+    p.orbital_period
+    p.earth_mu
+    p.earth_c1
+    p.earth_c2
+    p.inclination
+    p.c_pix
+    p.read_time
+
 def __turn_dirty():
     setattr(Parameters2(), '_Parameters2__is_dirty', True)
 

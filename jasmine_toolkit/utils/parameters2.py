@@ -87,13 +87,6 @@ class Parameters2:
     def apply(self, filename):
         self.__load_file(filename, False)
 
-    @property
-    def average_filter_efficiency(self):
-        wave_ref = np.linspace(self.short_wavelength_limit.value * 1e6,
-                               self.long_wavelength_limit.value * 1e6, 1000)
-        weight = np.ones(1000)
-        return self.filter_efficiency.weighted_mean(wave_ref, weight)
-
     def __load_file(self, filename, init):
         with codecs.open(filename, encoding='utf-8') as file:
             obj = yaml.safe_load(file)
