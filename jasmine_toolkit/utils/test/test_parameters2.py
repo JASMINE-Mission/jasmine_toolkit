@@ -108,6 +108,7 @@ def test_formula():
 
 
 def test_formulas():
+    __reset()
     p = Parameters2()
     p.ready()
     p.filter_efficiency
@@ -136,4 +137,4 @@ def __turn_clean():
 
 
 def __reset():
-    setattr(Parameters2, '__instance', None)
+    setattr(Parameters2, '_Parameters2__instance', None)

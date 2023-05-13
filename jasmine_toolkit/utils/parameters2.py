@@ -81,9 +81,11 @@ class Parameters2:
     def __get_value(self, name):
         ret = self.__constants[name]
         try:
-            return ret if ret not in _formulas else ret()
+            if ret not in _formulas:
+                return ret
         except TypeError:
             return ret
+        return ret()
 
     def is_dirty(self):
         return self.__is_dirty
