@@ -4,6 +4,8 @@ import math
 import numpy as np
 import pkg_resources
 
+from jasmine_toolkit.utils import *
+from jasmine_toolkit.utils import parameter as p
 from jasmine_toolkit.datamodel.efficiency import Efficiency
 
 
@@ -58,10 +60,11 @@ class Parameters:
     __instance = None
 
     @staticmethod
-    def get_instance():
-        if Parameters.__instance is None:
-            Parameters()
-        return Parameters.__instance
+    def get_instance() -> Parameters2 :
+        # if Parameters.__instance is None:
+        #     Parameters()
+        # return Parameters.__instance
+        return p
 
     def __init__(self):
         if Parameters.__instance is None:

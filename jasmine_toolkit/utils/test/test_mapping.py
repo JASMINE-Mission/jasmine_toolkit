@@ -6,6 +6,10 @@ from astropy.time import Time, TimeDelta
 from jasmine_toolkit.operation.pointing_freedom import EnumPointingFreedom
 from jasmine_toolkit.operation.pointing_mode import EnumPointingMode
 from jasmine_toolkit.utils.mapping import Mapping
+from jasmine_toolkit.utils import parameter as p
+
+
+p.ready()
 
 
 def test_run():

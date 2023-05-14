@@ -5,6 +5,10 @@ import numpy as np
 import pytest
 
 from jasmine_toolkit.operation.pointing_plan import PointingPlan
+from jasmine_toolkit.utils import parameter as p
+
+
+p.ready()
 
 
 # TODO
