@@ -1,13 +1,30 @@
 import jasmine_toolkit.utils.parameters2 as px
 from jasmine_toolkit.utils.parameters2 import Parameters2
 import pkg_resources
+import math
+from pytest import approx
 
 
 def test_singleton():
-    p1 = Parameters2()
-    assert p1 is not None
-    p2 = Parameters2()
-    assert p1 == p2
+    __reset()
+    sg = Parameters2()
+    two = Parameters2()
+    sg.ready()
+    assert -0.0001 < sg.effective_pupil_diameter - two.effective_pupil_diameter < 0.0001
+    __turn_dirty()
+    sg.effective_pupil_diameter = 0.2
+    sg.ready()
+    assert 0.19999 < two.effective_pupil_diameter < 0.200001
+    assert -0.0001 < sg.effective_pupil_diameter - two.effective_pupil_diameter < 0.0001
+
+
+def test_singleton_2():
+    __reset()
+    one = Parameters2()
+    one.effective_pupil_diameter = 0.2
+    one.ready()
+    two = Parameters2()
+    assert -0.0001 < one.effective_pupil_diameter - 0.2 < 0.0001
 
 
 def test_update_from_file():
@@ -126,6 +143,38 @@ def test_formulas():
     p.inclination
     p.c_pix
     p.read_time
+
+
+def test_efficiency():
+    __reset()
+    # number of mirror = 5, mirror reflection rate = 0.98, QE = 0.8, filter through put = 0.9 is assumed
+    sg = Parameters2()
+    sg.ready()
+    assert sg.total_efficiency == approx(0.6136365527435249)
+
+
+def test_troughput():
+    __reset()
+    sg = Parameters2()
+    sg.ready()
+    val = sg.average_telescope_throughput
+    assert val == approx(0.825825)
+
+
+def test_period():
+    __reset()
+    sg = Parameters2()
+    sg.orbital_altitude = 550000
+    sg.ready()
+    assert 5738 < sg.orbital_period < 5740
+
+
+def test_inclination():
+    __reset()
+    sg = Parameters2()
+    sg.orbital_altitude = 550000
+    sg.ready()
+    assert 97.5 < math.degrees(sg.inclination) < 97.7
 
 
 def __turn_dirty():
