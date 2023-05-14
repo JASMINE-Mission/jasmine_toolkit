@@ -5,7 +5,7 @@ import astropy.units as u
 from astropy.coordinates import SkyCoord
 from astropy.time import Time, TimeDelta
 
-from jasmine_toolkit.utils.parameters import Parameters
+from jasmine_toolkit.utils import parameter as p
 
 
 class Orbit:
@@ -22,7 +22,6 @@ class Orbit:
         @param initial_time: Time at which the satellite first passes the
         phase 0 position.
         """
-        p = Parameters.get_instance()
         self.__inclination = p.inclination  # in radian
         self.__ltan = p.ltan  # in hour
         self.__orbital_period = p.orbital_period  # in second

@@ -9,7 +9,7 @@ from astropy.time import Time
 from numpy import ndarray
 
 from jasmine_toolkit.operation.fov_change_mode import EnumFovChangeMode
-from jasmine_toolkit.utils.parameters import Parameters
+from jasmine_toolkit.utils import parameter as p
 
 
 class PointingPlan:
@@ -18,7 +18,6 @@ class PointingPlan:
         self.__plan: ndarray = np.empty((0, 3))
         self.__grid_coord = None
         self.__pointing: SkyCoord = None
-        p: Parameters = Parameters.get_instance()
         detector_x = p.detector_format_x * (
                 p.num_detector_x - 1) * p.pixel_size + p.detector_separation_x
         detector_y = p.detector_format_y * (
@@ -67,7 +66,6 @@ class PointingPlan:
          index are [Time, number of observation].
 
         """
-        p = Parameters.get_instance()
         l_min = p.minimum_l
         l_max = p.maximum_l
         b_min = p.minimum_b
@@ -101,7 +99,6 @@ class PointingPlan:
                 min_count = len(self.__grid[ll][b])
                 l0 = ll
                 b0 = b
-        p = Parameters.get_instance()
         coord_l = p.minimum_l + l0 * self.__gap_on_the_sky
         coord_b = p.minimum_b + b0 * self.__gap_on_the_sky
         self.__pointing = SkyCoord(l=coord_l * u.rad, b=coord_b * u.rad,
@@ -113,7 +110,6 @@ class PointingPlan:
         coord_b = coord.galactic.b.rad
         if coord_l > math.pi:
             coord_l = coord_l - math.pi * 2
-        p: Parameters = Parameters.get_instance()
         ll = (coord_l - p.minimum_l) / self.__gap_on_the_sky
         b = (coord_b - p.minimum_b) / self.__gap_on_the_sky
         if self._check_range(b, ll):
