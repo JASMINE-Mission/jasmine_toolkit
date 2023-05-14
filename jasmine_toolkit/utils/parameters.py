@@ -25,7 +25,7 @@ def constant_formula(func):
     return wrapper
 
 
-class Parameters2:
+class Parameters:
     __instance = None
     __ignore_list = (
         '__is_dirty',
@@ -39,12 +39,12 @@ class Parameters2:
     )
 
     def __new__(cls, *args, **kwargs):
-        if Parameters2.__instance is None:
-            return super(Parameters2, cls).__new__(cls)
-        return Parameters2.__instance
+        if Parameters.__instance is None:
+            return super(Parameters, cls).__new__(cls)
+        return Parameters.__instance
 
     def __init__(self):
-        if Parameters2.__instance is not None:
+        if Parameters.__instance is not None:
             return
         self.__is_dirty = False  # TODO ファイル読み込みしないならここでTrueにして良い
         self.__constants = {}
@@ -60,10 +60,10 @@ class Parameters2:
         # self.__load_file(filename, True)
         # print(self.__constants)
         self.__is_dirty = True
-        Parameters2.__instance = self
+        Parameters.__instance = self
 
     def __setattr__(self, name, value):
-        if not name.endswith(Parameters2.__ignore_list):
+        if not name.endswith(Parameters.__ignore_list):
             self.__check_dirty(False)
             if name in self.__constants:
                 self.__constants[name] = value
@@ -72,7 +72,7 @@ class Parameters2:
 
     def __getattr__(self, name):
         # print(name)
-        if not name.endswith(Parameters2.__ignore_list):
+        if not name.endswith(Parameters.__ignore_list):
             self.__check_dirty(True)
             if name in self.__constants:
                 return self.__get_value(name)
@@ -162,4 +162,4 @@ def _extract_value(dic, key):
     return ret if ret is not None else ''
 
 
-Parameters2()   # Python 3.7以降なら__new__自体がスレッドセーフなのでいらないらしいです
+Parameters()   # Python 3.7以降なら__new__自体がスレッドセーフなのでいらないらしいです

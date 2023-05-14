@@ -4,7 +4,7 @@ import pkg_resources
 import numpy as np
 import warnings
 from jasmine_toolkit.datamodel.efficiency import Efficiency
-from jasmine_toolkit.utils.parameters2 import Parameters2, constant_formula
+from jasmine_toolkit.utils.parameters import Parameters, constant_formula
 
 
 class JasmineConstant(Constant):
@@ -17,7 +17,7 @@ class JasmineConstant(Constant):
 
 
 def __p():
-    return Parameters2()
+    return Parameters()
 
 
 # EARTH_MASS = JasmineConstant(

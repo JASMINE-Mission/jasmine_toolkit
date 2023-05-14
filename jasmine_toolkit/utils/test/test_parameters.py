@@ -1,5 +1,5 @@
-import jasmine_toolkit.utils.parameters2 as px
-from jasmine_toolkit.utils.parameters2 import Parameters2
+import jasmine_toolkit.utils.parameters as px
+from jasmine_toolkit.utils.parameters import Parameters
 import pkg_resources
 import math
 from pytest import approx
@@ -7,8 +7,8 @@ from pytest import approx
 
 def test_singleton():
     __reset()
-    sg = Parameters2()
-    two = Parameters2()
+    sg = Parameters()
+    two = Parameters()
     sg.ready()
     assert -0.0001 < sg.effective_pupil_diameter - two.effective_pupil_diameter < 0.0001
     __turn_dirty()
@@ -20,15 +20,15 @@ def test_singleton():
 
 def test_singleton_2():
     __reset()
-    one = Parameters2()
+    one = Parameters()
     one.effective_pupil_diameter = 0.2
     one.ready()
-    two = Parameters2()
+    two = Parameters()
     assert -0.0001 < one.effective_pupil_diameter - 0.2 < 0.0001
 
 
 def test_update_from_file():
-    p = Parameters2()
+    p = Parameters()
     __turn_dirty()
     filename = pkg_resources.resource_filename('jasmine_toolkit', 'utils/test/constants_update.yaml')
     p.apply(filename)
@@ -37,7 +37,7 @@ def test_update_from_file():
 
 
 def test_update_file_in_not_exists_data():
-    p = Parameters2()
+    p = Parameters()
     __turn_dirty()
     filename = pkg_resources.resource_filename(
         'jasmine_toolkit', 'utils/test/constants_not_exists.yaml')
@@ -49,7 +49,7 @@ def test_update_file_in_not_exists_data():
 
 
 def test_dirty_mode():
-    p = Parameters2()
+    p = Parameters()
     __turn_dirty()
     try:
         print(p.EARTH_MASS)
@@ -63,7 +63,7 @@ def test_dirty_mode():
 
 def test_clean_mode():
     try:
-        p = Parameters2()
+        p = Parameters()
         __turn_clean()
         try:
             p.EARTH_MASS = 456
@@ -88,7 +88,7 @@ def test_extract_unit():
 
 
 def test_extract_num_value():
-    p = Parameters2()
+    p = Parameters()
     assert type(p._extract_value({'value': '100'})) is int
     assert type(p._extract_value({'value': '5.97'})) is float
     assert type(p._extract_value({'value': '5.9724E24'})) is float
@@ -96,7 +96,7 @@ def test_extract_num_value():
 
 
 def test_extract_not_num_value():
-    p = Parameters2()
+    p = Parameters()
     assert type(p._extract_value({'value': ''})) is str
     assert type(p._extract_value({'value': False})) is bool
     assert type(p._extract_value(
@@ -106,13 +106,13 @@ def test_extract_not_num_value():
 
 
 def test_specificated_property():
-    p = Parameters2()
+    p = Parameters()
     p.ready()
     print(p.average_filter_efficiency)
 
 
 def test_formula():
-    p = Parameters2()
+    p = Parameters()
     p.ready()
     before = p.effective_focal_length
     print(before)
@@ -126,7 +126,7 @@ def test_formula():
 
 def test_formulas():
     __reset()
-    p = Parameters2()
+    p = Parameters()
     p.ready()
     p.filter_efficiency
     p.effective_focal_length
@@ -148,14 +148,14 @@ def test_formulas():
 def test_efficiency():
     __reset()
     # number of mirror = 5, mirror reflection rate = 0.98, QE = 0.8, filter through put = 0.9 is assumed
-    sg = Parameters2()
+    sg = Parameters()
     sg.ready()
     assert sg.total_efficiency == approx(0.6136365527435249)
 
 
 def test_troughput():
     __reset()
-    sg = Parameters2()
+    sg = Parameters()
     sg.ready()
     val = sg.average_telescope_throughput
     assert val == approx(0.825825)
@@ -163,7 +163,7 @@ def test_troughput():
 
 def test_period():
     __reset()
-    sg = Parameters2()
+    sg = Parameters()
     sg.orbital_altitude = 550000
     sg.ready()
     assert 5738 < sg.orbital_period < 5740
@@ -171,19 +171,19 @@ def test_period():
 
 def test_inclination():
     __reset()
-    sg = Parameters2()
+    sg = Parameters()
     sg.orbital_altitude = 550000
     sg.ready()
     assert 97.5 < math.degrees(sg.inclination) < 97.7
 
 
 def __turn_dirty():
-    setattr(Parameters2(), '_Parameters2__is_dirty', True)
+    setattr(Parameters(), '_Parameters__is_dirty', True)
 
 
 def __turn_clean():
-    setattr(Parameters2(), '_Parameters2__is_dirty', False)
+    setattr(Parameters(), '_Parameters__is_dirty', False)
 
 
 def __reset():
-    setattr(Parameters2, '_Parameters2__instance', None)
+    setattr(Parameters, '_Parameters__instance', None)

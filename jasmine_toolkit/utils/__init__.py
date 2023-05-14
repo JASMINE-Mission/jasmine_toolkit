@@ -1,4 +1,4 @@
-from .parameters2 import Parameters2,constant_formula
-from .parameters2 import _TemporaryConstant as Constant
+from .parameters import Parameters,constant_formula
+from .parameters import _TemporaryConstant as Constant
 
-parameter = Parameters2()
+parameter = Parameters()
