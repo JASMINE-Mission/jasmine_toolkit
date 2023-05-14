@@ -52,7 +52,7 @@ class Orbit:
 
     def _calc_theta(self, time):
         dt = time - self.__initial_time
-        phase = math.modf(dt.sec / self.__orbital_period)[0]
+        phase = math.modf(dt.sec / self.__orbital_period.value)[0]
         theta = phase * 2.0 * math.pi
         return theta
 
@@ -68,7 +68,7 @@ class Orbit:
         return alpha
 
     def _calc_delta(self):
-        orbit_vector_lat = (90 * u.deg - self.__inclination * u.rad)
+        orbit_vector_lat = (90 * u.deg - self.__inclination)
         delta = orbit_vector_lat.to('rad').value
         return delta
 

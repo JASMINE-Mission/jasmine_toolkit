@@ -3,6 +3,7 @@ from jasmine_toolkit.utils.parameters import Parameters
 import pkg_resources
 import math
 from pytest import approx
+from astropy import units as u
 
 
 def test_singleton():
@@ -164,17 +165,19 @@ def test_troughput():
 def test_period():
     __reset()
     sg = Parameters()
-    sg.orbital_altitude = 550000
+    sg.orbital_altitude = 550000 * u.m
     sg.ready()
-    assert 5738 < sg.orbital_period < 5740
+    period = sg.orbital_period
+    print(period)
+    assert 5738 < period.value < 5740
 
 
 def test_inclination():
     __reset()
     sg = Parameters()
-    sg.orbital_altitude = 550000
+    sg.orbital_altitude = 550000 * u.m
     sg.ready()
-    assert 97.5 < math.degrees(sg.inclination) < 97.7
+    assert 97.5 < math.degrees(sg.inclination.value) < 97.7
 
 
 def __turn_dirty():

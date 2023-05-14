@@ -3,6 +3,7 @@ import math
 import pkg_resources
 import numpy as np
 import warnings
+from astropy import units as u
 from jasmine_toolkit.datamodel.efficiency import Efficiency
 from jasmine_toolkit.utils.parameters import Parameters, constant_formula
 
@@ -20,21 +21,18 @@ def __p():
     return Parameters()
 
 
-# EARTH_MASS = JasmineConstant(
-#     "EARTH_MASS", "Earth mass", 5.9724E24, "kg", 0.0
-# )
-EARTH_MASS = 5.9724E24
+EARTH_MASS = JasmineConstant(
+    "EARTH_MASS", "Earth mass", 5.9724E24, "kg", 0.0
+)
 
-# CONST_OF_GRAVITATION = JasmineConstant(
-#     "CONST_OF_GRAVITATION", "CONST_OF_GRAVITATION",
-#     6.6743E-11, "m3 / (kg s2)", 0.0
-# )
-CONST_OF_GRAVITATION = 6.6743E-11
+CONST_OF_GRAVITATION = JasmineConstant(
+    "CONST_OF_GRAVITATION", "CONST_OF_GRAVITATION",
+    6.6743E-11, "m3 / (kg s2)", 0.0
+)
 
-# EQUATORIAL_EARTH_RADIUS = JasmineConstant(
-#     "EQUATORIAL_EARTH_RADIUS", "EQUATORIAL_EARTH_RADIUS", 6.3781E6, "m", 0.0
-# )
-EQUATORIAL_EARTH_RADIUS = 6.3781E6
+EQUATORIAL_EARTH_RADIUS = JasmineConstant(
+    "EQUATORIAL_EARTH_RADIUS", "EQUATORIAL_EARTH_RADIUS", 6.3781E6, "m", 0.0
+)
 
 # POLAR_EARTH_RADIUS = JasmineConstant(
 #     "POLAR_EARTH_RADIUS", "POLAR_EARTH_RADIUS", 6.3568E6, "m", 0.0
@@ -76,10 +74,9 @@ f_number = 12.14
 # )
 pixel_size = 1.0e-5
 
-# maneuver_time = JasmineConstant(
-#     "maneuver_time", "maneuver_time", 115, "s", 0.0
-# )
-maneuver_time = 115
+maneuver_time = JasmineConstant(
+    "maneuver_time", "maneuver_time", 115, "s", 0.0
+)
 
 # large_maneuver_time = JasmineConstant(
 #     "large_maneuver_time", "large_maneuver_time", 220, "s", 0.0
@@ -160,10 +157,9 @@ detector_separation_x = 0.02282
 # )   # the value is fixed by Y.Y. at Feb. 1st
 detector_separation_y = 0.02282
 
-# orbital_altitude = JasmineConstant(
-#     "orbital_altitude", "orbital_altitude", 6.0E5, "m", 0.0
-# )
-orbital_altitude = 6.0E5
+orbital_altitude = JasmineConstant(
+    "orbital_altitude", "orbital_altitude", 6.0E5, "m", 0.0
+)
 
 spider_type = ''
 
@@ -359,10 +355,9 @@ def detector_format_y():
 @constant_formula
 def orbital_period():
     p = __p()
-    return 2 * math.pi * math.pow(
-        p.EQUATORIAL_EARTH_RADIUS + p.orbital_altitude,
-        1.5) / math.sqrt(
-        p.CONST_OF_GRAVITATION * p.EARTH_MASS)
+    x = (p.EQUATORIAL_EARTH_RADIUS + p.orbital_altitude)
+    return 2 * math.pi * math.pow(x.value, 1.5) * x.unit**1.5 \
+        / np.sqrt(p.CONST_OF_GRAVITATION * p.EARTH_MASS)
 
 
 @constant_formula
@@ -374,9 +369,10 @@ def earth_mu():
 @constant_formula
 def earth_c1():
     p = __p()
+    eqr = p.EQUATORIAL_EARTH_RADIUS
     return -3 * math.pi * p.EARTH_J2 * math.pow(
-        p.EQUATORIAL_EARTH_RADIUS / 1000, 2) \
-        * p.ONE_YEAR * math.sqrt(
+        eqr.value / 1000, 2) * eqr.unit ** 2 \
+        * p.ONE_YEAR * np.sqrt(
             p.earth_mu) / 2 / math.pi * 180 / math.pi / math.pow(10000, 1.5)
 
 
@@ -389,12 +385,12 @@ def earth_c2():
 @constant_formula
 def inclination():
     p = __p()
-    return math.acos(p.earth_c2 * math.pow(
-        (p.EQUATORIAL_EARTH_RADIUS + p.orbital_altitude) /
-        1000, 3.5)
+    x = (p.EQUATORIAL_EARTH_RADIUS + p.orbital_altitude)
+    return np.arccos((p.earth_c2 * math.pow(
+        x.value / 1000, 3.5) * x.unit**3.5
                      * math.pow(
         1 - p.orbital_eccentricity * p.orbital_eccentricity,
-        2) * math.sqrt(1000))
+        2) * math.sqrt(1000)).value) * u.radian
 
 
 @constant_formula

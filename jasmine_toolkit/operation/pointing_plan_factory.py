@@ -28,8 +28,8 @@ class PointingPlanFactory:
         self.__time_per_a_fov = p.orbital_period * 0.5 / enum.value
         self.__observation_sequence = []
         self.__max_exposure_per_field = int(
-            (self.__time_per_a_fov - p.maneuver_time) /
-            (p.exposure_time + p.read_time))
+            ((self.__time_per_a_fov - p.maneuver_time) /
+            (p.exposure_time + p.read_time)).value)
 
     def create(self, satellite: Satellite):
         """
@@ -69,7 +69,7 @@ class PointingPlanFactory:
                                             self.__max_exposure_per_field)
             td = dt * n
             fov_mode = strategy[fov_mod][0]
-            td = td + TimeDelta(strategy[fov_mod][1] * u.second)
+            td = td + TimeDelta(strategy[fov_mod][1])
 
             if not n == 0:
                 self.__observation_sequence.append([t + dt * n / 2,
