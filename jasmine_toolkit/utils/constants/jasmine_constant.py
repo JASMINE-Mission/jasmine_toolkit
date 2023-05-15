@@ -50,14 +50,8 @@ effective_pupil_diameter = JasmineConstant(
     "effective_pupil_diameter", "effective_pupil_diameter", 0.36, "m", 0.0
 )
 
-# central_obscuration_ratio = JasmineConstant(
-#     "central_obscuration_ratio", "central_obscuration_ratio", 0.35, "", 0.0
-# )
 central_obscuration_ratio = 0.35
 
-# f_number = JasmineConstant(
-#     "f_number", "f_number", 12.14, "", 0.0
-# )
 f_number = 12.14
 
 pixel_size = JasmineConstant(
@@ -68,21 +62,16 @@ maneuver_time = JasmineConstant(
     "maneuver_time", "maneuver_time", 115, "s", 0.0
 )
 
-# large_maneuver_time = JasmineConstant(
-#     "large_maneuver_time", "large_maneuver_time", 220, "s", 0.0
-# )
-large_maneuver_time = 220
+large_maneuver_time = JasmineConstant(
+    "large_maneuver_time", "large_maneuver_time", 220, "s", 0.0
+)
 
-# full_well_electron = JasmineConstant(
-#     "full_well_electron", "full_well_electron", 100000, "s", 0.0
-# )
-full_well_electron = 100000
+full_well_electron = JasmineConstant(
+    "full_well_electron", "full_well_electron", 100000, "e", 0.0
+)
 
 # TODO: Definition of magnitude should be contains colour
 
-# saturation_magnitude = JasmineConstant(
-#     "saturation_magnitude", "saturation_magnitude", 10.0, "", 0.0
-# )
 saturation_magnitude = 10.0
 
 # standard_magnitude = JasmineConstant(
@@ -90,17 +79,13 @@ saturation_magnitude = 10.0
 # )
 standard_magnitude = 12.5
 
-# faint_end_magnitude = JasmineConstant(
-#     "faint_end_magnitude", "faint_end_magnitude", 14.5, "", 0.0
-# )
 faint_end_magnitude = 14.5
 
 # TODO: check whether attitude control error depends on exposure time or not.
 
-# attitude_control_error_mas = JasmineConstant(
-#     "attitude_control_error_mas", "attitude_control_error_mas", 300, "", 0.0
-# )   # mas / 12.5 seconds
-attitude_control_error_mas = 300
+attitude_control_error_mas = JasmineConstant(
+    "attitude_control_error_mas", "attitude_control_error_mas", 300, "mas", 0.0
+)   # mas / 12.5 seconds
 
 # long_wavelength_limit = JasmineConstant(
 #     "long_wavelength_limit", "long_wavelength_limit", 1.6e-6, "m", 0.0
