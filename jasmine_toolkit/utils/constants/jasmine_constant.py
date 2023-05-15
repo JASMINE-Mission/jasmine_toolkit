@@ -46,10 +46,9 @@ ONE_YEAR = JasmineConstant(
 
 orbital_eccentricity = 0
 
-# effective_pupil_diameter = JasmineConstant(
-#     "effective_pupil_diameter", "effective_pupil_diameter", 0.36, "m", 0.0
-# )
-effective_pupil_diameter = 0.36
+effective_pupil_diameter = JasmineConstant(
+    "effective_pupil_diameter", "effective_pupil_diameter", 0.36, "m", 0.0
+)
 
 # central_obscuration_ratio = JasmineConstant(
 #     "central_obscuration_ratio", "central_obscuration_ratio", 0.35, "", 0.0
@@ -61,10 +60,9 @@ central_obscuration_ratio = 0.35
 # )
 f_number = 12.14
 
-# pixel_size = JasmineConstant(
-#     "pixel_size", "pixel_size", 1.0e-5, "m", 0.0
-# )
-pixel_size = 1.0e-5
+pixel_size = JasmineConstant(
+    "pixel_size", "pixel_size", 1.0e-5, "m", 0.0
+)
 
 maneuver_time = JasmineConstant(
     "maneuver_time", "maneuver_time", 115, "s", 0.0
@@ -139,15 +137,13 @@ num_detector_x = 2
 # )
 num_detector_y = 2
 
-# detector_separation_x = JasmineConstant(
-#     "detector_separation_x", "detector_separation_x", 0.02282, "m", 0.0
-# )   # old value is 0.02196
-detector_separation_x = 0.02282
+detector_separation_x = JasmineConstant(
+    "detector_separation_x", "detector_separation_x", 0.02282, "m", 0.0
+)   # old value is 0.02196
 
-# detector_separation_y = JasmineConstant(
-#     "detector_separation_y", "detector_separation_y", 0.02282, "m", 0.0
-# )   # the value is fixed by Y.Y. at Feb. 1st
-detector_separation_y = 0.02282
+detector_separation_y = JasmineConstant(
+    "detector_separation_y", "detector_separation_y", 0.02282, "m", 0.0
+)   # the value is fixed by Y.Y. at Feb. 1st
 
 orbital_altitude = JasmineConstant(
     "orbital_altitude", "orbital_altitude", 6.0E5, "m", 0.0
