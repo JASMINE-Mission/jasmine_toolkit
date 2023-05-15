@@ -34,24 +34,16 @@ EQUATORIAL_EARTH_RADIUS = JasmineConstant(
     "EQUATORIAL_EARTH_RADIUS", "EQUATORIAL_EARTH_RADIUS", 6.3781E6, "m", 0.0
 )
 
-# POLAR_EARTH_RADIUS = JasmineConstant(
-#     "POLAR_EARTH_RADIUS", "POLAR_EARTH_RADIUS", 6.3568E6, "m", 0.0
-# )
-POLAR_EARTH_RADIUS = 6.3568E6
+POLAR_EARTH_RADIUS = JasmineConstant(
+    "POLAR_EARTH_RADIUS", "POLAR_EARTH_RADIUS", 6.3568E6, "m", 0.0
+)
 
-# EARTH_J2 = JasmineConstant(
-#     "EARTH_J2", "EARTH_J2", 1.082632, "", 0.0
-# )
 EARTH_J2 = 1.082632
 
-# ONE_YEAR = JasmineConstant(
-#     "ONE_YEAR", "ONE_YEAR", 31556926, "s", 0.0
-# )
-ONE_YEAR = 31556926
+ONE_YEAR = JasmineConstant(
+    "ONE_YEAR", "ONE_YEAR", 31556926, "s", 0.0
+)
 
-# orbital_eccentricity = JasmineConstant(
-#     "orbital_eccentricity", "orbital_eccentricity", 0, "", 0.0
-# )
 orbital_eccentricity = 0
 
 # effective_pupil_diameter = JasmineConstant(
