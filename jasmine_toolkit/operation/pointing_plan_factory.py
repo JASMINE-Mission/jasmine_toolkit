@@ -27,6 +27,7 @@ class PointingPlanFactory:
         self.__mode = enum
         self.__time_per_a_fov = p.orbital_period * 0.5 / enum.value
         self.__observation_sequence = []
+        # TODO add unit exposure_time
         self.__max_exposure_per_field = int(
             ((self.__time_per_a_fov - p.maneuver_time) /
             (p.exposure_time + p.read_time)).value)

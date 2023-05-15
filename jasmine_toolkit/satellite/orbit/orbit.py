@@ -52,7 +52,7 @@ class Orbit:
 
     def _calc_theta(self, time):
         dt = time - self.__initial_time
-        phase = math.modf(dt.sec / self.__orbital_period.value)[0]
+        phase = math.modf(dt.to('s') / self.__orbital_period)[0]
         theta = phase * 2.0 * math.pi
         return theta
 
