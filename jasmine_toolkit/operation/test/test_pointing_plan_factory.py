@@ -4,6 +4,10 @@ from jasmine_toolkit.operation.pointing_freedom import EnumPointingFreedom
 from jasmine_toolkit.operation.pointing_mode import EnumPointingMode
 from jasmine_toolkit.operation.pointing_plan_factory import PointingPlanFactory
 from jasmine_toolkit.satellite.satellite import Satellite
+from jasmine_toolkit.utils import parameter as p
+
+
+p.ready()
 
 
 def test_create():

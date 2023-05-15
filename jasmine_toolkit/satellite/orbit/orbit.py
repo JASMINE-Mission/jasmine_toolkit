@@ -5,7 +5,7 @@ import astropy.units as u
 from astropy.coordinates import SkyCoord
 from astropy.time import Time, TimeDelta
 
-from jasmine_toolkit.utils.parameters import Parameters
+from jasmine_toolkit.utils import parameter as p
 
 
 class Orbit:
@@ -22,7 +22,6 @@ class Orbit:
         @param initial_time: Time at which the satellite first passes the
         phase 0 position.
         """
-        p = Parameters.get_instance()
         self.__inclination = p.inclination  # in radian
         self.__ltan = p.ltan  # in hour
         self.__orbital_period = p.orbital_period  # in second
@@ -53,7 +52,7 @@ class Orbit:
 
     def _calc_theta(self, time):
         dt = time - self.__initial_time
-        phase = math.modf(dt.sec / self.__orbital_period)[0]
+        phase = math.modf(dt.sec / self.__orbital_period.value)[0]
         theta = phase * 2.0 * math.pi
         return theta
 
@@ -69,7 +68,7 @@ class Orbit:
         return alpha
 
     def _calc_delta(self):
-        orbit_vector_lat = (90 * u.deg - self.__inclination * u.rad)
+        orbit_vector_lat = (90 * u.deg - self.__inclination)
         delta = orbit_vector_lat.to('rad').value
         return delta
 

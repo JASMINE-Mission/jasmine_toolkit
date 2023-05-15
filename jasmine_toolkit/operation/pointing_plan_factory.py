@@ -5,7 +5,7 @@ from jasmine_toolkit.operation.fov_change_mode import EnumFovChangeMode
 from jasmine_toolkit.operation.pointing_mode import EnumPointingMode
 from jasmine_toolkit.operation.pointing_plan import PointingPlan
 from jasmine_toolkit.satellite.satellite import Satellite
-from jasmine_toolkit.utils.parameters import Parameters
+from jasmine_toolkit.utils import parameter as p
 
 
 class PointingPlanFactory:
@@ -24,13 +24,12 @@ class PointingPlanFactory:
         self.__start: Time = start
         self.__end: Time = start + duration
         self.__satellite: Satellite = None
-        p: Parameters = Parameters.get_instance()
         self.__mode = enum
         self.__time_per_a_fov = p.orbital_period * 0.5 / enum.value
         self.__observation_sequence = []
         self.__max_exposure_per_field = int(
-            (self.__time_per_a_fov - p.maneuver_time) /
-            (p.exposure_time + p.read_time))
+            ((self.__time_per_a_fov - p.maneuver_time) /
+            (p.exposure_time + p.read_time)).value)
 
     def create(self, satellite: Satellite):
         """
@@ -40,7 +39,6 @@ class PointingPlanFactory:
         """
         self.__satellite = satellite
         pointing_plan: PointingPlan = PointingPlan()
-        p: Parameters = Parameters.get_instance()
         dt = TimeDelta(13.5 * u.second)
         self._set_time_sequence(dt, p, satellite)
         self._set_pointing_and_pa(pointing_plan, satellite)
@@ -71,7 +69,7 @@ class PointingPlanFactory:
                                             self.__max_exposure_per_field)
             td = dt * n
             fov_mode = strategy[fov_mod][0]
-            td = td + TimeDelta(strategy[fov_mod][1] * u.second)
+            td = td + TimeDelta(strategy[fov_mod][1])
 
             if not n == 0:
                 self.__observation_sequence.append([t + dt * n / 2,
