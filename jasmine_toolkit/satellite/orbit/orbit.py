@@ -4,6 +4,7 @@ import astropy.coordinates
 import astropy.units as u
 from astropy.coordinates import SkyCoord
 from astropy.time import Time, TimeDelta
+import numpy as np
 
 from jasmine_toolkit.utils import parameter as p
 
@@ -27,11 +28,11 @@ class Orbit:
         self.__orbital_period = p.orbital_period  # in second
         self.__initial_time = initial_time
         self.__initial_orbit_vector_lon = astropy.coordinates.get_sun(
-            initial_time).ra.to('rad').value + (self.__ltan + 6.0) * math.pi \
-            / 12
-        if self.__initial_orbit_vector_lon > 2.0 * math.pi:
+            initial_time).ra.to('rad') + (self.__ltan + 6.0 * u.h)  \
+            * math.pi * u.rad / (12 * u.h)
+        if self.__initial_orbit_vector_lon > 2.0 * math.pi * u.rad:
             self.__initial_orbit_vector_lon = self.__initial_orbit_vector_lon \
-                                              - 2.0 * math.pi
+                                              - 2.0 * math.pi * u.rad
         self.__orbital_radius = p.EQUATORIAL_EARTH_RADIUS + p.orbital_altitude
         self.__cos_angle_max = math.cos(math.pi / 2 - p.earth_avoiding_angle +
                                         math.acos(p.EQUATORIAL_EARTH_RADIUS /
@@ -42,34 +43,34 @@ class Orbit:
         alpha = self._calc_alpha(time)
         delta = self._calc_delta()
         theta = self._calc_theta(time)
-        satellite_dec = math.asin(math.sin(theta) * math.cos(delta))
-        ra_y = -math.sin(alpha) * math.sin(delta) * math.sin(theta) + math.cos(
-            alpha) * math.cos(theta)
-        ra_x = -math.sin(theta) * math.sin(delta) * math.cos(alpha) - math.sin(
-            alpha) * math.cos(theta)
+        satellite_dec = np.arcsin(np.sin(theta) * np.cos(delta))
+        ra_y = -np.sin(alpha) * np.sin(delta) * np.sin(theta) + np.cos(
+            alpha) * np.cos(theta)
+        ra_x = -np.sin(theta) * np.sin(delta) * np.cos(alpha) - np.sin(
+            alpha) * np.cos(theta)
         satellite_ra = math.atan2(ra_x, ra_y)
         return satellite_ra, satellite_dec
 
     def _calc_theta(self, time):
         dt = time - self.__initial_time
         phase = math.modf(dt.to('s') / self.__orbital_period)[0]
-        theta = phase * 2.0 * math.pi
+        theta = phase * 2.0 * math.pi * u.rad
         return theta
 
     def _calc_alpha(self, time):
         dt = time - self.__initial_time
-        dt_angle = math.modf(dt.to('year').value)[0] * 2.0 * math.pi
+        dt_angle = math.modf(dt.to('year').value)[0] * 2.0 * math.pi * u.rad
         if dt_angle < 0.0:
-            dt_angle = dt_angle + 2.0 * math.pi
+            dt_angle = dt_angle + 2.0 * math.pi * u.rad
         orbit_vector_lon = self.__initial_orbit_vector_lon + dt_angle
-        if orbit_vector_lon >= 2.0 * math.pi:
-            orbit_vector_lon = orbit_vector_lon - 2.0 * math.pi
+        if orbit_vector_lon >= 2.0 * math.pi * u.rad:
+            orbit_vector_lon = orbit_vector_lon - 2.0 * math.pi * u.rad
         alpha = orbit_vector_lon
         return alpha
 
     def _calc_delta(self):
         orbit_vector_lat = (90 * u.deg - self.__inclination)
-        delta = orbit_vector_lat.to('rad').value
+        delta = orbit_vector_lat.to('rad')
         return delta
 
     def next_observable_time(self, time: Time, dt: TimeDelta) -> Time:
@@ -97,11 +98,11 @@ class Orbit:
         sat_ra, sat_dec = self.satellite_direction(time)
         p_ra = pointing.icrs.ra.to('rad').value
         p_dec = pointing.icrs.dec.to('rad').value
-        inner_product_of_p_and_sat = math.cos(sat_ra) * math.cos(
-            p_ra) * math.cos(sat_dec) * math.cos(p_dec) \
-            + math.cos(sat_dec) * math.cos(
-            p_dec) * math.sin(sat_ra) * math.sin(p_ra) \
-            + math.sin(sat_dec) * math.sin(p_dec)
+        inner_product_of_p_and_sat = np.cos(sat_ra) * np.cos(
+            p_ra) * np.cos(sat_dec) * np.cos(p_dec) \
+            + np.cos(sat_dec) * np.cos(
+            p_dec) * np.sin(sat_ra) * np.sin(p_ra) \
+            + np.sin(sat_dec) * np.sin(p_dec)
         if inner_product_of_p_and_sat > self.__cos_angle_max:
             return True
         else:

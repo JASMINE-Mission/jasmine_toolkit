@@ -66,9 +66,9 @@ large_maneuver_time = JasmineConstant(
     "large_maneuver_time", "large_maneuver_time", 220, "s", 0.0
 )
 
-full_well_electron = JasmineConstant(
-    "full_well_electron", "full_well_electron", 100000, "e", 0.0
-)
+
+full_well_electron = 100000     # electron
+
 
 # TODO: Definition of magnitude should be contains colour
 
@@ -92,29 +92,23 @@ short_wavelength_limit = JasmineConstant(
     "short_wavelength_limit", "short_wavelength_limit", 1.0e-6, "m", 0.0
 )
 
-# read_out_noise = JasmineConstant(
-#     "read_out_noise", "read_out_noise", 15, "", 0.0
-# )   # electrons / read
-read_out_noise = 15
 
-# dark_current = JasmineConstant(
-#     "dark_current", "dark_current", 25, "", 0.0
-# )   # electrons / sec / pixel
-dark_current = 25
+read_out_noise = 15  # electron / read
 
-# background_photon_flux = JasmineConstant(
-#     "background_photon_flux", "background_photon_flux", 8, "", 0.0
-# )   # electrons / sec / pixel
-background_photon_flux = 8
 
-# num_detector_x = JasmineConstant(
-#     "num_detector_x", "num_detector_x", 2, "", 0.0
-# )
+dark_current = JasmineConstant(
+    "dark_current", "dark_current", 25, "1 / s / pix", 0.0
+)   # electrons / sec / pixel
+
+
+background_photon_flux = JasmineConstant(
+    "background_photon_flux", "background_photon_flux", 8, "1 / s / pix", 0.0
+)   # electrons / sec / pixel
+
+
 num_detector_x = 2
 
-# num_detector_y = JasmineConstant(
-#     "num_detector_y", "num_detector_y", 2, "", 0.0
-# )
+
 num_detector_y = 2
 
 detector_separation_x = JasmineConstant(
@@ -129,72 +123,40 @@ orbital_altitude = JasmineConstant(
     "orbital_altitude", "orbital_altitude", 6.0E5, "m", 0.0
 )
 
+
 spider_type = ''
 
-# spider_thickness = JasmineConstant(
-#     "spider_thickness", "spider_thickness", 5e-3, "m", 0.0
-# )
-spider_thickness = 5e-3
 
-# window_size_x = JasmineConstant(
-#     "window_size_x", "window_size_x", 9, "", 0.0
-# )
+spider_thickness = JasmineConstant(
+    "spider_thickness", "spider_thickness", 5e-3, "m", 0.0
+)
+
+
 window_size_x = 9
 
-# window_size_y = JasmineConstant(
-#     "window_size_y", "window_size_y", 9, "", 0.0
-# )
+
 window_size_y = 9
 
-# pixel_sampling_frequency = JasmineConstant(
-#     "pixel_sampling_frequency", "pixel_sampling_frequency", 2e5, "Hz", 0.0
-# )
-pixel_sampling_frequency = 2e5
+pixel_sampling_frequency = JasmineConstant(
+    "pixel_sampling_frequency", "pixel_sampling_frequency", 2e5, "Hz", 0.0
+)
 
-# n_col_ch = JasmineConstant(
-#     "n_col_ch", "n_col_ch", 123, "", 0.0
-# )
+
 n_col_ch = 123
-
-# n_row_ch = JasmineConstant(
-#     "n_row_ch", "n_row_ch", 1968, "", 0.0
-# )
 n_row_ch = 1968
-
-# n_ch = JasmineConstant(
-#     "n_ch", "n_ch", 16, "", 0.0
-# )
 n_ch = 16
-
-# n_ref_pix_left = JasmineConstant(
-#     "n_ref_pix_left", "n_ref_pix_left", 8, "", 0.0
-# )
 n_ref_pix_left = 8
-
-# n_ref_pix_right = JasmineConstant(
-#     "n_ref_pix_right", "n_ref_pix_right", 8, "", 0.0
-# )
 n_ref_pix_right = 8
-
-# n_ref_pix_top = JasmineConstant(
-#     "n_ref_pix_top", "n_ref_pix_top", 8, "", 0.0
-# )
 n_ref_pix_top = 8
-
-# n_ref_pix_bottom = JasmineConstant(
-#     "n_ref_pix_bottom", "n_ref_pix_bottom", 8, "", 0.0
-# )
 n_ref_pix_bottom = 8
+exposure_time = JasmineConstant(
+    "exposure_time", "exposure_time", 12.5, "s", 0.0
+)
 
-# exposure_time = JasmineConstant(
-#     "exposure_time", "exposure_time", 12.5, "s", 0.0
-# )
-exposure_time = 12.5
 
-# ltan = JasmineConstant(
-#     "ltan", "ltan", 6, "h", 0.0
-# )
-ltan = 6
+ltan = JasmineConstant(
+    "ltan", "ltan", 6, "h", 0.0
+)
 
 # TODO: check it should be const or variable?
 
