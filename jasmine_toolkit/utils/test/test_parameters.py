@@ -107,12 +107,6 @@ def test_extract_not_num_value():
         {'value': "__impo__('math').radians(-1.4)"})) is str
 
 
-def test_specificated_property():
-    p = Parameters()
-    p.ready()
-    print(p.average_filter_efficiency)
-
-
 def test_formula():
     p = Parameters()
     p.ready()
