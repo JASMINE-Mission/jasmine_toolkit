@@ -146,6 +146,7 @@ def test_efficiency():
     # number of mirror = 5, mirror reflection rate = 0.98, QE = 0.8, filter through put = 0.9 is assumed
     sg = Parameters()
     sg.ready()
+    # FIXME 単位捨てなくした場合は`.value`を叩いて比較する必要あり
     assert sg.total_efficiency == approx(0.6136365527435249)
 
 

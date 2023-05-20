@@ -68,7 +68,8 @@ class Efficiency:
             >>> wavref=np.linspace(0.8,1.6,1000)
             >>> val=efficiency.evaluate(wavref)
         """
-        val = np.interp(wavelength, self.wavelength_grid, self.efficiency_grid)
+        # FIXME ここで単位捨ててる
+        val = np.interp(wavelength.value, self.wavelength_grid, self.efficiency_grid)
         return val
 
     def weighted_mean(self, wavelength, weight):

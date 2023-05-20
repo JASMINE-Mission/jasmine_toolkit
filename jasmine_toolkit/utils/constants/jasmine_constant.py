@@ -74,9 +74,6 @@ full_well_electron = JasmineConstant(
 
 saturation_magnitude = 10.0
 
-# standard_magnitude = JasmineConstant(
-#     "standard_magnitude", "standard_magnitude", 12.5, "", 0.0
-# )
 standard_magnitude = 12.5
 
 faint_end_magnitude = 14.5
@@ -87,15 +84,13 @@ attitude_control_error_mas = JasmineConstant(
     "attitude_control_error_mas", "attitude_control_error_mas", 300, "mas", 0.0
 )   # mas / 12.5 seconds
 
-# long_wavelength_limit = JasmineConstant(
-#     "long_wavelength_limit", "long_wavelength_limit", 1.6e-6, "m", 0.0
-# )
-long_wavelength_limit = 1.6e-6
+long_wavelength_limit = JasmineConstant(
+    "long_wavelength_limit", "long_wavelength_limit", 1.6e-6, "m", 0.0
+)
 
-# short_wavelength_limit = JasmineConstant(
-#     "short_wavelength_limit", "short_wavelength_limit", 1.0e-6, "m", 0.0
-# )
-short_wavelength_limit = 1.0e-6
+short_wavelength_limit = JasmineConstant(
+    "short_wavelength_limit", "short_wavelength_limit", 1.0e-6, "m", 0.0
+)
 
 # read_out_noise = JasmineConstant(
 #     "read_out_noise", "read_out_noise", 15, "", 0.0
@@ -237,7 +232,7 @@ quantum_efficiency = __make_quantum_efficiency()
 def filter_efficiency():
     p = __p()
     __f_name = "data/filter/filter" + str(int(
-        p.short_wavelength_limit * 1e8)).zfill(3) + ".json"
+        p.short_wavelength_limit.value * 1e8)).zfill(3) + ".json"
     __spec_list = pkg_resources.resource_filename('jasmine_toolkit', __f_name)
     return Efficiency.from_json(__spec_list)
 
@@ -280,6 +275,12 @@ def effective_focal_length():
 
 
 def __weighted_mean(p, efficiency):
+    print("---------")
+    print(p.short_wavelength_limit)
+    print(p.short_wavelength_limit * 1e6)
+    print(p.long_wavelength_limit)
+    print(p.long_wavelength_limit * 1e6)
+    print("=============")
     wave_ref = np.linspace(p.short_wavelength_limit * 1e6,
                            p.long_wavelength_limit * 1e6, 1000)
     weight = np.ones(1000)
