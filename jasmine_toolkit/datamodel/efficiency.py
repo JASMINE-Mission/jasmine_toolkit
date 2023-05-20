@@ -2,6 +2,7 @@ from dataclasses import field
 import dataclasses
 import numpy as np
 import json
+from astropy import units as u
 
 
 @dataclasses.dataclass(frozen=True)
@@ -15,8 +16,8 @@ class Efficiency:
         comment (str): Comments.
     """
     # set sample data as default
-    wavelength_grid: np.ndarray = field(default_factory=np.array([0.9, 1.6]))
-    efficiency_grid: np.ndarray = field(default_factory=np.array([0.85, 0.85]))
+    wavelength_grid: np.ndarray = field(default_factory=np.array([0.9, 1.6]) * u.m)
+    efficiency_grid: np.ndarray = field(default_factory=np.array([0.85, 0.85]) * u.m)
     title:      str = 'Default'
     comment:    str = 'default value'
 
@@ -36,8 +37,8 @@ class Efficiency:
         """
         with open(filename, 'r') as fp:
             js = json.load(fp)
-            wavelength_grid = np.array(js['wavelength'])
-            efficiency_grid = np.array(js['efficiency'])
+            wavelength_grid = np.array(js['wavelength']) * u.m
+            efficiency_grid = np.array(js['efficiency']) * u.m
             if 'title' in js:
                 title = js['title']
             if 'comment' in js:
@@ -68,8 +69,7 @@ class Efficiency:
             >>> wavref=np.linspace(0.8,1.6,1000)
             >>> val=efficiency.evaluate(wavref)
         """
-        # FIXME ここで単位捨ててる
-        val = np.interp(wavelength.value, self.wavelength_grid, self.efficiency_grid)
+        val = np.interp(wavelength, self.wavelength_grid, self.efficiency_grid)
         return val
 
     def weighted_mean(self, wavelength, weight):

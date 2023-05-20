@@ -275,12 +275,6 @@ def effective_focal_length():
 
 
 def __weighted_mean(p, efficiency):
-    print("---------")
-    print(p.short_wavelength_limit)
-    print(p.short_wavelength_limit * 1e6)
-    print(p.long_wavelength_limit)
-    print(p.long_wavelength_limit * 1e6)
-    print("=============")
     wave_ref = np.linspace(p.short_wavelength_limit * 1e6,
                            p.long_wavelength_limit * 1e6, 1000)
     weight = np.ones(1000)
