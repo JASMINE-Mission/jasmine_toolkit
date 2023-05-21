@@ -152,25 +152,16 @@ n_ref_pix_bottom = 8
 exposure_time = JasmineConstant(
     "exposure_time", "exposure_time", 12.5, "s", 0.0
 )
-
-
 ltan = JasmineConstant(
     "ltan", "ltan", 6, "h", 0.0
 )
-
 # TODO: check it should be const or variable?
-
-# cell_pix = JasmineConstant(
-#     "cell_pix", "cell_pix", 13, "", 0.0
-# )
 cell_pix = 13
-
 use_M_flag = False
+reference_wavelength = JasmineConstant(
+    "reference_wavelength", "reference_wavelength", 1.4e-6, "m", 0.0
+)
 
-# reference_wavelength = JasmineConstant(
-#     "reference_wavelength", "reference_wavelength", 1.4e-6, "", 0.0
-# )
-reference_wavelength = 1.4e-6
 
 def __make_optics_efficiency():
     spec_list = pkg_resources.resource_filename(
