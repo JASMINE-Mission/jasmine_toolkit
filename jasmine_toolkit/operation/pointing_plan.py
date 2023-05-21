@@ -22,11 +22,12 @@ class PointingPlan:
                 p.num_detector_x - 1) * p.pixel_size + p.detector_separation_x
         detector_y = p.detector_format_y * (
                 p.num_detector_y - 1) * p.pixel_size + p.detector_separation_y
-        self.__fov_x = detector_x / p.effective_focal_length
-        self.__fov_y = detector_y / p.effective_focal_length
+        self.__fov_x = detector_x / p.effective_focal_length * u.rad
+        self.__fov_y = detector_y / p.effective_focal_length * u.rad
         detector_gap = p.detector_separation_x \
             - p.detector_format_x * p.pixel_size
-        self.__gap_on_the_sky = detector_gap / p.effective_focal_length
+        self.__gap_on_the_sky = detector_gap \
+            / p.effective_focal_length * u.rad
         self._generate_grid()
 
     def get_grid(self) -> np.ndarray:
@@ -77,7 +78,7 @@ class PointingPlan:
             for j in range(n_b):
                 ll = l_min + self.__gap_on_the_sky * i
                 b = b_min + self.__gap_on_the_sky * j
-                c = SkyCoord(l=ll * u.rad, b=b * u.rad, frame='galactic')
+                c = SkyCoord(l=ll, b=b, frame='galactic')
                 ra = c.icrs.ra.rad
                 dec = c.icrs.dec.rad
                 self.__grid_coord[i][j][0] = ra
@@ -89,7 +90,7 @@ class PointingPlan:
         #   The code is implemented that always the algorithm is used for
         #   searching next FOV. It should be changed that successive two FOV
         #   should overlap half of its FOV.
-        l0 = -1
+        l0 = -1 * u.rad
         b0 = -1
         min_count = 100000
         n_l = len(self.__grid)
@@ -101,15 +102,15 @@ class PointingPlan:
                 b0 = b
         coord_l = p.minimum_l + l0 * self.__gap_on_the_sky
         coord_b = p.minimum_b + b0 * self.__gap_on_the_sky
-        self.__pointing = SkyCoord(l=coord_l * u.rad, b=coord_b * u.rad,
+        self.__pointing = SkyCoord(l=coord_l, b=coord_b,
                                    frame='galactic')
         return self.__pointing
 
     def _coord_to_grid(self, coord: SkyCoord):
-        coord_l = coord.galactic.l.rad
-        coord_b = coord.galactic.b.rad
-        if coord_l > math.pi:
-            coord_l = coord_l - math.pi * 2
+        coord_l = coord.galactic.l.rad * u.rad
+        coord_b = coord.galactic.b.rad * u.rad
+        if coord_l > math.pi * u.rad:
+            coord_l = (coord_l - math.pi * 2 * u.rad)
         ll = (coord_l - p.minimum_l) / self.__gap_on_the_sky
         b = (coord_b - p.minimum_b) / self.__gap_on_the_sky
         if self._check_range(b, ll):
@@ -137,7 +138,7 @@ class PointingPlan:
                         dec=self.__grid_coord[ll][b][1] * u.rad, frame='icrs')
 
     def _calc_pointing_bl(self, b, fov: float, array_length: float):
-        b = b + int(fov * 0.5 / self.__gap_on_the_sky)
+        b = b + int(fov * 0.5/ self.__gap_on_the_sky)
         if b < 0:
             b = 0
         if b >= array_length:
@@ -180,10 +181,11 @@ class PointingPlan:
         return arg
 
     def _get_field_of_view(self, pointing, pa):
-        ne = np.array([self.__fov_x / 2, self.__fov_y / 2])
-        se = np.array([self.__fov_x / 2, -self.__fov_y / 2])
-        sw = np.array([-self.__fov_x / 2, -self.__fov_y / 2])
-        nw = np.array([-self.__fov_x / 2, self.__fov_y / 2])
+        dv = 2 * u.rad
+        ne = np.array([self.__fov_x / dv, self.__fov_y / dv])
+        se = np.array([self.__fov_x / dv, -self.__fov_y / dv])
+        sw = np.array([-self.__fov_x / dv, -self.__fov_y / dv])
+        nw = np.array([-self.__fov_x / dv, self.__fov_y / dv])
         rot = np.array(
             [[math.cos(pa), math.sin(pa)], [-math.sin(pa), math.cos(pa)]])
         po = np.array([pointing.icrs.ra.rad, pointing.icrs.dec.rad])

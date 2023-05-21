@@ -194,30 +194,22 @@ earth_avoiding_angle = JasmineConstant(
     "earth_avoiding_angle", "earth_avoiding_angle",
     math.radians(25.7), "rad", 0.0
 )
-
-# minimum_l = JasmineConstant(
-#     "minimum_l", "minimum_l",
-#     math.radians(-1.4), "", 0.0
-# )
-minimum_l = math.radians(-1.4)
-
-# maximum_l = JasmineConstant(
-#     "maximum_l", "maximum_l",
-#     math.radians(0.7), "", 0.0
-# )
-maximum_l = math.radians(0.7)
-
-# minimum_b = JasmineConstant(
-#     "minimum_b", "minimum_b",
-#     math.radians(-0.6), "", 0.0
-# )
-minimum_b = math.radians(-0.6)
-
-# maximum_b = JasmineConstant(
-#     "maximum_b", "maximum_b",
-#     math.radians(0.6), "", 0.0
-# )
-maximum_b = math.radians(0.6)
+minimum_l = JasmineConstant(
+    "minimum_l", "minimum_l",
+    math.radians(-1.4), "rad", 0.0
+)
+maximum_l = JasmineConstant(
+    "maximum_l", "maximum_l",
+    math.radians(0.7), "rad", 0.0
+)
+minimum_b = JasmineConstant(
+    "minimum_b", "minimum_b",
+    math.radians(-0.6), "rad", 0.0
+)
+maximum_b = JasmineConstant(
+    "maximum_b", "maximum_b",
+    math.radians(0.6), "rad", 0.0
+)
 
 
 @constant_formula
