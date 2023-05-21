@@ -34,8 +34,8 @@ class Orbit:
             self.__initial_orbit_vector_lon = self.__initial_orbit_vector_lon \
                                               - 2.0 * math.pi * u.rad
         self.__orbital_radius = p.EQUATORIAL_EARTH_RADIUS + p.orbital_altitude
-        self.__cos_angle_max = math.cos(math.pi / 2 - p.earth_avoiding_angle +
-                                        math.acos(p.EQUATORIAL_EARTH_RADIUS /
+        self.__cos_angle_max = np.cos(math.pi / 2 * u.rad - p.earth_avoiding_angle +
+                                        np.arccos(p.EQUATORIAL_EARTH_RADIUS /
                                                   self.__orbital_radius))
         self.__target = SkyCoord(l=0.0 * u.deg, b=0.0 * u.deg, frame="galactic")
 

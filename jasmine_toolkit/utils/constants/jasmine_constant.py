@@ -190,11 +190,10 @@ def filter_efficiency():
     return Efficiency.from_json(__spec_list)
 
 
-# earth_avoiding_angle = JasmineConstant(
-#     "earth_avoiding_angle", "earth_avoiding_angle",
-#     math.radians(25.7), "", 0.0
-# )
-earth_avoiding_angle = math.radians(25.7)
+earth_avoiding_angle = JasmineConstant(
+    "earth_avoiding_angle", "earth_avoiding_angle",
+    math.radians(25.7), "rad", 0.0
+)
 
 # minimum_l = JasmineConstant(
 #     "minimum_l", "minimum_l",
