@@ -16,8 +16,10 @@ class Efficiency:
         comment (str): Comments.
     """
     # set sample data as default
-    wavelength_grid: np.ndarray = field(default_factory=np.array([0.9, 1.6]) * u.m)
-    efficiency_grid: np.ndarray = field(default_factory=np.array([0.85, 0.85]) * u.m)
+    wavelength_grid: np.ndarray\
+        = field(default_factory=np.array([0.9, 1.6]) * u.m)
+    efficiency_grid: np.ndarray\
+        = field(default_factory=np.array([0.85, 0.85]) * u.m)
     title:      str = 'Default'
     comment:    str = 'default value'
 

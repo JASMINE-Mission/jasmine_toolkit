@@ -69,8 +69,8 @@ if __name__ == '__main__':
     initial_time_0 = Time('2028-03-01T00:00:00', scale="tcb")
     duration_0 = TimeDelta(3 * u.yr)
     pointing_plan = m.make_data(EnumPointingFreedom.POINTING_FIXED,
-                                EnumPointingMode.FOUR_FOV_IN_ORBIT, initial_time_0,
-                                duration_0)
+                                EnumPointingMode.FOUR_FOV_IN_ORBIT,
+                                initial_time_0, duration_0)
     pointing_plan.save_plan('plan.csv')
     pointing_plan.save_grid('grid.csv')
     data = pointing_plan.get_grid()

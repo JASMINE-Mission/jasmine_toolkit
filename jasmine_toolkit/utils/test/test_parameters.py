@@ -17,7 +17,8 @@ def test_singleton():
     sg.effective_pupil_diameter = 0.2
     sg.ready()
     assert 0.19999 < two.effective_pupil_diameter < 0.200001
-    assert -0.0001 < sg.effective_pupil_diameter - two.effective_pupil_diameter < 0.0001
+    assert -0.0001 < sg.effective_pupil_diameter - two.effective_pupil_diameter\
+           < 0.0001
 
 
 def test_singleton_2():
@@ -32,7 +33,9 @@ def test_singleton_2():
 def test_update_from_file():
     p = Parameters()
     __turn_dirty()
-    filename = pkg_resources.resource_filename('jasmine_toolkit', 'utils/test/constants_update.yaml')
+    filename = pkg_resources\
+        .resource_filename('jasmine_toolkit',
+                           'utils/test/constants_update.yaml')
     p.apply(filename)
     p.ready()
     assert p.maneuver_time.value == 12345
@@ -143,7 +146,8 @@ def test_formulas():
 
 def test_efficiency():
     __reset()
-    # number of mirror = 5, mirror reflection rate = 0.98, QE = 0.8, filter through put = 0.9 is assumed
+    # number of mirror = 5, mirror reflection rate = 0.98, QE = 0.8,
+    # filter through put = 0.9 is assumed
     sg = Parameters()
     sg.ready()
     assert sg.total_efficiency.value == approx(0.6136365527435249)

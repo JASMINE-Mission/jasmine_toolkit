@@ -138,7 +138,7 @@ class PointingPlan:
                         dec=self.__grid_coord[ll][b][1] * u.rad, frame='icrs')
 
     def _calc_pointing_bl(self, b, fov: float, array_length: float):
-        b = b + int(fov * 0.5/ self.__gap_on_the_sky)
+        b = b + int(fov * 0.5 / self.__gap_on_the_sky)
         if b < 0:
             b = 0
         if b >= array_length:
