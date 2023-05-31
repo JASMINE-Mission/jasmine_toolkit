@@ -17,8 +17,8 @@ def test_singleton():
     sg.effective_pupil_diameter = 0.2
     sg.ready()
     assert 0.19999 < two.effective_pupil_diameter < 0.200001
-    assert -0.0001 < sg.effective_pupil_diameter - two.effective_pupil_diameter\
-           < 0.0001
+    assert -0.0001 < sg.effective_pupil_diameter\
+           - two.effective_pupil_diameter < 0.0001
 
 
 def test_singleton_2():
