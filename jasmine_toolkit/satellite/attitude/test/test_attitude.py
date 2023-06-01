@@ -20,11 +20,11 @@ def test_position_angle():
 
 def test_position_angle_over_pi():
     a: Attitude = Attitude(EnumPointingFreedom.POINTING_FIXED)
-    coord = SkyCoord(lon=-90.0 * u.deg, lat=0.0 * u.deg,
+    coord = SkyCoord(lon=-90.0 * u.deg, lat=45.0 * u.deg,
                      frame='barycentricmeanecliptic')
     time = Time('2022-09-23T00:00:00')
     pa = a.get_position_angle(coord, time)
-    assert math.isclose(pa, 4.71, abs_tol=0.01)
+    assert math.isclose(pa, 1.57, abs_tol=0.01)
 
 
 def test_position_angle_over_random(monkeypatch):
