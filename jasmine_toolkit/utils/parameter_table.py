@@ -22,8 +22,8 @@ v_list = [
 
     # detector
     p.pixel_size,
-    p.dark_current,
-    p.background_photon_flux,
+    p.dark_current_per_pix,
+    p.background_photon_flux_per_pix,
     p.detector_separation_x,
     p.detector_separation_y,
     ["full well electron", p.full_well_electron],
