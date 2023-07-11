@@ -22,8 +22,8 @@ v_list = [
 
     # detector
     p.pixel_size,
-#    p.dark_current,  # unit pix is not acceptable
-#    p.background_photon_flux,  # unit pix is not acceptable
+    # p.dark_current,  # unit pix is not acceptable
+    # p.background_photon_flux,  # unit pix is not acceptable
     p.detector_separation_x,
     p.detector_separation_y,
     ["full well electron", p.full_well_electron],
@@ -46,22 +46,22 @@ v_list = [
     ["read time", p.read_time, 1],
 
     # operation
-    ## orbit
+    # orbit
     p.orbital_altitude,
     p.ltan,
     ["orbital eccentricity", p.orbital_eccentricity],
     ["orbital period", p.orbital_period, 1],
     ["inclination", p.inclination, 1],
-    ## AOCS
+    # AOCS
     p.maneuver_time,
     p.large_maneuver_time,
     p.attitude_control_error_mas,
-    ## observation
+    # observation
     p.exposure_time,
     p.earth_avoiding_angle,
     ["window size in x direction", p.window_size_x],
     ["window size in y direction", p.window_size_y],
-    ## Science region
+    # Science region
     p.minimum_l,
     p.maximum_l,
     p.minimum_b,
@@ -94,15 +94,19 @@ def write_to_file(filename: str):
                      + "|" + str(v_list[i].unit) + "|"
                      + str(v_list[i].reference) + "|\n")
         elif isinstance(v_list[i], list):
-            if isinstance(v_list[i][1], astropy.units.quantity.Quantity):
-                fp.write("|" + v_list[i][0] + "|" + str(v_list[i][1].value)
-                         + "|" + str(v_list[i][1].unit) + "|")
-            else:
-                fp.write("|" + v_list[i][0] + "|" + str(v_list[i][1]) + "| |")
-            if len(v_list[i]) == 3:
-                fp.write("induced")
-            fp.write("|\n")
+            write_not_JasmineConstant(fp, i)
     fp.close()
+
+
+def write_not_JasmineConstant(fp, i):
+    if isinstance(v_list[i][1], astropy.units.quantity.Quantity):
+        fp.write("|" + v_list[i][0] + "|" + str(v_list[i][1].value)
+                 + "|" + str(v_list[i][1].unit) + "|")
+    else:
+        fp.write("|" + v_list[i][0] + "|" + str(v_list[i][1]) + "| |")
+    if len(v_list[i]) == 3:
+        fp.write("induced")
+    fp.write("|\n")
 
 
 if __name__ == '__main__':
