@@ -1,0 +1,5 @@
+# description:定数の意味
+
+maneuver_time:
+  value: 12345
+  unit: s
