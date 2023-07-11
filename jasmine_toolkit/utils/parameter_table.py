@@ -4,7 +4,7 @@ from jasmine_toolkit.utils.constants.jasmine_constant import JasmineConstant
 
 p.ready()
 v_list = [
-# te;escp@e
+    # telescope
     p.effective_pupil_diameter,
     ["central obscuration ratio", p.central_obscuration_ratio],
     ["F number", p.f_number],
@@ -14,9 +14,11 @@ v_list = [
     p.spider_thickness,
     ["spider type", p.spider_type],
     ["effective focal length", p.effective_focal_length, 1],
-#    p.filter_efficiency, # return value is Efficiency object
-    ["average telescope throughput", p.average_telescope_throughput, 1], # phy unit exists?
-    ["average filter efficiency", p.average_filter_efficiency, 1], # why unit exists?
+    # p.filter_efficiency, # return value is Efficiency object
+    ["average telescope throughput", p.average_telescope_throughput, 1],
+    # phy unit exists?
+    ["average filter efficiency", p.average_filter_efficiency, 1],
+    # why unit exists?
 
     # detector
     p.pixel_size,
@@ -34,7 +36,8 @@ v_list = [
     ["number of the reference pixels in right", p.n_ref_pix_right],
     ["number of the reference pixels in top", p.n_ref_pix_top],
     ["number of the reference pixels in bottom", p.n_ref_pix_bottom],
-    ["average quantum efficiency", p.average_quantum_efficiency, 1],  # why unit exists?
+    ["average quantum efficiency", p.average_quantum_efficiency, 1],
+    # why unit exists?
     ["detector format in x direction", p.detector_format_x, 1],
     ["detector format in x direction", p.detector_format_y, 1],
     # detector electronics
@@ -100,6 +103,7 @@ def write_to_file(filename: str):
                 fp.write("induced")
             fp.write("|\n")
     fp.close()
+
 
 if __name__ == '__main__':
     write_to_file("tmp.txt")
