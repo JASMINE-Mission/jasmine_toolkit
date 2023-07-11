@@ -22,8 +22,8 @@ v_list = [
 
     # detector
     p.pixel_size,
-    # p.dark_current,  # unit pix is not acceptable
-    # p.background_photon_flux,  # unit pix is not acceptable
+    p.dark_current,
+    p.background_photon_flux,
     p.detector_separation_x,
     p.detector_separation_y,
     ["full well electron", p.full_well_electron],
@@ -84,6 +84,7 @@ v_list = [
     p.POLAR_EARTH_RADIUS,
     p.ONE_YEAR,
 ]
+
 
 def write_to_file(filename: str):
     fp = open(filename, "w", encoding="utf-8")
