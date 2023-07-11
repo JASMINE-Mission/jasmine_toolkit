@@ -40,7 +40,7 @@ class Efficiency:
         with open(filename, 'r') as fp:
             js = json.load(fp)
             wavelength_grid = np.array(js['wavelength']) * u.m
-            efficiency_grid = np.array(js['efficiency']) * u.m
+            efficiency_grid = np.array(js['efficiency'])
             if 'title' in js:
                 title = js['title']
             if 'comment' in js:

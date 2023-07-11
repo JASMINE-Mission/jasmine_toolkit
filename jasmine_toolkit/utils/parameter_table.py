@@ -16,9 +16,7 @@ v_list = [
     ["effective focal length", p.effective_focal_length, 1],
     # p.filter_efficiency, # return value is Efficiency object
     ["average telescope throughput", p.average_telescope_throughput, 1],
-    # phy unit exists?
     ["average filter efficiency", p.average_filter_efficiency, 1],
-    # why unit exists?
 
     # detector
     p.pixel_size,
@@ -37,7 +35,6 @@ v_list = [
     ["number of the reference pixels in top", p.n_ref_pix_top],
     ["number of the reference pixels in bottom", p.n_ref_pix_bottom],
     ["average quantum efficiency", p.average_quantum_efficiency, 1],
-    # why unit exists?
     ["detector format in x direction", p.detector_format_x, 1],
     ["detector format in x direction", p.detector_format_y, 1],
     # detector electronics
@@ -95,11 +92,11 @@ def write_to_file(filename: str):
                      + "|" + str(v_list[i].unit) + "|"
                      + str(v_list[i].reference) + "|\n")
         elif isinstance(v_list[i], list):
-            write_not_JasmineConstant(fp, i)
+            write_without_name_item(fp, i)
     fp.close()
 
 
-def write_not_JasmineConstant(fp, i):
+def write_without_name_item(fp, i):
     if isinstance(v_list[i][1], astropy.units.quantity.Quantity):
         fp.write("|" + v_list[i][0] + "|" + str(v_list[i][1].value)
                  + "|" + str(v_list[i][1].unit) + "|")
