@@ -14,10 +14,10 @@ p.ready()
 
 def test_run():
     m = Mapping()
-    m.make_data(EnumPointingFreedom.POINTING_FIXED,
-                EnumPointingMode.FOUR_FOV_IN_ORBIT,
-                Time('2028-01-01T00:00:00', scale="tcb"),
-                TimeDelta(0.02 * u.d))
+    m.make_pointing_plan(EnumPointingFreedom.POINTING_FIXED,
+                         EnumPointingMode.FOUR_FOV_IN_ORBIT,
+                         Time('2028-01-01T00:00:00', scale="tcb"),
+                         TimeDelta(0.02 * u.d))
 
 
 def test_statistics():

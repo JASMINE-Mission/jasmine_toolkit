@@ -32,14 +32,11 @@ class Attitude:
         ra = pointing.icrs.ra.to('rad').value
         # calculate north perpendicular direction ra_np and dec_np to the
         # pointing direction
-        ra_np = ra
-        dec_np = dec + math.pi / 2
-        if dec >= 0.0:
-            dec_np = math.pi / 2 - dec
-            if ra >= math.pi:
-                ra_np = ra - math.pi
-            else:
-                ra_np = ra + math.pi
+        np = pointing.directional_offset_by(
+            pointing.position_angle(SkyCoord(0., 90., unit='deg')),
+            90.0 * u.deg).icrs
+        dec_np = np.dec.to('rad').value
+        ra_np = np.ra.to('rad').value
         if self.__mode == EnumPointingFreedom.POINTING_RANDOM:
             dec_np = dec_np + 0.34 * (random.random() - 0.5)
         # TODO factor 0.34 which means 20 degrees in radian should be variable
