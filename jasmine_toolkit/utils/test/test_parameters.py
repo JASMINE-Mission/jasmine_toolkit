@@ -150,7 +150,7 @@ def test_efficiency():
     # filter through put = 0.9 is assumed
     sg = Parameters()
     sg.ready()
-    assert sg.total_efficiency.value == approx(0.6136365527435249)
+    assert sg.total_efficiency == approx(0.6136365527435249)
 
 
 def test_troughput():
@@ -158,7 +158,7 @@ def test_troughput():
     sg = Parameters()
     sg.ready()
     val = sg.average_telescope_throughput
-    assert val.value == approx(0.825825)
+    assert val == approx(0.825825)
 
 
 def test_period():

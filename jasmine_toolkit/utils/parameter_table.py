@@ -75,34 +75,34 @@ v_list = [
     ["earth mu", p.earth_mu, 1],
     ["earth C1", p.earth_c1, 1],
     ["earth C2", p.earth_c2, 1],
-    p.EARTH_MASS,
-    p.CONST_OF_GRAVITATION,
-    p.EQUATORIAL_EARTH_RADIUS,
-    p.POLAR_EARTH_RADIUS,
-    p.ONE_YEAR,
 ]
+
+
+def write_jasmine_constant(fp, v):
+    fp.write("|" + str(v.name) + "|" + str(v.value) + "|" + str(v.unit) + "|"
+             + str(v.reference) + "|\n")
 
 
 def write_to_file(filename: str):
     fp = open(filename, "w", encoding="utf-8")
     fp.write("Parameter List\n^Name ^Value ^Units ^Comments^\n")
-    for i in range(len(v_list)):
-        if isinstance(v_list[i], JasmineConstant):
-            fp.write("|" + str(v_list[i].name) + "|" + str(v_list[i].value)
-                     + "|" + str(v_list[i].unit) + "|"
-                     + str(v_list[i].reference) + "|\n")
-        elif isinstance(v_list[i], list):
-            write_without_name_item(fp, i)
+    for v in v_list:
+        if isinstance(v, JasmineConstant):
+            write_jasmine_constant(fp, v)
+        elif isinstance(v, list):
+            write_without_name_item(fp, v)
+        else:
+            raise ValueError(f'wrong item type {type(v)}')
     fp.close()
 
 
-def write_without_name_item(fp, i):
-    if isinstance(v_list[i][1], astropy.units.quantity.Quantity):
-        fp.write("|" + v_list[i][0] + "|" + str(v_list[i][1].value)
-                 + "|" + str(v_list[i][1].unit) + "|")
+def write_without_name_item(fp, v):
+    if isinstance(v[1], astropy.units.quantity.Quantity):
+        fp.write("|" + v[0] + "|" + str(v[1].value)
+                 + "|" + str(v[1].unit) + "|")
     else:
-        fp.write("|" + v_list[i][0] + "|" + str(v_list[i][1]) + "| |")
-    if len(v_list[i]) == 3:
+        fp.write("|" + v[0] + "|" + str(v[1]) + "| |")
+    if len(v) == 3:
         fp.write("induced")
     fp.write("|\n")
 
