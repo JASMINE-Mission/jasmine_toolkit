@@ -96,13 +96,13 @@ short_wavelength_limit = JasmineConstant(
 read_out_noise = 15  # electron / read
 
 
-dark_current = JasmineConstant(
-    "dark_current", "dark_current", 25, "1 / s / pix", 0.0
+dark_current_per_pix = JasmineConstant(
+    "dark_current", "dark_current", 25, "1 / s", 0.0
 )   # electrons / sec / pixel
 
 
-background_photon_flux = JasmineConstant(
-    "background_photon_flux", "background_photon_flux", 8, "1 / s / pix", 0.0
+background_photon_flux_per_pix = JasmineConstant(
+    "background_photon_flux", "background_photon_flux", 8, "1 / s", 0.0
 )   # electrons / sec / pixel
 
 
