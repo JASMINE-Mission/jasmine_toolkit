@@ -72,7 +72,7 @@ full_well_electron = 100000     # electron
 
 # TODO: Definition of magnitude should be contains colour
 
-saturation_magnitude = 10.0
+saturation_magnitude = 9.5
 
 standard_magnitude = 12.5
 
