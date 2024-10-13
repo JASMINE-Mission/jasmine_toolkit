@@ -43,8 +43,8 @@ test = [
 homepage = 'https://github.com/JASMINE-Mission/jasmine_toolkit'
 repository = 'https://github.com/JASMINE-Mission/jasmine_toolkit'
 
-[tool.setuptools]
-packages = ['jasmine_toolkit']
+[tool.setuptools.packages.find]
+include = ['jasmine_toolkit*']
 
 [tool.setuptools.dynamic]
 version = { attr = 'jasmine_toolkit.version.version' }
