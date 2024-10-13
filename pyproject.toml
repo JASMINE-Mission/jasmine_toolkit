@@ -27,7 +27,6 @@ classifiers = [
 
 dynamic = ['version', 'readme']
 
-
 dependencies = [
   'numpy>=2.0',
   'astropy>=6.0'
