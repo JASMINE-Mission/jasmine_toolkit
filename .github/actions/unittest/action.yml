@@ -4,13 +4,11 @@ description: Unit test
 runs:
   using: "composite"
   steps:
-    - name: Install pytest and dependencies
+    - name: Install package
       env:
         BRANCH: ${{ github.ref_name }}
       run: |
-        python -m pip install pytest pytest-html pytest-cov
-        if [ -f jasmine_toolkit/utils/test/requirements.txt ];
-        then pip install -r jasmine_toolkit/utils/test/requirements.txt; fi
+        python -m pip install .[test]
       shell: bash
 
     - name: Test with pytest
