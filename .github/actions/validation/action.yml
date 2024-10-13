@@ -4,13 +4,11 @@ description: Detailed test for code validation.
 runs:
   using: "composite"
   steps:
-    - name: Install pytest and dependencies
+    - name: Install package
       env:
         BRANCH: ${{ github.ref_name }}
       run: |
-        python -m pip install pytest pytest-html pytest-cov hypothesis
-        if [ -f validation/requirements.txt ];
-        then pip install -r validation/requirements.txt; fi
+        python -m pip install .[test]
       shell: bash
 
     - name: Code validation
@@ -37,7 +35,7 @@ runs:
       with:
         payload: |
           {
-            "text": "${{ github.ref_name }}で${{ env.TEST_DIR }}配下のテストが全件パスしませんでした。\n詳細はGithub上のActionsページで直近のエラーとなっているActionを参照ください。"
+            "text": "some test in ${{ env.TEST_DIR }} failed in ${{ github.ref_name }}. Please checK the details in the corresponding errors in Actions in Github."
           }
       env:
         SLACK_WEBHOOK_URL: ${{ env.SLACK_WEBHOOK_URL}}
