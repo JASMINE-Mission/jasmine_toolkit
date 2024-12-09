@@ -24,5 +24,5 @@ def test_effective_focal_length():
     with p.update_parameters():
         p.telescope.f_number = 12.14 * 2
 
-    calc = p.telescope.effective_focal_length
-    assert efl == calc / 2.0
+    diff = efl - p.telescope.effective_focal_length / 2.0
+    assert diff.value == pytest.approx(0)

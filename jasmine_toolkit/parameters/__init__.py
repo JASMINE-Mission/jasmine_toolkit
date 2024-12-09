@@ -10,8 +10,6 @@ from .utils import parameter_editable
 from . import detector as detector
 from . import telescope as telescope
 
-from icecream import ic
-
 
 __Module = type(sys.modules['jasmine_toolkit.parameters'])
 

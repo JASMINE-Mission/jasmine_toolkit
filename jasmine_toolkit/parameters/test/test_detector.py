@@ -51,9 +51,10 @@ def test_evaluate_before_finalized():
 
 
 def test_pixel_scale():
-    pix = p.detector.pixel_scale
+    pix_scale = p.detector.pixel_scale
 
     with p.update_parameters():
-        p.telescope.f_number = 12.14 / 2
+        p.telescope.f_number = 12.14 / 2.0
 
-    assert pix != p.detector.pixel_scale
+    diff = pix_scale - p.detector.pixel_scale / 2.0
+    assert diff.value == pytest.approx(0)
