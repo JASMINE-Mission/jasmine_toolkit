@@ -7,27 +7,25 @@ from .calclated_registry import calculated
 from .utils  import Parameter
 
 
-__all__ = (
-    'naxis1',
-    'naxis2',
+__all__ = [
     'pixel_size',
-)
-
-naxis1 = Parameter(
+    'pixel_scale',
+    'full_well',
+    'readout_noise',
+    'dark_current',
+    'n_column_channel',
+    'n_row_channel',
+    'n_channel',
     'naxis1',
-    1200,
-    'pixel',
-    'the NAXI1 size of the detector.',
-    'default value',
-)
-
-naxis2 = Parameter(
     'naxis2',
-    1200,
-    'pixel',
-    'the NAXIS2 size of the detector.',
-    'default value',
-)
+    'n_reference_pixel_left',
+    'n_reference_pixel_right',
+    'n_reference_pixel_top',
+    'n_reference_pixel_bottom',
+    'sampling_frequency',
+    'minimum_readout_time',
+]
+
 
 pixel_size = Parameter(
     'pixel_size',
@@ -36,6 +34,7 @@ pixel_size = Parameter(
     'the pixel scale of the detector.',
     'default value',
 )
+
 
 @calculated
 def pixel_scale():
@@ -51,6 +50,7 @@ def pixel_scale():
         'calculated value',
     )
 
+
 full_well = Parameter(
     'full_well',
     100000,
@@ -58,6 +58,7 @@ full_well = Parameter(
     'Full well size of the pixel in electron',
     'default value',
 )
+
 
 readout_noise = Parameter(
     'readout_noise',
@@ -67,6 +68,7 @@ readout_noise = Parameter(
     'default value',
 )
 
+
 dark_current = Parameter(
     'dark_current',
     25.0,
@@ -74,3 +76,112 @@ dark_current = Parameter(
     'Dark current of the detector in electron/s',
     'default value',
 )
+
+
+n_column_channel = Parameter(
+    'n_column_channel',
+    123,
+    'pixel',
+    'number of columns per channel',
+    'default value',
+)
+
+
+n_row_channel = Parameter(
+    'n_row_channel',
+    1968,
+    'pixel',
+    'number of rows per channel',
+    'default value',
+)
+
+
+n_channel = Parameter(
+    'n_channel',
+    16,
+    'pixel',
+    'number of channels per detector',
+    'default value',
+)
+
+
+@calculated
+def naxis1():
+    import jasmine_toolkit.parameters.detector as d
+    return Parameter(
+        'naxis1',
+        d.n_column_channel * d.n_channel,
+        'pixel',
+        'number of pixels along with NAXIS1',
+        'calculated value',
+    )
+
+
+@calculated
+def naxis2():
+    import jasmine_toolkit.parameters.detector as d
+    return Parameter(
+        'naxis2',
+        d.n_row_channel,
+        'pixel',
+        'number of pixels along with NAXIS2',
+        'calculated value',
+    )
+
+
+n_reference_pixel_left = Parameter(
+    'n_reference_pixel_left',
+    8,
+    'pixel',
+    'number of reference pixels (left) per line',
+    'default value',
+)
+
+
+n_reference_pixel_right = Parameter(
+    'n_reference_pixel_right',
+    8,
+    'pixel',
+    'number of reference pixels (right) per line',
+    'default value',
+)
+
+
+n_reference_pixel_top = Parameter(
+    'n_reference_pixel_top',
+    8,
+    'pixel',
+    'number of reference pixels (top) per line',
+    'default value',
+)
+
+
+n_reference_pixel_bottom = Parameter(
+    'n_reference_pixel_bottom',
+    8,
+    'pixel',
+    'number of reference pixels (bottom) per line',
+    'default value',
+)
+
+
+sampling_frequency = Parameter(
+    'sampling_frequency',
+    2.0e5,
+    'pixel.Hz',
+    'pixel sampling frequency per channel',
+    'default value',
+)
+
+
+@calculated
+def minimum_readout_time():
+    import jasmine_toolkit.parameters.detector as d
+    pixel_channel = d.n_column_channel * d.n_row_channel
+    return Parameter(
+        'minimum_readout_time',
+        pixel_channel / d.sampling_frequency,
+        's',
+        'minimum raedout time',
+        'calculated value',
+    )

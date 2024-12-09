@@ -17,30 +17,30 @@ def test_evaluate_parameters():
 def test_assign_incompatible():
     with pytest.raises(Exception) as e:
         with p.update_parameters():
-            p.detector.naxis1 = 10
+            p.detector.pixel_size = 10
     assert isinstance(e.value, UnitIncompatibleError)
 
     with pytest.raises(Exception) as e:
         with p.update_parameters():
-            p.detector.naxis1 = 10 * u.m
+            p.detector.pixel_size = 10 * u.s
     assert isinstance(e.value, UnitIncompatibleError)
 
 
 def test_assign_compatible():
     with p.update_parameters():
-        p.detector.naxis1 = 1200 * u.pixel
-    assert isinstance(p.detector.naxis1, p.Parameter)
-    assert p.detector.naxis1 == 1200 * u.pixel
+        p.detector.pixel_size = 20 * u.um
+    assert isinstance(p.detector.pixel_size, p.Parameter)
+    assert p.detector.pixel_size == 20 * u.um
 
     with p.update_parameters():
-        new_naxis1 = 1100 * u.pixel
-        p.detector.naxis1 = new_naxis1
-    assert p.detector.naxis1 == new_naxis1
+        new_pixsize = 10 * u.um
+        p.detector.pixel_size = new_pixsize
+    assert p.detector.pixel_size == new_pixsize
 
     with p.update_parameters():
-        new_naxis1 = 1300 * u.pixel
-        p.detector.naxis1 = p.detector.naxis1.updated(new_naxis1)
-    assert p.detector.naxis1 == new_naxis1
+        new_pixsize = 30 * u.um
+        p.detector.pixel_size = p.detector.pixel_size.updated(new_pixsize)
+    assert p.detector.pixel_size == new_pixsize
 
 
 def test_unexpected_assignment():
