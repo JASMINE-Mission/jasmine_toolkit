@@ -16,12 +16,15 @@ __all__ = [
     'n_column_channel',
     'n_row_channel',
     'n_channel',
+    'naxis1_full',
+    'naxis2_full',
     'naxis1',
     'naxis2',
     'n_reference_pixel_left',
     'n_reference_pixel_right',
     'n_reference_pixel_top',
     'n_reference_pixel_bottom',
+    'alignment',
     'sampling_frequency',
     'minimum_readout_time',
 ]
@@ -106,11 +109,36 @@ n_channel = Parameter(
 
 
 @calculated
-def naxis1():
+def naxis1_full():
     import jasmine_toolkit.parameters.detector as d
     return Parameter(
-        'naxis1',
+        'naxis1_full',
         d.n_column_channel * d.n_channel,
+        'pixel',
+        'number of pixels along with NAXIS1',
+        'calculated value',
+    )
+
+
+@calculated
+def naxis2_full():
+    import jasmine_toolkit.parameters.detector as d
+    return Parameter(
+        'naxis2_full',
+        d.n_row_channel,
+        'pixel',
+        'number of pixels along with NAXIS2',
+        'calculated value',
+    )
+
+
+@calculated
+def naxis1():
+    import jasmine_toolkit.parameters.detector as d
+    n_ref = d.n_reference_pixel_left + d.n_reference_pixel_right
+    return Parameter(
+        'naxis1',
+        d.naxis1_full - n_ref,
         'pixel',
         'number of pixels along with NAXIS1',
         'calculated value',
@@ -120,9 +148,10 @@ def naxis1():
 @calculated
 def naxis2():
     import jasmine_toolkit.parameters.detector as d
+    n_ref = d.n_reference_pixel_top + d.n_reference_pixel_bottom
     return Parameter(
         'naxis2',
-        d.n_row_channel,
+        d.naxis2_full - n_ref,
         'pixel',
         'number of pixels along with NAXIS2',
         'calculated value',
@@ -161,6 +190,20 @@ n_reference_pixel_bottom = Parameter(
     8,
     'pixel',
     'number of reference pixels (bottom) per line',
+    'default value',
+)
+
+
+alignment = Parameter(
+    'alignment',
+    [
+        [[-1, +0, +21.33], [+0, -1, +21.33]],
+        [[+0, +1, -21.33], [-1, +0, +21.33]],
+        [[+1, +0, -21.33], [+0, +1, -21.33]],
+        [[+0, -1, +21.33], [+1, +0, -21.33]],
+    ],
+    '',
+    'coefficients of detector affine transformation',
     'default value',
 )
 
