@@ -17,7 +17,7 @@ runs:
       id: pytest
       continue-on-error: true
       run: |
-        python -m pytest validation --cov=. --cov-report xml
+        python -m pytest --forked validation --cov=. --cov-report xml
       shell: bash
 
     - name: Send Coverage Report to CodeClimate
