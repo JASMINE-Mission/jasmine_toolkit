@@ -50,3 +50,27 @@ def pixel_scale():
         'the effective pixel scale on the sky',
         'calculated value',
     )
+
+full_well = Parameter(
+    'full_well',
+    100000,
+    'electron',
+    'Full well size of the pixel in electron',
+    'default value',
+)
+
+readout_noise = Parameter(
+    'readout_noise',
+    15.0,
+    'electron / pixel',
+    'Readout noise of the detector in electron',
+    'default value',
+)
+
+dark_current = Parameter(
+    'dark_current',
+    25.0,
+    'electron / s',
+    'Dark current of the detector in electron/s',
+    'default value',
+)

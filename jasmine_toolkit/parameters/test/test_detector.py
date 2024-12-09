@@ -43,6 +43,12 @@ def test_assign_compatible():
     assert p.detector.naxis1 == new_naxis1
 
 
+def test_unexpected_assignment():
+    with pytest.raises(Exception) as e:
+        p.detector.pixel_scale = 1.0e-5 * u.degree
+    assert isinstance(e.value, NameError)
+
+
 def test_evaluate_before_finalized():
     with pytest.raises(Exception) as e:
         with p.update_parameters():
