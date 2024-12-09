@@ -3,9 +3,10 @@
 
 Fill in a nice introduction of the module here.
 '''
-import sys
+import sys, warnings
 from .calclated_registry import _get_calculated_attributes
-from .parameter import Parameter, setup_parameters
+from .utils import Parameter, update_parameters
+from .utils import parameter_editable
 from . import detector as detector
 from . import telescope as telescope
 
@@ -20,17 +21,20 @@ def print_parameters():
         print(p.info)
 
 
-class ProtectedModule(__Module):
+class ParameterModule(__Module):
     @property
     def __calc_dict__(self):
         return _get_calculated_attributes()
 
-    def __getattr__(self, attr):
+    def __getattribute__(self, attr):
+        if attr in ('__class__'):
+            return super().__getattribute__(attr)
+
         calculated_attr = _get_calculated_attributes()
         if attr in calculated_attr:
             return calculated_attr[attr]()
         else:
-            return super()._getattr__(attr)
+            return super().__getattribute__(attr)
 
     def __setattr__(self, attr, val):
         if attr.startswith('_'):
@@ -57,11 +61,14 @@ class ProtectedModule(__Module):
                         description=exists.description,
                         reference=reference)
                     super().__setattr__(attr, param)
+                if not parameter_editable():
+                    warnings.warn(
+                        f'Parameter "{attr}" is updated unexpectedly.', stacklevel=2)
             else:
                 super().__setattr__(attr, val)
 
 for __name in sys.modules.keys():
     if __name.startswith('jasmine_toolkit.parameters'):
-        sys.modules[__name].__class__ = ProtectedModule
+        sys.modules[__name].__class__ = ParameterModule
 
 del __name

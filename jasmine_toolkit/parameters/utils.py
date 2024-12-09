@@ -11,36 +11,30 @@ from .exception import *
 
 __all__ = (
     'Parameter',
-    'setup_parameters',
+    'update_parameters',
 )
 
 
 __parameter_editable = Event()
 
 
-def finalize_parameters():
-    ''' Finalize the parameters '''
-    __parameter_editable.clear()
-
-
-def unfinalize_parameters():
-    ''' Make the parameters editable '''
-    __parameter_editable.set()
+def parameter_editable():
+    return __parameter_editable.is_set()
 
 
 @contextmanager
-def setup_parameters():
+def update_parameters():
     ''' Provide a context where parameters are updated without warnings '''
     try:
-        yield unfinalize_parameters()
+        yield __parameter_editable.set()
     finally:
-        finalize_parameters()
+        __parameter_editable.clear()
 
 
 def parameter_finalized(func):
     @functools.wraps(func)
     def wrap(*args, **params):
-        if not __parameter_editable.is_set():
+        if __parameter_editable.is_set():
             raise ParameterNotFinalized('parameters are not finalized yet.')
         return func(*args, **params)
     return wrap
@@ -134,7 +128,7 @@ class Parameter(Quantity, metaclass=ParameterMeta):
     def __assign__(self, value):
         raise ParameterProtected(f'Parameter {self.name} is protected.')
 
-    def is_compatible(self, value, unit=None):
+    def is_compatible(self, value, unit=dimensionless_unscaled):
         if isinstance(value, Quantity):
             if not value.unit.is_equivalent(self.unit):
                 raise UnitIncompatibleError(
@@ -143,7 +137,7 @@ class Parameter(Quantity, metaclass=ParameterMeta):
             if not Unit(unit).is_equivalent(self.unit):
                 raise UnitIncompatibleError(
                     f'units ({self.unit}, {unit}) are not compatible')
-        if self.shape != value.shape:
+        if not isinstance(value, float) and self.shape != value.shape:
             raise UnitIncompatibleError(
                 f'Shape {value.shape} is not compatible with {self.shape}.')
         return True
