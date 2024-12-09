@@ -11,47 +11,38 @@ from .exception import *
 
 __all__ = (
     'Parameter',
-    'finalize_parameters',
-    'finalized_context',
+    'setup_parameters',
 )
 
 
-__parameter_finalized = Event()
+__parameter_editable = Event()
 
 
 def finalize_parameters():
-    __parameter_finalized.set()
+    ''' Finalize the parameters '''
+    __parameter_editable.clear()
 
 
 def unfinalize_parameters():
-    __parameter_finalized.clear()
+    ''' Make the parameters editable '''
+    __parameter_editable.set()
 
 
 @contextmanager
-def finalized_context():
+def setup_parameters():
+    ''' Provide a context where parameters are updated without warnings '''
     try:
-        yield finalize_parameters()
+        yield unfinalize_parameters()
     finally:
-        unfinalize_parameters()
+        finalize_parameters()
 
 
 def parameter_finalized(func):
     @functools.wraps(func)
     def wrap(*args, **params):
-        if __parameter_finalized.is_set():
-            return func(*args, **params)
-        else:
+        if not __parameter_editable.is_set():
             raise ParameterNotFinalized('parameters are not finalized yet.')
-    return wrap
-
-
-def parameter_adjustable(func):
-    @functools.wraps(func)
-    def wrap(*args, **params):
-        if not __parameter_finalized.is_set():
-            return func(*args, **params)
-        else:
-            raise ParameterFinalized('parameters are already finalized.')
+        return func(*args, **params)
     return wrap
 
 
@@ -86,8 +77,8 @@ class Parameter(Quantity, metaclass=ParameterMeta):
         inst._description = description
         inst._reference = reference
 
-        if name_lower in cls.__registry.keys():
-            raise ParameterDuplicated(f'parameter {name} already defined')
+        # if name_lower in cls.__registry.keys():
+        #     raise ParameterDuplicated(f'parameter {name} already defined')
         cls.__registry.update({name_lower: inst})
 
         return inst
@@ -95,6 +86,13 @@ class Parameter(Quantity, metaclass=ParameterMeta):
     @classmethod
     def all_parameters(cls):
         return cls.__registry.copy()
+
+    def updated(self, value, description=None, reference=None):
+        description = description or self.description
+        reference = reference or 'manually updated'
+        return Parameter(
+            name=self.name, value=value, unit=value.unit,
+            description=description, reference=reference)
 
     def __repr__(self):
         return (
@@ -133,31 +131,22 @@ class Parameter(Quantity, metaclass=ParameterMeta):
     def __all(self):
         return np.full(self.shape, True)
 
-    @parameter_adjustable
     def __assign__(self, value):
-        if isinstance(value, Quantity):
-            self.update(value)
-        else:
-            raise ParameterProtected(f'Parameter {self.name} is protected.')
+        raise ParameterProtected(f'Parameter {self.name} is protected.')
 
-    @parameter_adjustable
-    def update(self, value, unit=None, reference=None):
-        reference = reference or 'manually updated'
-
+    def is_compatible(self, value, unit=None):
         if isinstance(value, Quantity):
             if not value.unit.is_equivalent(self.unit):
-                raise UnitIncompatibility(
+                raise UnitIncompatibleError(
                     f'units ({self.unit}, {value.unit}) are not compatible')
-            self._set_unit(value.unit)
-            np.place(self, self.__all, value.copy())
         else:
-            unit = unit or dimensionless_unscaled
             if not Unit(unit).is_equivalent(self.unit):
-                raise UnitIncompatibility(
+                raise UnitIncompatibleError(
                     f'units ({self.unit}, {unit}) are not compatible')
-            self._set_unit(unit)
-            np.place(self, self.__all, Quantity(value, unit=unit).copy())
-        self._reference = reference or 'manually defined'
+        if self.shape != value.shape:
+            raise UnitIncompatibleError(
+                f'Shape {value.shape} is not compatible with {self.shape}.')
+        return True
 
     @property
     def name(self):

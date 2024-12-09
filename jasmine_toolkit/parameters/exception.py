@@ -1,23 +1,31 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
+''' Exceptions of the parameters module '''
+
 
 __all__ = (
+    'ParameterChanged',
     'ParameterProtected',
     'ParameterFinalized',
     'ParameterNotFinalized',
     'ParameterDuplicated',
-    'UnitIncompatibility',
+    'UnitIncompatibleError',
 )
 
 
-class ParameterProtected(RuntimeError):
+class ParameterChanged(UserWarning):
     pass
 
 
-class ParameterFinalized(RuntimeError):
+class ParameterProtected(UserWarning):
     pass
 
 
-class ParameterNotFinalized(RuntimeError):
+class ParameterFinalized(UserWarning):
+    pass
+
+
+class ParameterNotFinalized(UserWarning):
     pass
 
 
@@ -25,5 +33,5 @@ class ParameterDuplicated(RuntimeError):
     pass
 
 
-class UnitIncompatibility(ValueError):
+class UnitIncompatibleError(ValueError):
     pass
