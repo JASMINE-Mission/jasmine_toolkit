@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 ''' File description '''
 
-import functools
+import functools, inspect
 
 __all__ = [
     'calculated',
@@ -14,10 +14,14 @@ __registry = {}
 
 def calculated(func):
     ''' Decorator to register a function in the registry '''
-    __registry[func.__name__] = func
+    module = inspect.getmodule(inspect.stack()[1].frame)
+    module_name = module.__name__
+    if module_name not in __registry.keys():
+        __registry[module_name] = {}
+    __registry[module_name][func.__name__] = func
     return func
 
 
-def _get_calculated_attributes():
+def _get_calculated_attributes(name):
     ''' Retrieve the registered attributes '''
-    return __registry
+    return __registry.get(name, {})

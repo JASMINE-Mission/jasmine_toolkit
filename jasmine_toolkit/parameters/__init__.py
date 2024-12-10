@@ -24,13 +24,13 @@ def print_parameters():
 class ParameterModule(__Module):
     @property
     def __calc_dict__(self):
-        return _get_calculated_attributes()
+        return _get_calculated_attributes(self.__name__)
 
     def __getattribute__(self, attr):
-        if attr in ('__class__'):
+        if attr in ('__class__', '__name__'):
             return super().__getattribute__(attr)
 
-        calculated_attr = _get_calculated_attributes()
+        calculated_attr = _get_calculated_attributes(self.__name__)
         if attr in calculated_attr:
             return calculated_attr[attr]()
         else:
