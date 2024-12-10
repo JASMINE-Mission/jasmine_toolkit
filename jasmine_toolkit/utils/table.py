@@ -56,11 +56,11 @@ def __table_header():
 def __table_item_template(name, value, unit, reference):
     if isinstance(value, np.ndarray):
         value = str(value)
-        return f'| {name:28s} | {value:>16} | {unit:18} | {reference:24s} |\n'
+        return f'| {name:28s} | {value:>16} | {unit:18} | {reference:40s} |\n'
     elif isinstance(value, float):
-        return f'| {name:28s} | {value:16.2f} | {unit:18} | {reference:24s} |\n'
+        return f'| {name:28s} | {value:16.2f} | {unit:18} | {reference:40s} |\n'
     else:
-        return f'| {name:28s} | {value:16} | {unit:18} | {reference:24s} |\n'
+        return f'| {name:28s} | {value:16} | {unit:18} | {reference:40s} |\n'
 
 
 def dump_table(output=None, overwrite=False, **options):
