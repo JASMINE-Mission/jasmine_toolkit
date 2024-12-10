@@ -10,6 +10,8 @@ from .utils import parameter_editable
 from . import detector as detector
 from . import telescope as telescope
 from . import satellite as satellite
+from . import mission as mission
+
 
 __Module = type(sys.modules['jasmine_toolkit.parameters'])
 

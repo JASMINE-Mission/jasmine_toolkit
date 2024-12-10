@@ -4,7 +4,7 @@
 
 import numpy as np
 from .calclated_registry import calculated
-from .utils  import Parameter
+from .utils import Parameter
 
 
 __all__ = [
@@ -66,7 +66,7 @@ full_well = Parameter(
 readout_noise = Parameter(
     'readout_noise',
     15.0,
-    'electron / pixel',
+    'electron / pix',
     'Readout noise of the detector in electron',
     'default value',
 )
@@ -75,7 +75,7 @@ readout_noise = Parameter(
 dark_current = Parameter(
     'dark_current',
     25.0,
-    'electron / s',
+    'electron / (pix s)',
     'Dark current of the detector in electron/s',
     'default value',
 )

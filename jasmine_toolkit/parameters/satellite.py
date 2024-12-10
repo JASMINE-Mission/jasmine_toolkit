@@ -4,7 +4,7 @@
 
 import numpy as np
 from .calclated_registry import calculated
-from .utils  import Parameter
+from .utils import Parameter
 
 
 __all__ = [

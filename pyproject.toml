@@ -39,6 +39,9 @@ test = [
   'pytest-forked>=1.6'
 ]
 
+[project.scripts]
+jasmien_toolkit = 'jasmine_toolkit.bin.toolkit:main'
+
 [project.urls]
 homepage = 'https://github.com/JASMINE-Mission/jasmine_toolkit'
 repository = 'https://github.com/JASMINE-Mission/jasmine_toolkit'

@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 ''' Test cases for the detector parameters '''
+
 import pytest
 import astropy.units as u
 import jasmine_toolkit.parameters as p
