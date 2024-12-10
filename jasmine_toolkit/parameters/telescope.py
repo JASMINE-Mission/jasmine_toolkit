@@ -62,3 +62,21 @@ field_of_view = Parameter(
     'the side lengths of the field of view',
     'default value',
 )
+
+
+n_spider = Parameter(
+    'n_spider',
+    3,
+    '',
+    'number of the secondary mirror supports',
+    'default value',
+)
+
+
+spider_thickness = Parameter(
+    'spider_thickness',
+    3.0,
+    'mm',
+    'thickness of the secondary mirror supports',
+    'default value',
+)
