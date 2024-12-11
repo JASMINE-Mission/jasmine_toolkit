@@ -29,7 +29,8 @@ dynamic = ['version', 'readme']
 
 dependencies = [
   'numpy>=2.0',
-  'astropy>=6.0'
+  'astropy>=6.0',
+  'matplotlib>=3.9'
 ]
 
 [project.optional-dependencies]
