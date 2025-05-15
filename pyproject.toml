@@ -31,7 +31,7 @@ dependencies = [
   'numpy>=2.0',
   'astropy>=7.0',
   'matplotlib>=3.10',
-  'dust_extinction>=1.6'
+  'dust_extinction>=1.5'
 ]
 
 [project.optional-dependencies]
