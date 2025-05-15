@@ -98,6 +98,10 @@ class Parameter(Quantity, metaclass=ParameterMeta):
         )
 
     @property
+    def quantity(self):
+        return Quantity(self.value, self.unit)
+
+    @property
     def info(self):
         return (
             f'[{self.name}]\n'
