@@ -41,6 +41,20 @@ class NL20:
     lambda_h = 1.662 * u.um
 
     def __init__(self, pp=-0.5, original_Rv=3.1):
+        ''' Initialize the NL20 extinction model
+
+        Arguments:
+            pp (float):
+                Power law index for the wavelength dependence of the
+                extinction curve. The default value is -0.5, which
+                corresponds to the extinction law estimated by
+                Nogueras-Lara et al. (2020).
+
+            original_Rv (float):
+                Original Rv value for the Fitzpatrick et al. (2019)
+                extinction model. The default value is 3.1, which is
+                the original value used in the model.
+        '''
         self.__pp = pp
         self.__Rv = original_Rv
         self.__anchor = 5500 * u.angstrom
@@ -50,11 +64,40 @@ class NL20:
         return F19(Rv=self.__Rv)
 
     def __factor(self, l):
+        ''' Calculate the modification factor for the extinction curve '''
         return (l / self.__anchor)**self.__pp
 
     def extinguish(self, wavelength, Av):
+        ''' Calculate the reduction factor for a given wavelength and Av
+
+        Arguments:
+            wavelength (float or array):
+                Wavelength in Angstroms. The wavelength should be
+                provided in Angstroms.
+
+            Av (float):
+                Visual extinction in magnitudes. The Av value should
+                be provided in magnitudes.
+
+        Returns:
+            Reduction factor (float or array)
+        '''
         return self.__model.extinguish(wavelength, Av) \
             ** self.__factor(wavelength)
 
     def extinction(self, wavelength, Av):
+        ''' Calculate the extinction in magnitudes
+
+        Arguments:
+            wavelength (float or array):
+                Wavelength in Angstroms. The wavelength should be
+                provided in Angstroms.
+
+            Av (float):
+                Visual extinction in magnitudes. The Av value should
+                be provided in magnitudes.
+
+        Returns:
+            Extinction in magnitudes (float or array)
+        '''
         return -2.5 * np.log10(self.extinguish(wavelength, Av))
