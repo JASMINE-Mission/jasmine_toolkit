@@ -15,13 +15,8 @@ def model():
 
 
 def test_constructor_with_parameters():
-    model = NL20(Rv=1.0, pp=0.5)
+    model = NL20(pp=0.5, original_Rv=1.0)
     assert isinstance(model, NL20)
-
-
-def test_properties(model):
-    assert model.Rv == 3.1
-    assert model.pp == -0.5
 
 
 def test_extinction_null(model):

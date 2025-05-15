@@ -40,27 +40,17 @@ class NL20:
     lambda_j = 1.235 * u.um
     lambda_h = 1.662 * u.um
 
-    def __init__(self, Rv=3.1, pp=-0.5):
-        self.__Rv = Rv
+    def __init__(self, pp=-0.5, original_Rv=3.1):
         self.__pp = pp
+        self.__Rv = original_Rv
         self.__anchor = 5500 * u.angstrom
 
     @property
-    def Rv(self):
-        ''' The total-to-selective extinction ratio. '''
-        return self.__Rv
-
-    @property
-    def pp(self):
-        ''' The power-law index for the extinction curve. '''
-        return self.__pp
-
-    @property
     def __model(self):
-        return F19(Rv=self.Rv)
+        return F19(Rv=self.__Rv)
 
     def __factor(self, l):
-        return (l / self.__anchor)**self.pp
+        return (l / self.__anchor)**self.__pp
 
     def extinguish(self, wavelength, Av):
         return self.__model.extinguish(wavelength, Av) \
