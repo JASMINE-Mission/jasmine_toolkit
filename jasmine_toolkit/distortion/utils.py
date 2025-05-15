@@ -1,6 +1,19 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-''' Miscellaneous functions '''
+''' Utilities for distortion correction
+
+This module provides utility functions for distortion correction, including:
+
+- `generate_grid`:
+        Generates a grid of points around a specified pointing direction.
+- `get_residual`:
+        Computes the residual distortion pattern using polynomial fitting.
+- `visualize_difference`:
+        Visualizes the differences between target and reference footprints.
+
+These functions are designed to assist in analyzing and correcting distortion
+patterns in astronomical imaging data.
+'''
 
 from astropy.coordinates import SkyCoord
 from astropy.modeling.models import Polynomial2D, Legendre2D
@@ -22,24 +35,24 @@ def generate_grid(lon, lat, dlon=0.5, dlat=0.5, n_grids=31, frame='icrs'):
 
     Arguments:
         lon: `Quantity`
-          The longitude of the poniting direction.
+            The longitude of the pointing direction.
 
         lat: `Quantity`
-          The latitude of the pointing direction.
+            The latitude of the pointing direction.
 
         dlon: `float`
-          The width of the grid area in degree.
-          Defaults to 0.5.
+            The width of the grid area in degree.
+            Defaults to 0.5.
 
         dlat: `float`
-          The height of the grid area in degree.
-          Defaults to 0.5.
+            The height of the grid area in degree.
+            Defaults to 0.5.
 
         n_grids: `int`
-          The number of grid points along with side.
+            The number of grid points along each side.
 
     Returns:
-        SkyCoord instance with sources alined in a grid.
+        SkyCoord instance with sources aligned in a grid.
     '''
     center = SkyCoord(lon, lat, frame=frame)
     lon_tics = np.linspace(-dlon / 2.0, dlon / 2.0, n_grids) * u.deg
@@ -56,17 +69,17 @@ def get_residual(degree, xy, dxy, legendre=False):
 
     Arguments:
         degree: `float`
-          The maximum order of the polynomial functions
+            The maximum order of the polynomial functions
 
         xy: `NDarray[n, 2]`
-          Evaluation points on the focal plane coordinates.
-          Used as explanatory variables in polynomial fitting.
+            Evaluation points on the focal plane coordinates.
+            Used as explanatory variables in polynomial fitting.
 
         dxy: `NDarray[n, 2]`
-          A distortion pattern on the focal plane coordinates.
+            A distortion pattern on the focal plane coordinates.
 
         legendre: `boolean`
-          Use the Legendre polynomial basis if true.
+            Use the Legendre polynomial basis if true.
 
     Returns:
         The residual distortion pattern.
@@ -97,7 +110,7 @@ def visualize_difference(
         reference: `NDArray[n, 2]`
 
         output: `str`
-          The figure will be saved as the specified file.
+            The figure will be saved as the specified file.
     '''
     dv = target - reference
 
