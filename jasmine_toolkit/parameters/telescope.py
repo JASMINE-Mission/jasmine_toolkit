@@ -22,7 +22,7 @@ pupil_diameter = Parameter(
     36,
     'cm',
     'the effective diameter of the primary mirror',
-    'default value',
+    'jas36xm2_as35',
 )
 
 f_number = Parameter(
@@ -30,7 +30,7 @@ f_number = Parameter(
     12.14,
     '',
     'the F-number of the optics',
-    'default value',
+    'jas36xm2_as35',
 )
 
 
@@ -51,7 +51,7 @@ central_obscuration = Parameter(
     0.35,
     '',
     'the obscuration by the secondary mirror in length ratio',
-    'default value',
+    'jas36xm2_as35',
 )
 
 
@@ -60,7 +60,7 @@ field_of_view = Parameter(
     [0.55, 0.55],
     'degree',
     'the side lengths of the field of view',
-    'default value',
+    'Mission Design Report (RPR-SJ430003B)',
 )
 
 
@@ -69,14 +69,14 @@ n_spider = Parameter(
     3,
     '',
     'number of the secondary mirror supports',
-    'default value',
+    'jas36xm2_as35',
 )
 
 
 spider_thickness = Parameter(
     'spider_thickness',
-    3.0,
+    10.0,
     'mm',
     'thickness of the secondary mirror supports',
-    'default value',
+    'jas36xm2_as35',
 )

@@ -35,7 +35,7 @@ pixel_size = Parameter(
     10,
     'um',
     'the pixel scale of the detector.',
-    'default value',
+    'HPK CMOS design document (K51-B90034)',
 )
 
 
@@ -59,16 +59,16 @@ full_well = Parameter(
     100000,
     'electron',
     'Full well size of the pixel in electron',
-    'default value',
+    'HPK CMOS design document (K51-B90034)',
 )
 
 
 readout_noise = Parameter(
     'readout_noise',
-    15.0,
+    41.0,
     'electron / pix',
     'Readout noise of the detector in electron',
-    'default value',
+    'tentative value',
 )
 
 
@@ -77,7 +77,7 @@ dark_current = Parameter(
     25.0,
     'electron / (pix s)',
     'Dark current of the detector in electron/s',
-    'default value',
+    'tentative value',
 )
 
 
@@ -86,7 +86,7 @@ n_column_channel = Parameter(
     123,
     'pixel',
     'number of columns per channel',
-    'default value',
+    'HPK CMOS design document (K51-B90034)',
 )
 
 
@@ -95,7 +95,7 @@ n_row_channel = Parameter(
     1968,
     'pixel',
     'number of rows per channel',
-    'default value',
+    'HPK CMOS design document (K51-B90034)',
 )
 
 
@@ -104,7 +104,7 @@ n_channel = Parameter(
     16,
     'pixel',
     'number of channels per detector',
-    'default value',
+    'HPK CMOS design document (K51-B90034)',
 )
 
 
@@ -163,7 +163,7 @@ n_reference_pixel_left = Parameter(
     8,
     'pixel',
     'number of reference pixels (left) per line',
-    'default value',
+    'HPK CMOS design document (K51-B90034)',
 )
 
 
@@ -172,7 +172,7 @@ n_reference_pixel_right = Parameter(
     8,
     'pixel',
     'number of reference pixels (right) per line',
-    'default value',
+    'HPK CMOS design document (K51-B90034)',
 )
 
 
@@ -181,7 +181,7 @@ n_reference_pixel_top = Parameter(
     8,
     'pixel',
     'number of reference pixels (top) per line',
-    'default value',
+    'HPK CMOS design document (K51-B90034)',
 )
 
 
@@ -190,7 +190,7 @@ n_reference_pixel_bottom = Parameter(
     8,
     'pixel',
     'number of reference pixels (bottom) per line',
-    'default value',
+    'HPK CMOS design document (K51-B90034)',
 )
 
 
@@ -204,7 +204,7 @@ alignment = Parameter(
     ],
     '',
     'coefficients of detector affine transformation',
-    'default value',
+    'MDR document (RPR-SJ430003B)',
 )
 
 
@@ -213,7 +213,7 @@ sampling_frequency = Parameter(
     2.0e5,
     'pixel.Hz',
     'pixel sampling frequency per channel',
-    'default value',
+    'HPK CMOS design document (K51-B90034)',
 )
 
 

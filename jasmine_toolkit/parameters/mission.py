@@ -19,7 +19,7 @@ gcs_longitude_range = Parameter(
   [-1.4, 0.7],
   'degree',
   'Galactic longitude range of the Galactic Center Astrometry Survey field',
-  'default value',
+  'MDR document (RPR-SJ430003B)',
 )
 
 gcs_latitude_range = Parameter(
@@ -27,7 +27,7 @@ gcs_latitude_range = Parameter(
   [-0.6, 0.6],
   'degree',
   'Galactic latitude range of the Galactic Center Astrometry Survey field',
-  'default value',
+  'MDR document (RPR-SJ430003B)',
 )
 
 gcs_magnitude_range = Parameter(
@@ -35,5 +35,5 @@ gcs_magnitude_range = Parameter(
   [9.5, 14.5],
   'mag',
   'Target magnitude range of the Galactic Center Astrometry Survey',
-  'default value',
+  'MDR document (RPR-SJ430003B)',
 )

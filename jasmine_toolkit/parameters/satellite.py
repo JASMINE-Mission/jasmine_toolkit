@@ -20,7 +20,7 @@ attitude_control_error = Parameter(
     400,
     'mas',
     'typical satellite attitude control error in 12.5 sec',
-    'default value',
+    'Mission Design Report (RPR-SJ430003B)',
 )
 
 
@@ -29,7 +29,7 @@ orbital_altitude = Parameter(
     600,
     'km',
     'orbital altitude',
-    'default value',
+    'Mission Design Report (RPR-SJ430003B)',
 )
 
 
@@ -38,7 +38,7 @@ earth_avoidance_angle_limit = Parameter(
     25.7,
     'degree',
     'minimum earth avoidance angle',
-    'default value',
+    'Mission Design Report (RPR-SJ430003B)',
 )
 
 
@@ -47,5 +47,5 @@ solar_face_angle_limit = Parameter(
     40.0,
     'degree',
     'maximum solar face angle',
-    'default value',
+    'Mission Design Report (RPR-SJ430003B)',
 )
