@@ -53,14 +53,14 @@ def __table_header():
     return 'Parameter List\n\n^Name ^Value ^Units ^Comments^\n'
 
 
-def __table_item_template(name, value, unit, reference):
+def __table_item_template(name, value, unit, ref):
     if isinstance(value, np.ndarray):
         value = str(value)
-        return f'| {name:28s} | {value:>16} | {unit:18} | {reference:40s} |\n'
+        return f'| {name:28s} | {value:>16} | {unit:18} | {ref:40s} |\n'
     elif isinstance(value, float):
-        return f'| {name:28s} | {value:16.2f} | {unit:18} | {reference:40s} |\n'
+        return f'| {name:28s} | {value:16.2f} | {unit:18} | {ref:40s} |\n'
     else:
-        return f'| {name:28s} | {value:16} | {unit:18} | {reference:40s} |\n'
+        return f'| {name:28s} | {value:16} | {unit:18} | {ref:40s} |\n'
 
 
 def dump_table(output=None, overwrite=False, **options):
