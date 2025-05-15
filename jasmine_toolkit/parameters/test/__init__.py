@@ -1,3 +1,3 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-''' Miscellaneous utilities '''
+''' Test cases for the parameters module '''

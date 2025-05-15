@@ -3,8 +3,6 @@ name: validation
 on:
   push:
     branches: [ "develop" ]
-  pull_request:
-    branches: [ "develop" ]
   workflow_dispatch:
 
 jobs:
@@ -22,5 +20,4 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
       uses: ./.github/actions/validation

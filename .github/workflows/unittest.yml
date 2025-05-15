@@ -1,7 +1,8 @@
 name: unittest
 
 on:
-  push
+  push:
+  workflow_dispatch:
 
 jobs:
   unittest:
