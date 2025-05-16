@@ -55,3 +55,11 @@ include = ['jasmine_toolkit*']
 [tool.setuptools.dynamic]
 version = { attr = 'jasmine_toolkit.version.version' }
 readme = { file = 'README.md', content-type = 'text/markdown' }
+
+[tool.setuptools.package-data]
+jasmine_toolkit = [
+  'utils/data/filter/filter100.json',
+  'utils/data/qe/qe170.json',
+  'utils/data/telescope/teleff.json',
+  'utils/data/telescope/FringeZernike_2D-s1_jas36xm2.csv'
+]
