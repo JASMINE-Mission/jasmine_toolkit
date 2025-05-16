@@ -32,12 +32,6 @@ class WaveFrontError:
         yan: Quantity
             Y angle (yan) with respect to the optical axis.
 
-        x: Quantity
-            X coordinate on the focal plane.
-
-        y: Quantity
-            Y coordinate on the focal plane.
-
         wavelength: Quantity
             Reference wavelength of the light.
 
@@ -48,8 +42,6 @@ class WaveFrontError:
     fringe_coeff: np.ndarray
     xan: Quantity
     yan: Quantity
-    x: Quantity
-    y: Quantity
     wavelength: Quantity
     radius: Quantity = field(default=p.telescope.pupil_diameter / 2.0)
 
