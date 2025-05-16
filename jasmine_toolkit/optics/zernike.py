@@ -29,7 +29,8 @@ __fringe_zernike_index = (
 
 def get_fringe_index(index):
     ''' Get (n, m) indices of the i-th Fringe Zernike polynomial '''
-    assert index > 0, 'Index must be greater than 0'
+    assert (0 < index) & (index < 38), \
+        'Index must be between 1 and 37 (inclusive)'
     return __fringe_zernike_index[index - 1]
 
 
@@ -38,7 +39,7 @@ def fringe_zernike(index, npix, outside=0.0):
 
     Arguments:
         index: int
-            Fringe Zernike index.
+            Fringe Zernike index (between 1 and 37, inclusive).
 
         npix: int
             Side length of the output array in pixels.
@@ -50,8 +51,8 @@ def fringe_zernike(index, npix, outside=0.0):
             Scaling is given in the Zero-to-Peak convention.
     '''
     return poppy_zernike(
-        __fringe_zernike_index[index, 0],
-        __fringe_zernike_index[index, 1],
+        __fringe_zernike_index[index - 1][0],
+        __fringe_zernike_index[index - 1][1],
         outside=outside,
         npix=npix,
         noll_normalize=False)
@@ -62,10 +63,10 @@ def noll_j_index(n, m):
     if n == 0:
         return 1
 
-    c = [[0, 1], [1, 0]]
-    p0 = m <= 0
-    p1 = (n % 4) in (2, 3)
-    return (n * (n + 1)) // 2 + abs(m) + c[p0][p1]
+    c = [[1, 0, 1], [0, 1, 1]]
+    p0 = (m >= 0) + (m == 0)
+    p1 = ((n % 4) in (2, 3)) + 0
+    return (n * (n + 1)) // 2 + abs(m) + c[p1][p0]
 
 
 def noll_normalize(n, m, centering=True):
