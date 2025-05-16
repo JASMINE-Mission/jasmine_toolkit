@@ -83,8 +83,8 @@ class _JASMINESpec:
         '''
         scale = self.pixel_scale.to_value('degree')
 
-        C = np.matrix([[np.cos(pa), -np.sin(pa)], [np.sin(pa), np.cos(pa)]])
-        P = np.matrix([[-scale, 0.0], [0.0, scale]])
+        C = np.array([[np.cos(pa), -np.sin(pa)], [np.sin(pa), np.cos(pa)]])
+        P = np.array([[-scale, 0.0], [0.0, scale]])
 
         wcsobj = WCS(naxis=2)
         wcsobj.wcs.ctype = ['RA---TAN', 'DEC--TAN']
