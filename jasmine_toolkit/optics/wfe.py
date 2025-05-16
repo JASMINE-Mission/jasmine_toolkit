@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-''' File description '''
+''' Wavefront error class for Fringe Zernike 37 convention'''
 
 from dataclasses import dataclass, field
 from poppy import ZernikeWFE
@@ -44,10 +44,12 @@ class WaveFrontError:
     yan: Quantity
     wavelength: Quantity
     radius: Quantity = field(default=p.telescope.pupil_diameter / 2.0)
+    centering: bool = field(default=True)
 
     @property
     def coeff(self):
-        return convert_fringe37_to_noll(self.fringe_coeff)
+        return convert_fringe37_to_noll(
+            self.fringe_coeff, centering=self.centering)
 
     @property
     def wfe(self):
