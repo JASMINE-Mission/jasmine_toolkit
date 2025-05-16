@@ -7,7 +7,8 @@ build-backend = 'setuptools.build_meta'
 name = 'jasmine_toolkit'
 description = 'A tool suite for the development of JASMINE'
 keywords = ['astronomy', 'JASMINE']
-license = { file = 'LICENSE' }
+license = 'MIT'
+license-files = ['LICENSE']
 
 authors = [
   { name = 'Ryou Ohsawa', email = 'ryou.ohsawa@nao.ac.jp' }
@@ -16,7 +17,6 @@ authors = [
 classifiers = [
   'Development Status :: 3 - Alpha',
   'Intended Audience :: Science/Research',
-  'License :: OSI Approved :: MIT License',
   'Operating System :: POSIX :: Linux',
   'Programming Language :: Python :: 3',
   'Programming Language :: Python :: 3.9',
@@ -50,16 +50,16 @@ homepage = 'https://github.com/JASMINE-Mission/jasmine_toolkit'
 repository = 'https://github.com/JASMINE-Mission/jasmine_toolkit'
 
 [tool.setuptools.packages.find]
-include = ['jasmine_toolkit*']
+include = ['jasmine_toolkit/*']
 
 [tool.setuptools.dynamic]
 version = { attr = 'jasmine_toolkit.version.version' }
 readme = { file = 'README.md', content-type = 'text/markdown' }
 
 [tool.setuptools.package-data]
-jasmine_toolkit = [
-  'utils/data/filter/filter100.json',
-  'utils/data/qe/qe170.json',
-  'utils/data/telescope/teleff.json',
-  'utils/data/telescope/FringeZernike_2D-s1_jas36xm2.csv'
+"jasmine_toolkit.resource" = [
+  'filter/filter100.json',
+  'qe/qe170.json',
+  'telescope/teleff.json',
+  'telescope/FringeZernike_2D-s1_jas36xm2.csv'
 ]
