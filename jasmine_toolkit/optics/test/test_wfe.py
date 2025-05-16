@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-''' Test cases for the WaveFrontError class. '''
+''' Test cases for the WFEfringe37 class. '''
 
-from ..wfe import WaveFrontError
+from ..wfe import WFEfringe37
 from ..zernike import noll_normalize
 
 import pytest
@@ -26,8 +26,8 @@ def fringe_coeff():
 
 
 def test_wavefront_error_init():
-    ''' Test the initialization of the WaveFrontError class. '''
-    wfe = WaveFrontError(
+    ''' Test the initialization of the WFEfringe37 class. '''
+    wfe = WFEfringe37(
         name='Test WFE',
         fringe_coeff=[0.1, 0.2, 0.3],
         xan=0.5,
@@ -46,7 +46,7 @@ def test_wavefront_error_init():
 
 def test_wavefront_error_coeff(fringe_coeff):
     ''' Test the conversion of fringe coefficients to Noll coefficients. '''
-    wfe = WaveFrontError(
+    wfe = WFEfringe37(
         name='Test WFE',
         fringe_coeff=fringe_coeff,
         xan=0.5,
@@ -65,7 +65,7 @@ def test_wavefront_error_coeff(fringe_coeff):
 
 def test_wavefront_error_coeff_no_centering(fringe_coeff):
     ''' Test the conversion of fringe coefficients to Noll coefficients. '''
-    wfe = WaveFrontError(
+    wfe = WFEfringe37(
         name='Test WFE',
         fringe_coeff=fringe_coeff,
         xan=0.5,
@@ -84,8 +84,8 @@ def test_wavefront_error_coeff_no_centering(fringe_coeff):
 
 
 def test_wavefront_error_generate_wfe(fringe_coeff):
-    ''' Test the generation of the WFE object. '''
-    wfe = WaveFrontError(
+    ''' Test the generation of the poppy.ZernikeWFE object. '''
+    wfe = WFEfringe37(
         name='Test WFE',
         fringe_coeff=fringe_coeff,
         xan=0.5,

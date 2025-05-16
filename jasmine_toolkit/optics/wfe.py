@@ -13,7 +13,7 @@ import numpy as np
 
 
 @dataclass(frozen=True)
-class WaveFrontError:
+class WFEfringe37:
     ''' Wavefront error class for Fringe Zernike 37 convention
 
     Attributes:
