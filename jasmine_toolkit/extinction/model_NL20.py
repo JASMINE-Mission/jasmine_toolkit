@@ -71,9 +71,10 @@ class NL20:
         ''' Calculate the reduction factor for a given wavelength and Av
 
         Arguments:
-            wavelength (float or array):
-                Wavelength in Angstroms. The wavelength should be
-                provided in Angstroms.
+            wavelength (astropy.units.Quantity):
+                Wavelength as an astropy Quantity with units of length
+                (e.g., Angstroms, microns). The method will handle
+                unit conversions internally if necessary.
 
             Av (float):
                 Visual extinction in magnitudes. The Av value should
