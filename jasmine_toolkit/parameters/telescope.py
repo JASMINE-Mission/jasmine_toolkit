@@ -15,10 +15,13 @@ __all__ = (
     'effective_focal_length',
     'central_obscuration',
     'm2_obscuration_radius',
+    'pupil_to_m2_distance',
+    'obscuration_depth',
     'field_of_view',
     'n_spider',
     'spider_thickness',
     'spider_angle_offset',
+    'reference_wavelength',
 )
 
 
@@ -73,6 +76,24 @@ central_obscuration = Parameter(
 )
 
 
+pupil_to_m2_distance = Parameter(
+    'pupil_to_m2_distance',
+    227.0,
+    'mm',
+    'the distance from the pupil to the secondary mirror',
+    'jas36xm2_as35',
+)
+
+
+obscuration_depth = Parameter(
+    'obscuration_depth',
+    50.0,
+    'mm',
+    'the depth of the obscuration layer',
+    'jas36xm2_as35',
+)
+
+
 @calculated
 def m2_obscuration_radius():
     import jasmine_toolkit.parameters.telescope as t
@@ -118,4 +139,13 @@ spider_angle_offset = Parameter(
     'degree',
     'rotation angle of the secondary mirror supports',
     'tentative value',
+)
+
+
+reference_wavelength = Parameter(
+    'reference_wavelength',
+    1.25,
+    'um',
+    'reference wavelength for the optics design',
+    'jas36xm2_as35',
 )

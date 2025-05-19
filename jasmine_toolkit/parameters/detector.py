@@ -48,7 +48,7 @@ def pixel_scale():
     return Parameter(
         'pixel_scale',
         pixel_scale.to_value('degree'),
-        'degree',
+        'degree/pixel',
         'the effective pixel scale on the sky',
         'calculated value',
     )

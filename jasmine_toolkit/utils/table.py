@@ -15,8 +15,11 @@ __items__ = [
     p.telescope.effective_focal_length,
     p.telescope.n_spider,
     p.telescope.spider_thickness,
-    p.telescope.spider_angle,
+    p.telescope.spider_angle_offset,
+    p.telescope.pupil_to_m2_distance,
+    p.telescope.obscuration_depth,
     p.telescope.field_of_view,
+    p.telescope.reference_wavelength,
 
     # detector
     p.detector.naxis1,

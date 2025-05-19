@@ -91,7 +91,7 @@ class _JASMINESpec:
         Results:
             astropy.wcs.WCS object for the JASMINE telescope.
         '''
-        scale = self.pixel_scale.to_value('degree')
+        scale = self.pixel_scale.to_value('degree/pixel')
 
         C = np.array([[np.cos(pa), -np.sin(pa)], [np.sin(pa), np.cos(pa)]])
         P = np.array([[-scale, 0.0], [0.0, scale]])

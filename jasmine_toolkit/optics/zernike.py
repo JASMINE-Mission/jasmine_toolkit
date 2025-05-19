@@ -71,7 +71,7 @@ def noll_j_index(n, m):
 
 def noll_normalize(n, m, centering=True):
     ''' Normalize Zernike polynomial according to Noll convention '''
-    if centering & (n == 1):
+    if centering & (n <= 1):
         return np.inf
     elif m == 0:
         return np.sqrt(n + 1)

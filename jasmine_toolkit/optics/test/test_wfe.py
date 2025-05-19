@@ -59,7 +59,7 @@ def test_wavefront_error_coeff(fringe_coeff):
 
     # Assuming convert_fringe37_to_noll is implemented correctly
     expected_coeff = [
-      0.1, 0.0, 0.0, 0.4, 0.6, 0.5, 0.8, 0.7, 0.0, 0.0, 0.9]
+      0.0, 0.0, 0.0, 0.4, 0.6, 0.5, 0.8, 0.7, 0.0, 0.0, 0.9]
     assert wfe.coeff[:11] == pytest.approx(expected_coeff)
 
 

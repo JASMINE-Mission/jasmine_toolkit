@@ -52,12 +52,16 @@ def test_noll_j_index():
 
 def test_noll_normalize():
     ''' Test the noll_normalize function '''
-    assert noll_normalize(0,  0) == pytest.approx(1.0)
+    assert noll_normalize(0,  0) == np.inf
     assert noll_normalize(1,  1) == np.inf
     assert noll_normalize(1, -1) == np.inf
     assert noll_normalize(2,  0) == pytest.approx(np.sqrt(3))
     assert noll_normalize(2, -2) == pytest.approx(np.sqrt(6))
     assert noll_normalize(2,  2) == pytest.approx(np.sqrt(6))
+
+    assert noll_normalize(0,  0, False) == pytest.approx(1)
+    assert noll_normalize(1,  1, False) == pytest.approx(2)
+    assert noll_normalize(1, -1, False) == pytest.approx(2)
 
 
 def test_convert_fringe37_to_noll():
