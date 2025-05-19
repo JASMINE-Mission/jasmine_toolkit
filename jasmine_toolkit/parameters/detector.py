@@ -211,7 +211,7 @@ alignment = Parameter(
 sampling_frequency = Parameter(
     'sampling_frequency',
     2.0e5,
-    'pixel.Hz',
+    'Hz',
     'pixel sampling frequency per channel',
     'HPK CMOS design document (K51-B90034)',
 )
@@ -223,7 +223,7 @@ def minimum_readout_time():
     pixel_channel = d.n_column_channel * d.n_row_channel
     return Parameter(
         'minimum_readout_time',
-        pixel_channel / d.sampling_frequency.to_value('pixel.Hz'),
+        pixel_channel.value / d.sampling_frequency.to_value('Hz'),
         's',
         'minimum readout time',
         'calculated value',
