@@ -11,7 +11,7 @@ __all__ = [
   'attitude_control_error',
   'orbital_altitude',
   'earth_avoidance_angle_limit',
-  'solar_face_angle_limit',
+  'solar_separation_angle_limit',
 ]
 
 
@@ -42,10 +42,24 @@ earth_avoidance_angle_limit = Parameter(
 )
 
 
-solar_face_angle_limit = Parameter(
-    'solar_face_angle_limit',
+solar_separation_angle_limit = Parameter(
+    'solar_separation_angle_limit',
     40.0,
     'degree',
-    'maximum solar face angle',
+    'minimum solar separation angle',
     'Mission Design Report (RPR-SJ430003B)',
 )
+
+
+@calculated
+def solar_separation_angle_range():
+    import jasmine_toolkit.parameters.satellite as s
+    import astropy.units as u
+    angle = s.solar_separation_angle_limit.to_value('deg')
+    return Parameter(
+        'solar_separation_angle_range',
+        value=[angle, 180.0 - angle],
+        unit='deg',
+        description='solar separation angle range',
+        reference='calculated value',
+    )

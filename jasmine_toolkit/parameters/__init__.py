@@ -1,7 +1,22 @@
 #!/usr/bin/env python
 ''' JASMINE Parameter Module
 
-Fill in a nice introduction of the module here.
+This module manages several parameters in the JASMINE mission. Several values
+are defined in submodules, including detector, telescope, and so on. The module
+also supports calculated attributes that depend on other parameters.
+
+The module will facilitate simulation and analysis by providing consistency
+and help evaluation process in the JASMINE mission.
+
+
+Key Features:
+- Support for parameters with metadata: units, descriptions, and references.
+- Prevents modification of calculated parameters to ensure immutability.
+- Dynamic handling of calculated attributes.
+- Integrates with submodules for detector, telescope, satellite, and mission.
+
+Functions:
+- `print_parameters()`: Displays detailed info about all defined parameters.
 '''
 import sys, warnings
 from .calclated_registry import _get_calculated_attributes

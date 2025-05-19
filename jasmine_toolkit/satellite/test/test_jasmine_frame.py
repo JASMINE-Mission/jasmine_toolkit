@@ -85,9 +85,9 @@ def test_earth_avoidance(frame, galcen, grid):
     frame.earth_avoidance(grid)
 
 
-def test_sun_separation(frame, galcen, grid):
-    frame.sun_separation(galcen)
-    frame.sun_separation(grid)
+def test_solar_separation(frame, galcen, grid):
+    frame.solar_separation(galcen)
+    frame.solar_separation(grid)
 
 
 def test_observable(frame, galcen, grid):
