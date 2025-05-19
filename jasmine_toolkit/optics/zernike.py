@@ -29,7 +29,7 @@ __fringe_zernike_index = (
 
 def get_fringe_index(index):
     ''' Get (n, m) indices of the i-th Fringe Zernike polynomial '''
-    assert (0 < index) & (index < 38), \
+    assert (0 < index) and (index < 38), \
         'Index must be between 1 and 37 (inclusive)'
     return __fringe_zernike_index[index - 1]
 
