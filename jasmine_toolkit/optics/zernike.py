@@ -29,8 +29,8 @@ __fringe_zernike_index = (
 
 def get_fringe_index(index):
     ''' Get (n, m) indices of the i-th Fringe Zernike polynomial '''
-    assert (0 < index) and (index < 38), \
-        'Index must be between 1 and 37 (inclusive)'
+    if index < 1 or index > 37:
+        raise ValueError('Index must be between 1 and 37 (inclusive)')
     return __fringe_zernike_index[index - 1]
 
 
@@ -95,7 +95,8 @@ def convert_fringe37_to_noll(coeff, centering=True):
         noll_coeff: ndarray
             Coefficients of Zernike polynomials in the Noll's convention.
     '''
-    assert len(coeff) <= 37, 'Coefficient array is too long'
+    if len(coeff) > 37:
+        raise ValueError('Coefficient array is too long')
 
     max_term = 79
     noll_coeff = np.zeros(max_term)
