@@ -15,6 +15,7 @@ __items__ = [
     p.telescope.effective_focal_length,
     p.telescope.n_spider,
     p.telescope.spider_thickness,
+    p.telescope.spider_angle,
     p.telescope.field_of_view,
 
     # detector
@@ -37,7 +38,7 @@ __items__ = [
     # satellite
     p.satellite.attitude_control_error,
     p.satellite.earth_avoidance_angle_limit,
-    p.satellite.solar_face_angle_limit,
+    p.satellite.solar_separation_angle_limit,
 
     # misison
     p.mission.gcs_longitude_range,

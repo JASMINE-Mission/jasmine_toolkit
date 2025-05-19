@@ -69,6 +69,16 @@ class _JASMINESpec:
 
         return p.detector.pixel_scale
 
+    @property
+    def solar_separation_angle_range(self):
+        ''' Provide the sun separation angle range '''
+        return p.satellite.solar_separation_angle_range
+
+    @property
+    def earth_avoidance_angle_limit(self):
+        ''' Provide the earth avoidance angle limit '''
+        return p.satellite.earth_avoidance_angle_limit
+
     def wcs(self, lon, lat, pa=0.0*u.deg):
         ''' Generate the WCS instance for the JASMINE focal plane
 
@@ -257,19 +267,18 @@ class JASMINEFrame(BaseRADecFrame, _JASMINESpec, _ObeservatoryMixin):
         ''' Separation angle from the Earth's surface '''
         return self.earth_separation(target) - self.nadir_horizon_angle
 
-    def sun_separation(self, target):
+    def solar_separation(self, target):
         ''' Separation angle from the sun '''
         target = self.__unit_cartesian(target.icrs)
         return np.arccos(target.xyz.T @ self.sun_direction.xyz)
 
-    def observable(self, target,
-                   sun_separation_angle=[45*u.deg, 135*u.deg],
-                   earth_avoidance_angle=24.5*u.deg):
+    def observable(self, target):
         ''' Check the target is observable '''
         ea = self.earth_avoidance(target)
-        ss = self.sun_separation(target)
-        return (ea > earth_avoidance_angle) \
-            & (ss > sun_separation_angle[0]) & (ss < sun_separation_angle[1])
+        ss = self.solar_separation(target)
+        ea_lim = self.earth_avoidance_angle_limit
+        sun_range = self.solar_separation_angle_range
+        return (ea > ea_lim) & (ss > sun_range[0]) & (ss < sun_range[1])
 
     @staticmethod
     def __unit_cartesian(obj):

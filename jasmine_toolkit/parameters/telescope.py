@@ -10,10 +10,15 @@ from .utils import Parameter
 
 __all__ = (
     'pupil_diameter',
+    'pupil_radius',
     'f_number',
     'effective_focal_length',
     'central_obscuration',
+    'm2_obscuration_radius',
     'field_of_view',
+    'n_spider',
+    'spider_thickness',
+    'spider_angle_offset',
 )
 
 
@@ -24,6 +29,19 @@ pupil_diameter = Parameter(
     'the effective diameter of the primary mirror',
     'jas36xm2_as35',
 )
+
+
+@calculated
+def pupil_radius():
+    import jasmine_toolkit.parameters as p
+    radius = p.telescope.pupil_diameter / 2.0
+    return Parameter(
+        'pupil_radius',
+        value=radius.to_value('mm'),
+        unit='mm',
+        description='Effective radius of the pupil',
+        reference='calculated value')
+
 
 f_number = Parameter(
     'f_number',
@@ -36,8 +54,8 @@ f_number = Parameter(
 
 @calculated
 def effective_focal_length():
-    import jasmine_toolkit.parameters as p
-    effective_focal_length = p.telescope.f_number * p.telescope.pupil_diameter
+    import jasmine_toolkit.parameters.telescope as t
+    effective_focal_length = t.f_number * t.pupil_diameter
     return Parameter(
         'effective_focal_length',
         value=effective_focal_length.to_value('mm'),
@@ -53,6 +71,18 @@ central_obscuration = Parameter(
     'the obscuration by the secondary mirror in length ratio',
     'jas36xm2_as35',
 )
+
+
+@calculated
+def m2_obscuration_radius():
+    import jasmine_toolkit.parameters.telescope as t
+    radius = t.central_obscuration * t.pupil_radius
+    return Parameter(
+        'm2_obscuration_radius',
+        value=radius.to_value('mm'),
+        unit='mm',
+        description='Radius of the secondary mirror obscuration',
+        reference='calculated value')
 
 
 field_of_view = Parameter(
@@ -79,4 +109,13 @@ spider_thickness = Parameter(
     'mm',
     'thickness of the secondary mirror supports',
     'jas36xm2_as35',
+)
+
+
+spider_angle_offset = Parameter(
+    'spider_angle_offset',
+    0.0,
+    'degree',
+    'rotation angle of the secondary mirror supports',
+    'tentative value',
 )

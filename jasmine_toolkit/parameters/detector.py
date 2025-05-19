@@ -223,8 +223,8 @@ def minimum_readout_time():
     pixel_channel = d.n_column_channel * d.n_row_channel
     return Parameter(
         'minimum_readout_time',
-        pixel_channel / d.sampling_frequency,
+        pixel_channel / d.sampling_frequency.to_value('pixel.Hz'),
         's',
-        'minimum raedout time',
+        'minimum readout time',
         'calculated value',
     )
