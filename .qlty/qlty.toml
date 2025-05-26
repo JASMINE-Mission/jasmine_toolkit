@@ -14,13 +14,10 @@
 config_version = "0"
 
 exclude_patterns = [
-  "**/build/**",
-  "**/dist/**",
-  "**/docs/**",
-  "**/*.egg-info/**",
-  "**/notebook/**",
-  "**/sandbox/**",
-  "**/scripts/**",
+  "docs/**",
+  "notebook/**",
+  "sandbox/**",
+  "scripts/**",
 ]
 
 test_patterns = [
