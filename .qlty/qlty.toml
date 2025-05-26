@@ -14,11 +14,17 @@
 config_version = "0"
 
 exclude_patterns = [
+<<<<<<< Updated upstream
   "**/.*",
   "**/test/**",
   "**/__init__.py",
   "**/*.yml",
   "**/*.txt",
+=======
+  "**/notebook/**",
+  "**/sandbox/**",
+  "**/scripts/**",
+>>>>>>> Stashed changes
   "**/*.md",
   "/notebook/",
   "/sandbox/",
