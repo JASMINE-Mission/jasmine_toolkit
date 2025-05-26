@@ -107,7 +107,7 @@ class ARMAModel:
             n_warmup, n_step, self.ar_coeff, self.ma_coeff, v, y))
 
     def psd(self, freq):
-        ''' Return the power-spectrum density at fequencies '''
+        ''' Return the power-spectrum density at frequencies '''
         na = np.arange(1, self.ar_coeff.size + 1).reshape((1, -1))
         nb = np.arange(1, self.ma_coeff.size + 1).reshape((1, -1))
         freq = self.sampling_interval * freq.reshape((-1, 1))
