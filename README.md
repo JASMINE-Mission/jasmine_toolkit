@@ -27,3 +27,12 @@ This command fetches the package source code from the specified GitHub repositor
 ## How to use
 
 Basic examples are provides in the `notebook` directory.
+
+
+## Utilities
+
+The package provides a command `jasmine_toolkit`. The command can display a parameter list used in the JASMINE mission.
+
+```bash
+jasmine_toolkit table
+```
