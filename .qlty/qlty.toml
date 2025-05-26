@@ -14,11 +14,10 @@
 config_version = "0"
 
 exclude_patterns = [
-  "**/notebook/**",
-  "**/sandbox/**",
-  "**/scripts/**",
-  "**/.*",
-  "**/*.md",
+  "docs/**",
+  "notebook/**",
+  "sandbox/**",
+  "scripts/**",
 ]
 
 test_patterns = [
