@@ -14,25 +14,13 @@
 config_version = "0"
 
 exclude_patterns = [
-<<<<<<< Updated upstream
-  "**/.*",
-  "**/test/**",
-  "**/__init__.py",
-  "**/*.yml",
-  "**/*.txt",
-=======
+  "**/build/**",
+  "**/dist/**",
+  "**/docs/**",
+  "**/*.egg-info/**",
   "**/notebook/**",
   "**/sandbox/**",
   "**/scripts/**",
->>>>>>> Stashed changes
-  "**/*.md",
-  "/notebook/",
-  "/sandbox/",
-  "/scripts/",
-  "/build/",
-  "/dist/",
-  "/*egg-info/",
-  "/validation/",
 ]
 
 test_patterns = [
