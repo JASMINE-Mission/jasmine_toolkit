@@ -4,3 +4,5 @@
 
 from .pupil import *
 from .wfe import *
+from .jitter import *
+from .trajectory import *
