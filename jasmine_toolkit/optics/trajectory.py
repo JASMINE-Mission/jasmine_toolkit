@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 ''' Trajectory of 2D jitter motion'''
 
+from scipy.signal import convolve
+
 import numpy as np
 import scipy.fft as fft
 
@@ -129,9 +131,7 @@ class Trajectory:
 
     def convolve(self, image):
         ''' Convolve the image with the trajectory canvas '''
-        assert self.canvas.shape == image.shape
-        return np.real(fft.ifftshift(
-            fft.ifft2(self.fft_canvas * fft.fft2(image))))
+        return convolve(image, self.canvas, mode='same')
 
 
 class FFTTrajectory(Trajectory):

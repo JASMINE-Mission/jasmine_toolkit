@@ -17,28 +17,28 @@ def canvas():
 def test_trajectory_init(canvas):
     x = np.array([0, 1, 2])
     y = np.array([0, 1, 2])
-    traj = Trajectory(x, y, canvas_size=255)
+    traj = Trajectory(x, y, canvas_size=127)
 
     assert isinstance(traj, Trajectory)
-    assert traj.canvas_size == 255
+    assert traj.canvas_size == 127
     assert np.array_equal(traj.x, x)
     assert np.array_equal(traj.y, y)
-    assert traj.canvas.shape == (255, 255)
-    assert traj.extent == [-127.5, 127.5, -127.5, 127.5]
-    assert traj.fft_canvas.shape == (255, 255)
+    assert traj.canvas.shape == (127, 127)
+    assert traj.extent == [-63.5, 63.5, -63.5, 63.5]
+    assert traj.fft_canvas.shape == (127, 127)
     assert traj.convolve(canvas).shape == (255, 255)
 
 
 def test_ffttrajectory_init(canvas):
     x = np.array([0, 1, 2])
     y = np.array([0, 1, 2])
-    traj = FFTTrajectory(x, y, canvas_size=255)
+    traj = FFTTrajectory(x, y, canvas_size=127)
 
     assert isinstance(traj, FFTTrajectory)
-    assert traj.canvas_size == 255
+    assert traj.canvas_size == 127
     assert np.array_equal(traj.x, x)
     assert np.array_equal(traj.y, y)
-    assert traj.canvas.shape == (255, 255)
-    assert traj.extent == [-127.5, 127.5, -127.5, 127.5]
-    assert traj.fft_canvas.shape == (255, 255)
+    assert traj.canvas.shape == (127, 127)
+    assert traj.extent == [-63.5, 63.5, -63.5, 63.5]
+    assert traj.fft_canvas.shape == (127, 127)
     assert traj.convolve(canvas).shape == (255, 255)
