@@ -7,7 +7,7 @@ from poppy import ZernikeWFE
 from astropy.units.quantity import Quantity
 from importlib.resources import files
 
-from .. import parameters as  p
+from .. import parameters as p
 from .zernike import convert_fringe37_to_noll
 
 import numpy as np

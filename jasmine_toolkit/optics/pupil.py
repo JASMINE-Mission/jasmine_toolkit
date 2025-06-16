@@ -2,12 +2,12 @@
 # -*- coding: utf-8 -*-
 ''' Definition of the pupil plane '''
 
-import jasmine_toolkit.parameters as p
+import jasmine_toolkit.parameters.telescope as tel
 import poppy
 import numpy as np
 import astropy.units as u
 
-from .wfe import get_wfe_fringe37
+from .wfe import get_wfe_fringe37, WFEfringe37
 
 
 __all__ = [
@@ -18,7 +18,7 @@ __all__ = [
 
 def __get_pupil(primary_radius=None):
     primary_radius = primary_radius \
-        if primary_radius else p.telescope.pupil_radius
+        if primary_radius else tel.pupil_radius
     return poppy.CircularAperture(
         radius=primary_radius, name='JASMINE entrance pupil')
 
@@ -28,13 +28,13 @@ def __get_obscuration(
         secondary_radius=None, n_supports=None, support_width=None,
         support_angle_offset=None):
     secondary_radius = secondary_radius \
-        if secondary_radius else p.telescope.m2_obscuration_radius
+        if secondary_radius else tel.m2_obscuration_radius
     n_supports = n_supports \
-        if n_supports else p.telescope.n_spider
+        if n_supports else tel.n_spider
     support_width = support_width \
-        if support_width else p.telescope.spider_thickness
+        if support_width else tel.spider_thickness
     support_angle_offset = support_angle_offset \
-        if support_angle_offset else p.telescope.spider_angle_offset
+        if support_angle_offset else tel.spider_angle_offset
 
     shift_x = distance * np.tan(xan)
     shift_y = distance * np.tan(yan)
@@ -54,12 +54,12 @@ def get_obscuration(
 
     layer0 = __get_obscuration(
         xan=xan, yan=yan,
-        distance=p.telescope.pupil_to_m2_distance,
+        distance=tel.pupil_to_m2_distance,
         secondary_radius=secondary_radius, n_supports=n_supports,
         support_width=support_width, support_angle_offset=support_angle_offset)
     layer1 = __get_obscuration(
         xan=xan, yan=yan,
-        distance=p.telescope.pupil_to_m2_distance + p.telescope.obscuration_depth,
+        distance=tel.pupil_to_m2_distance + tel.obscuration_depth,
         secondary_radius=secondary_radius, n_supports=n_supports,
         support_width=support_width, support_angle_offset=support_angle_offset)
 
@@ -73,7 +73,7 @@ def get_pupil(
         primary_radius=None,
         xan=0.0 * u.deg, yan=0.0 * u.deg, distance=0.0 * u.mm,
         secondary_radius=None, n_supports=None, support_width=None,
-        support_angle_offset=None):
+        support_angle_offset=None, wfe=None):
     ''' Get the pupil plane '''
 
     pupil = __get_pupil(primary_radius=primary_radius)
@@ -83,11 +83,17 @@ def get_pupil(
         secondary_radius=secondary_radius, n_supports=n_supports,
         support_width=support_width, support_angle_offset=support_angle_offset)
 
-    wfe_fringe = get_wfe_fringe37(
-        xan=xan, yan=yan, primary_radius=primary_radius)
+    if wfe is None:
+        wfe_fringe = get_wfe_fringe37(
+            xan=xan, yan=yan, primary_radius=primary_radius)
+        wfe = wfe_fringe.wfe
+    elif isinstance(wfe, poppy.ZernikeWFE):
+        wfe = wfe.copy()
+    elif isinstance(wfe, WFEfringe37):
+        wfe = wfe.wfe
 
     return poppy.CompoundAnalyticOptic([
-        wfe_fringe.wfe,
+        wfe,
         pupil,
         obscuration
     ], name='entrance pupil')
