@@ -55,7 +55,7 @@ repository = 'https://github.com/JASMINE-Mission/jasmine_toolkit'
 
 
 [tool.setuptools.packages.find]
-include = ['jasmine_toolkit']
+include = ['jasmine_toolkit*']
 
 
 [tool.setuptools.dynamic]
