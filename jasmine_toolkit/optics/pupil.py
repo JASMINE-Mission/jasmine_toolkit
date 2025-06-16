@@ -17,6 +17,8 @@ __all__ = [
 
 
 def __get_pupil(primary_radius=None):
+    ''' Helper function to generata a circular aperture '''
+
     primary_radius = primary_radius \
         if primary_radius else tel.pupil_radius
     return poppy.CircularAperture(
@@ -27,6 +29,8 @@ def __get_obscuration(
         xan=0.0 * u.deg, yan=0.0 * u.deg, distance=0.0 * u.mm,
         secondary_radius=None, n_supports=None, support_width=None,
         support_angle_offset=None):
+    ''' Helper function to generate the secondary obscuration '''
+
     secondary_radius = secondary_radius \
         if secondary_radius else tel.m2_obscuration_radius
     n_supports = n_supports \
@@ -48,18 +52,25 @@ def __get_obscuration(
 
 
 def get_obscuration(
-        xan=0.0 * u.deg, yan=0.0 * u.deg, distance=0.0 * u.mm,
+        xan=0.0 * u.deg, yan=0.0 * u.deg,
+        pupil_to_m2_distance=None,
+        obscuration_depth=None,
         secondary_radius=None, n_supports=None, support_width=None,
         support_angle_offset=None):
 
+    pupil_to_m2_distance = tel.pupil_to_m2_distance \
+        if pupil_to_m2_distance is None else pupil_to_m2_distance
+    obscuration_depth = tel.obscuration_depth \
+        if obscuration_depth is None else obscuration_depth
+
     layer0 = __get_obscuration(
         xan=xan, yan=yan,
-        distance=tel.pupil_to_m2_distance,
+        distance=pupil_to_m2_distance,
         secondary_radius=secondary_radius, n_supports=n_supports,
         support_width=support_width, support_angle_offset=support_angle_offset)
     layer1 = __get_obscuration(
         xan=xan, yan=yan,
-        distance=tel.pupil_to_m2_distance + tel.obscuration_depth,
+        distance=pupil_to_m2_distance + obscuration_depth,
         secondary_radius=secondary_radius, n_supports=n_supports,
         support_width=support_width, support_angle_offset=support_angle_offset)
 
@@ -71,7 +82,8 @@ def get_obscuration(
 
 def get_pupil(
         primary_radius=None,
-        xan=0.0 * u.deg, yan=0.0 * u.deg, distance=0.0 * u.mm,
+        xan=0.0 * u.deg, yan=0.0 * u.deg,
+        pupil_to_m2_distance=None, obscuration_depth=None,
         secondary_radius=None, n_supports=None, support_width=None,
         support_angle_offset=None, wfe=None):
     ''' Get the pupil plane '''
@@ -79,9 +91,13 @@ def get_pupil(
     pupil = __get_pupil(primary_radius=primary_radius)
 
     obscuration = get_obscuration(
-        xan=xan, yan=yan, distance=distance,
-        secondary_radius=secondary_radius, n_supports=n_supports,
-        support_width=support_width, support_angle_offset=support_angle_offset)
+        xan=xan, yan=yan,
+        pupil_to_m2_distance=pupil_to_m2_distance,
+        obscuration_depth=obscuration_depth,
+        secondary_radius=secondary_radius,
+        n_supports=n_supports,
+        support_width=support_width,
+        support_angle_offset=support_angle_offset)
 
     if wfe is None:
         wfe_fringe = get_wfe_fringe37(
