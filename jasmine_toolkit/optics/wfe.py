@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-''' Wavefront error class for Fringe Zernike 37 convention'''
+''' Wavefront error class for Fringe Zernike 37 convention '''
 
 from dataclasses import dataclass, field
 from poppy import ZernikeWFE
@@ -38,7 +38,7 @@ def load_zernike37_model(path=None):
         A function `zernike37` that returns Fringe Zernike coefficients
         at the provided angle pair (xan, yan).
     '''
-    path = path if path \
+    path = path if path is None \
         else __get_resource().joinpath('FringeZernike_2D-s1_jas36xm2.csv')
 
     df = pd.read_csv(path, header=None, index_col=0).T
@@ -50,7 +50,7 @@ def load_zernike37_model(path=None):
         xan, yan, df[f'{n+1}'].array.reshape((21, 21))) for n in range(37)]
 
     def zernike37(xan, yan):
-        ''' Return the Zernike 37 model '''
+        ''' Generate a set of Fringe Zernike 37 coefficients '''
         return np.array([model(xan, yan) for model in models]).ravel()
 
     return zernike37
@@ -79,8 +79,8 @@ def get_wfe_fringe37(
     zernike37 = load_zernike37_model(path=path)
     fringe_coeff = zernike37(xan.to_value('deg'), yan.to_value('deg'))
 
-    primary_radius = primary_radius \
-        if primary_radius else p.telescope.pupil_radius
+    primary_radius = primary_radius if primary_radius is None \
+        else p.telescope.pupil_radius
 
     return WFEfringe37(
         name='default',

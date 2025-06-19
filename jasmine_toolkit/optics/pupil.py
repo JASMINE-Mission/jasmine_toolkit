@@ -55,8 +55,40 @@ def get_obscuration(
         xan=0.0 * u.deg, yan=0.0 * u.deg,
         pupil_to_m2_distance=None,
         obscuration_depth=None,
-        secondary_radius=None, n_supports=None, support_width=None,
+        secondary_radius=None,
+        n_supports=None,
+        support_width=None,
         support_angle_offset=None):
+    ''' Obtain the obscuration mask at the entrance pupil
+
+    Options:
+        xan: Quantity (angle)
+            X angle (xan) with respect to the optical axis.
+
+        yan: Quantity (angle)
+            Y angle (yan) with respect to the optical axis.
+
+        pupil_to_m2_distance: Quantity (length)
+            Distance from the entrance pupil to the secondary mirror.
+
+        obscuration_depth: Quantity (length)
+            Depth of the obscuration.
+
+        secondary_radius: Quantity (length)
+            Radius of the secondary mirror.
+
+        n_supports: int
+            Number of support struts.
+
+        support_width: Quantity (length)
+            Width of the support struts.
+
+        support_angle_offset: Quantity (angle)
+            Angle offset of the support struts.
+
+    Returns:
+        A two-layer obscuration mask pattern.
+    '''
 
     pupil_to_m2_distance = tel.pupil_to_m2_distance \
         if pupil_to_m2_distance is None else pupil_to_m2_distance
@@ -81,12 +113,56 @@ def get_obscuration(
 
 
 def get_pupil(
+        name='entrance pupil',
         primary_radius=None,
-        xan=0.0 * u.deg, yan=0.0 * u.deg,
-        pupil_to_m2_distance=None, obscuration_depth=None,
-        secondary_radius=None, n_supports=None, support_width=None,
-        support_angle_offset=None, wfe=None):
-    ''' Get the pupil plane '''
+        xan=0.0 * u.deg,
+        yan=0.0 * u.deg,
+        pupil_to_m2_distance=None,
+        obscuration_depth=None,
+        secondary_radius=None,
+        n_supports=None,
+        support_width=None,
+        support_angle_offset=None,
+        wfe=None):
+    ''' Generate a set of optical elements at the pupil plane
+
+    Options:
+        name: str
+            Name of the entrance pupil.
+
+        primary_radius: Quantity (length)
+            Radius of the entrance aperture.
+
+        xan: Quantity (angle)
+            X angle (xan) with respect to the optical axis.
+
+        yan: Quantity (angle)
+            Y angle (yan) with respect to the optical axis.
+
+        pupil_to_m2_distance: Quantity (length)
+            Distance from the entrance pupil to the secondary mirror.
+
+        obscuration_depth: Quantity (length)
+            Depth of the obscuration.
+
+        secondary_radius: Quantity (length)
+            Radius of the secondary mirror.
+
+        n_supports: int
+            Number of support struts.
+
+        support_width: Quantity (length)
+            Width of the support struts.
+
+        support_angle_offset: Quantity (angle)
+            Angle offset of the support struts.
+
+        wfe: ZernikeWFE or WFEfringe37
+            Definition of the wavefront error at the entrance pupil.
+
+    Returns:
+        A compound analytic optic instance for the JASMINE telescope.
+    '''
 
     pupil = __get_pupil(primary_radius=primary_radius)
 
@@ -112,4 +188,4 @@ def get_pupil(
         wfe,
         pupil,
         obscuration
-    ], name='entrance pupil')
+    ], name=name)
