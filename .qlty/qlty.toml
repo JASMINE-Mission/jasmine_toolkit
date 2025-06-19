@@ -64,9 +64,6 @@ name = "bandit"
 name = "checkov"
 
 [[plugin]]
-name = "flake8"
-
-[[plugin]]
 name = "markdownlint"
 mode = "comment"
 
