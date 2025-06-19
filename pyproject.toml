@@ -85,8 +85,9 @@ ignore = [
   'E741', # Ambiguous variable name
   'F403', # star imports
 ]
-fixable = ['E']
+unfixable = ['ALL']
 
 [tool.ruff.format]
 quote-style = 'single'
+line-ending = 'lf'
 preview = true
