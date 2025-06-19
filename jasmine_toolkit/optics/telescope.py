@@ -122,9 +122,6 @@ class JASMINE(Instrument):
 
       return optics
 
-    def _calc_opd(self, z):
-        return np.sqrt((self.focal_length + z)**2 + self.primary_aperture**2)
-
     def _get_default_nlambda(self, filtername):
         if filtername not in self.filter_list:
             raise LookupError(f'filter name {filtername} is not defined.')
@@ -155,18 +152,3 @@ class JASMINE(Instrument):
         if filtername not in self.filter_list:
             raise LookupError(f'filter name {filtername} is not defined.')
         return REGISTRY[filtername]
-
-
-if __name__ == '__main__':
-    import matplotlib.pyplot as plt
-    j = JASMINE()
-
-    fig, ax = plt.subplots(figsize=(10, 4))
-    poppy.conf.default_image_display_fov = 10.0
-    psf = j.calc_psf(display=True)
-    plt.show()
-
-    fig, ax = plt.subplots(figsize=(8, 6))
-    poppy.display_psf(
-        psf, ax=ax, vmax=None, scale='asinh')
-    plt.show()
