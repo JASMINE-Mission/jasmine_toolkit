@@ -81,6 +81,7 @@ select = [
   'E', 'F', 'W']
 ignore = [
   'E221', # multiple spaces before operator
+  'E401', # multiple imports on one line
   'E731', # Do not assign a `lambda` expression
   'E741', # Ambiguous variable name
   'F403', # star imports
