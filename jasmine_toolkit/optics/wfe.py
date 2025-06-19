@@ -27,7 +27,17 @@ def __get_resource():
 
 
 def load_zernike37_model(path=None):
-    ''' Return a wavefront error model in the Fringe Zernike 37 convention '''
+    ''' Return a wavefront error model in the Fringe Zernike 37 convention
+
+    Arguments:
+        path: str (optional)
+            Path to the CSV file containing the Zernike coefficients.
+            If not provided, the default file is used.
+
+    Returns:
+        A function `zernike37` that returns Fringe Zernike coefficients
+        at the provided angle pair (xan, yan).
+    '''
     path = path if path \
         else __get_resource().joinpath('FringeZernike_2D-s1_jas36xm2.csv')
 
@@ -48,7 +58,24 @@ def load_zernike37_model(path=None):
 
 def get_wfe_fringe37(
         xan=0.0 * u.deg, yan=0.0 * u.deg, primary_radius=None, path=None):
-    ''' Return a default WFEfringe37 instance '''
+    ''' Return a default WFEfringe37 instance
+
+    Arguments:
+        xan: Quantity (angle, optional)
+            X angle (xan) with respect to the optical axis.
+
+        yan: Quantity (angle, optional)
+            Y angle (yan) with respect to the optical axis.
+
+        primary_radius: Quantity (optional)
+            Radius of the entrance pupil.
+
+        path: str (optional)
+            Path to the wavefront error definition file.
+
+    Returns:
+        A generated WFEfringe37 instance.
+    '''
     zernike37 = load_zernike37_model(path=path)
     fringe_coeff = zernike37(xan.to_value('deg'), yan.to_value('deg'))
 
@@ -79,16 +106,16 @@ class WFEfringe37:
             When the array length is less than 37, the remaining coefficients
             are assumed to be zeros.
 
-        xan: Quantity
+        xan: Quantity (angle)
             X angle (xan) with respect to the optical axis.
 
-        yan: Quantity
+        yan: Quantity (angle)
             Y angle (yan) with respect to the optical axis.
 
-        wavelength: Quantity
+        wavelength: Quantity (length)
             Reference wavelength of the light.
 
-        radius: Quantity
+        radius: Quantity (length)
             Radius of the entrance pupil of the telescope.
     '''
     name: str
@@ -101,11 +128,13 @@ class WFEfringe37:
 
     @property
     def coeff(self):
+        ''' Zernike coefficients in the Noll's convention '''
         return convert_fringe37_to_noll(
             self.fringe_coeff, centering=self.centering)
 
     @property
     def wfe(self):
+        ''' Zernike wavefront error instance '''
         return ZernikeWFE(
             name=self.name,
             radius=self.radius,
