@@ -52,7 +52,8 @@ def __get_obscuration(
 
 
 def get_obscuration(
-        xan=0.0 * u.deg, yan=0.0 * u.deg,
+        xan=0.0 * u.deg,
+        yan=0.0 * u.deg,
         pupil_to_m2_distance=None,
         obscuration_depth=None,
         secondary_radius=None,
@@ -90,26 +91,29 @@ def get_obscuration(
         A two-layer obscuration mask pattern.
     '''
 
-    pupil_to_m2_distance = tel.pupil_to_m2_distance \
-        if pupil_to_m2_distance is None else pupil_to_m2_distance
-    obscuration_depth = tel.obscuration_depth \
-        if obscuration_depth is None else obscuration_depth
+    pupil_to_m2_distance = (
+        tel.pupil_to_m2_distance
+        if pupil_to_m2_distance is None else pupil_to_m2_distance)
+    obscuration_depth = (
+        tel.obscuration_depth
+        if obscuration_depth is None else obscuration_depth)
+
+    options = {
+        'xan': xan,
+        'yan': yan,
+        'secondary_radius': secondary_radius,
+        'n_supports': n_supports,
+        'support_width': support_width,
+        'support_angle_offset': support_angle_offset
+    }
 
     layer0 = __get_obscuration(
-        xan=xan, yan=yan,
-        distance=pupil_to_m2_distance,
-        secondary_radius=secondary_radius, n_supports=n_supports,
-        support_width=support_width, support_angle_offset=support_angle_offset)
+        distance=pupil_to_m2_distance, **options)
     layer1 = __get_obscuration(
-        xan=xan, yan=yan,
-        distance=pupil_to_m2_distance + obscuration_depth,
-        secondary_radius=secondary_radius, n_supports=n_supports,
-        support_width=support_width, support_angle_offset=support_angle_offset)
+        distance=pupil_to_m2_distance + obscuration_depth, **options)
 
-    return poppy.CompoundAnalyticOptic([
-        layer0,
-        layer1
-    ], name='JASMINE obscuration')
+    return poppy.CompoundAnalyticOptic(
+        [layer0, layer1], name='JASMINE obscuration')
 
 
 def get_pupil(
@@ -184,8 +188,5 @@ def get_pupil(
     elif isinstance(wfe, WFEfringe37):
         wfe = wfe.wfe
 
-    return poppy.CompoundAnalyticOptic([
-        wfe,
-        pupil,
-        obscuration
-    ], name=name)
+    return poppy.CompoundAnalyticOptic(
+        [wfe, pupil, obscuration], name=name)
