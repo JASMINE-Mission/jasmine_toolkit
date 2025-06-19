@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 ''' Parameters for the satellite system '''
 
-import numpy as np
 from .calclated_registry import calculated
 from .utils import Parameter
 
@@ -54,7 +53,6 @@ solar_separation_angle_limit = Parameter(
 @calculated
 def solar_separation_angle_range():
     import jasmine_toolkit.parameters.satellite as s
-    import astropy.units as u
     angle = s.solar_separation_angle_limit.to_value('deg')
     return Parameter(
         'solar_separation_angle_range',

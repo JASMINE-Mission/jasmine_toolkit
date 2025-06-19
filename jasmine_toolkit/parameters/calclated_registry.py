@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 ''' File description '''
 
-import functools, inspect
+import inspect
 
 __all__ = [
     'calculated',

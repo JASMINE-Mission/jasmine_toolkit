@@ -70,9 +70,9 @@ def __table_item_template(name, value, unit, ref):
 def dump_table(output=None, overwrite=False, **options):
     table = __table_header()
 
-    for p in __items__:
+    for q in __items__:
         table += __table_item_template(
-            p.name, p.value, p.unit, p.reference)
+            q.name, q.value, q.unit, q.reference)
 
     if output is None:
         print(table.strip())

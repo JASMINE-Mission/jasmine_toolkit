@@ -3,14 +3,14 @@
 ''' Exceptions of the parameters module '''
 
 
-__all__ = (
+__all__ = [
     'ParameterChanged',
     'ParameterProtected',
     'ParameterFinalized',
     'ParameterNotFinalized',
     'ParameterDuplicated',
     'UnitIncompatibleError',
-)
+]
 
 
 class ParameterChanged(UserWarning):

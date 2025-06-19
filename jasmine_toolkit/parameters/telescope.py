@@ -2,8 +2,6 @@
 # -*- coding: utf-8 -*-
 ''' Parameters for the telescope/optics '''
 
-import numpy as np
-
 from .calclated_registry import calculated
 from .utils import Parameter
 

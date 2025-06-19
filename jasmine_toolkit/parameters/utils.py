@@ -9,10 +9,10 @@ import numpy as np
 from .exception import *
 
 
-__all__ = (
+__all__ = [
     'Parameter',
     'update_parameters',
-)
+]
 
 
 __parameter_editable = Event()
