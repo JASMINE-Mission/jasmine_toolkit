@@ -2,7 +2,7 @@ name: validation
 description: Detailed test for code validation.
 
 runs:
-  using: "composite"
+  using: composite
   steps:
     - name: Install package
       env:

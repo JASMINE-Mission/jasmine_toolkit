@@ -2,7 +2,7 @@ name: unittest
 description: Unittest
 
 runs:
-  using: "composite"
+  using: composite
   steps:
     - name: Install package
       env:

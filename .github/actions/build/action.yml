@@ -2,7 +2,7 @@ name: build
 description: Action to test the build and install procedures.
 
 runs:
-  using: "composite"
+  using: composite
   steps:
     - name: Build Package
       run: |

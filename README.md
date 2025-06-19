@@ -23,11 +23,9 @@ pip install git+https://github.com/JASMINE-Mission/jasmine_toolkit.git
 
 This command fetches the package source code from the specified GitHub repository and installs it in your Python environment. Make sure you have `git` installed on your system and that your Python environment is properly set up before running the command.
 
-
 ## How to use
 
 Basic examples are provides in the `notebook` directory.
-
 
 ## Utilities
 
