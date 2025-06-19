@@ -56,7 +56,8 @@ class Trajectory:
             canvas_size (int):
                 The size of the square canvas. Must be an odd number
         '''
-        assert canvas_size % 2 == 1
+        if canvas_size % 2 == 0:
+            raise ValueError('canvas_size must be an odd number')
         self.__x = np.atleast_1d(x).reshape((-1, ))
         self.__y = np.atleast_1d(y).reshape((-1, ))
         self.__canvas_size = canvas_size
@@ -121,8 +122,9 @@ class Trajectory:
         return zip(self.ix, self.iy, self.dx, self.dy)
 
     def __patch(self, dx, dy):
-        assert (-0.5 <= dx) & (dx <= 0.5)
-        assert (-0.5 <= dy) & (dy <= 0.5)
+        ''' Generate a patch for the trajectory at the given dx and dy '''
+        if not (-0.5 <= dx <= 0.5) or not (-0.5 <= dy <= 0.5):
+            raise ValueError('dx and dy must be in the range [-0.5, 0.5]')
         ix = np.array([-1, 0, 1]).reshape((1, -1))
         iy = np.array([-1, 0, 1]).reshape((-1, 1))
         wx = self._weight(dx - ix)
