@@ -29,6 +29,7 @@ dynamic = ['version', 'readme']
 
 dependencies = [
   'astropy>=7.0',
+  'astroquery>0.4',
   'dust_extinction>=1.5',
   'matplotlib>=3.10',
   'numpy>=2.0',
