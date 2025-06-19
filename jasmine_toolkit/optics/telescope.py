@@ -104,22 +104,22 @@ class JASMINE(Instrument):
           self, fov_pixels=None, fov_arcsec=None,
           fft_oversample=None, detector_oversample=None, **args):
 
-      optics = poppy.OpticalSystem(
-          name='fake JASMINE',
-          oversample=fft_oversample or self._fft_oversample,
-          npix=self._simsize)
+        optics = poppy.OpticalSystem(
+            name='fake JASMINE',
+            oversample=fft_oversample or self._fft_oversample,
+            npix=self._simsize)
 
-      optics.add_pupil(get_pupil(
-          name='entrance pupil',
-          xan=self._xan,
-          yan=self._yan
-      ))
-      optics.add_detector(
-          pixelscale=self.pixel_scale,
-          fov_pixels=fov_pixels or self._fovsize,
-          oversample=detector_oversample or self._detector_oversample)
+        optics.add_pupil(get_pupil(
+            name='entrance pupil',
+            xan=self._xan,
+            yan=self._yan
+        ))
+        optics.add_detector(
+            pixelscale=self.pixel_scale,
+            fov_pixels=fov_pixels or self._fovsize,
+            oversample=detector_oversample or self._detector_oversample)
 
-      return optics
+        return optics
 
     def _get_default_nlambda(self, filtername):
         if filtername not in self.filter_list:
