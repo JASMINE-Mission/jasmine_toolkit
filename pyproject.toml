@@ -77,7 +77,8 @@ line-length = 79
 indent-width = 4
 
 [tool.ruff.lint]
-select = ['E', 'F', 'W']
+select = [
+  'E', 'F', 'W']
 ignore = [
   'E221', # multiple spaces before operator
   'E731', # Do not assign a `lambda` expression
@@ -88,3 +89,4 @@ fixable = ['E']
 
 [tool.ruff.format]
 quote-style = 'single'
+preview = true
