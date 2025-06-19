@@ -91,6 +91,6 @@ ignore = [
 unfixable = ['ALL']
 
 [tool.ruff.format]
-quote-style = 'single'
+quote-style = 'preserve'
 line-ending = 'lf'
 preview = true
