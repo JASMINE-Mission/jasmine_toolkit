@@ -1,3 +1,3 @@
 #!/usr/bin/env python
 
-version = '1.0.5'
+version = '1.0.7'
