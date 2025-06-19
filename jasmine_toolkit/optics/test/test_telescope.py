@@ -11,9 +11,9 @@ from ..telescope import JASMINE
 
 def test_jasmine_init_defaults():
     j = JASMINE()
-    assert j.xan == 0.0 * u.deg
-    assert j.yan == 0.0 * u.deg
-    assert j.defocus == 0.0 * u.mm
+    assert j.xan == pytest.approx(0.0 * u.deg)
+    assert j.yan == pytest.approx(0.0 * u.deg)
+    assert j.defocus == pytest.approx(0.0 * u.mm)
     assert j.name == 'JASMINE'
     assert j.wfe is not None
 
