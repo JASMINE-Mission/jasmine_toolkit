@@ -26,11 +26,11 @@ def __get_resource():
     return files('jasmine_toolkit.resource.telescope')
 
 
-def load_zernike37_model(path=None):
+def load_zernike37_model(zernike_path=None):
     ''' Return a wavefront error model in the Fringe Zernike 37 convention
 
     Arguments:
-        path: str (optional)
+        zernike_path: str (optional)
             Path to the CSV file containing the Zernike coefficients.
             If not provided, the default file is used.
 
@@ -38,10 +38,11 @@ def load_zernike37_model(path=None):
         A function `zernike37` that returns Fringe Zernike coefficients
         at the provided angle pair (xan, yan).
     '''
-    path = path if path is None \
-        else __get_resource().joinpath('FringeZernike_2D-s1_jas36xm2.csv')
+    zernike_path = (
+        zernike_path if zernike_path is not None
+        else __get_resource().joinpath('FringeZernike_2D-s1_jas36xm2.csv'))
 
-    df = pd.read_csv(path, header=None, index_col=0).T
+    df = pd.read_csv(zernike_path, header=None, index_col=0).T
 
     xan = np.sort(np.unique(df['xan']))
     yan = np.sort(np.unique(df['yan']))
@@ -57,7 +58,10 @@ def load_zernike37_model(path=None):
 
 
 def get_wfe_fringe37(
-        xan=0.0 * u.deg, yan=0.0 * u.deg, primary_radius=None, path=None):
+        xan=0.0 * u.deg,
+        yan=0.0 * u.deg,
+        primary_radius=None,
+        zernike_path=None):
     ''' Return a default WFEfringe37 instance
 
     Arguments:
@@ -70,17 +74,18 @@ def get_wfe_fringe37(
         primary_radius: Quantity (optional)
             Radius of the entrance pupil.
 
-        path: str (optional)
+        zernike_path: str (optional)
             Path to the wavefront error definition file.
 
     Returns:
         A generated WFEfringe37 instance.
     '''
-    zernike37 = load_zernike37_model(path=path)
+    zernike37 = load_zernike37_model(zernike_path=zernike_path)
     fringe_coeff = zernike37(xan.to_value('deg'), yan.to_value('deg'))
 
-    primary_radius = primary_radius if primary_radius is None \
-        else p.telescope.pupil_radius
+    primary_radius = (
+        primary_radius if primary_radius is not None
+        else p.telescope.pupil_radius)
 
     return WFEfringe37(
         name='default',

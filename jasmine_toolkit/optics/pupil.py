@@ -17,7 +17,7 @@ __all__ = [
 
 
 def __get_pupil(primary_radius=None):
-    ''' Helper function to generata a circular aperture '''
+    ''' Helper function to generate a circular aperture '''
 
     primary_radius = primary_radius \
         if primary_radius else tel.pupil_radius
@@ -92,11 +92,11 @@ def get_obscuration(
     '''
 
     pupil_to_m2_distance = (
-        tel.pupil_to_m2_distance
-        if pupil_to_m2_distance is None else pupil_to_m2_distance)
+        tel.pupil_to_m2_distance if pupil_to_m2_distance is not None
+        else pupil_to_m2_distance)
     obscuration_depth = (
-        tel.obscuration_depth
-        if obscuration_depth is None else obscuration_depth)
+        tel.obscuration_depth if obscuration_depth is not None
+        else obscuration_depth)
 
     options = {
         'xan': xan,
