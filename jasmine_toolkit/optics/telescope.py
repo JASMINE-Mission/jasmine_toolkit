@@ -3,7 +3,6 @@
 from poppy import Instrument
 import poppy
 import astropy.units as u
-import numpy as np
 
 from .filter import REGISTRY
 from .pupil import get_pupil, get_wfe_fringe37
