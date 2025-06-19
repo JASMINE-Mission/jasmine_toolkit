@@ -4,7 +4,18 @@
 
 from synphot import SpectralElement
 
-from ..filter import REGISTRY
+from ..filter import REGISTRY, compile_hw_band
+
+
+def test_compile_hw_band():
+    band = compile_hw_band()
+    assert isinstance(band, SpectralElement)
+
+    # Check wavelength and efficiency arrays
+    wave = band.waveset
+    throughput = band(wave)
+    assert len(wave) == len(throughput)
+    assert (throughput >= 0).all() and (throughput <= 1).all()
 
 
 def test_filter_registry():
