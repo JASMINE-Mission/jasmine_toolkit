@@ -16,5 +16,5 @@ def test_all_filter_availability():
     assert len(filter_list) > 0
 
     for name in filter_list:
-        filter = getattr(REGISTRY, name)
-        assert isinstance(filter, SpectralElement)
+        band = getattr(REGISTRY, name)
+        assert isinstance(band, SpectralElement)
