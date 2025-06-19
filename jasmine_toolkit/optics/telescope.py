@@ -126,7 +126,8 @@ class JASMINE(Instrument):
         return np.sqrt((self.focal_length + z)**2 + self.primary_aperture**2)
 
     def _get_default_nlambda(self, filtername):
-        assert filtername.upper() in self.filter_list
+        if filtername not in self.filter_list:
+            raise LookupError(f'filter name {filtername} is not defined.')
         return 21
 
     def _get_default_fov(self):
