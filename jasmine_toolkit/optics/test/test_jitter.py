@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-''' File description '''
+''' Test cases for jitter module '''
 
 from pytest import fixture
 import numpy as np
