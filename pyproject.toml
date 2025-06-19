@@ -55,7 +55,7 @@ repository = 'https://github.com/JASMINE-Mission/jasmine_toolkit'
 
 
 [tool.setuptools.packages.find]
-include = ['jasmine_toolkit']
+include = ['jasmine_toolkit*']
 
 
 [tool.setuptools.dynamic]
@@ -70,3 +70,24 @@ readme = { file = 'README.md', content-type = 'text/markdown' }
   'telescope/teleff.json',
   'telescope/FringeZernike_2D-s1_jas36xm2.csv'
 ]
+
+[tool.ruff]
+exclude = ['**/test']
+line-length = 79
+indent-width = 4
+
+[tool.ruff.lint]
+select = [
+  'E', 'F', 'W']
+ignore = [
+  'E221', # multiple spaces before operator
+  'E731', # Do not assign a `lambda` expression
+  'E741', # Ambiguous variable name
+  'F403', # star imports
+]
+unfixable = ['ALL']
+
+[tool.ruff.format]
+quote-style = 'single'
+line-ending = 'lf'
+preview = true
