@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 ''' Test cases for the WFEfringe37 class. '''
 
-from ..wfe import WFEfringe37
+from ..wfe import WFEfringe37, get_wfe_fringe37, load_zernike37_model
 from ..zernike import noll_normalize
 
 import pytest
@@ -79,7 +79,7 @@ def test_wavefront_error_coeff_no_centering(fringe_coeff):
 
     # Assuming convert_fringe37_to_noll is implemented correctly
     expected_coeff = [
-      0.1, 0.2, 0.3, 0.4, 0.6, 0.5, 0.8, 0.7, 0.0, 0.0, 0.9]
+        0.1, 0.2, 0.3, 0.4, 0.6, 0.5, 0.8, 0.7, 0.0, 0.0, 0.9]
     assert wfe.coeff[:11] == pytest.approx(expected_coeff)
 
 
@@ -95,3 +95,22 @@ def test_wavefront_error_generate_wfe(fringe_coeff):
     )
 
     assert isinstance(wfe.wfe, poppy.ZernikeWFE)
+
+
+def test_get_wfe_fringe37_default():
+    wfe = get_wfe_fringe37()
+    assert isinstance(wfe, WFEfringe37)
+    assert hasattr(wfe, 'fringe_coeff')
+    assert hasattr(wfe, 'xan')
+    assert hasattr(wfe, 'yan')
+    assert hasattr(wfe, 'wavelength')
+    assert hasattr(wfe, 'radius')
+
+
+def test_load_zernike37_model_callable():
+    zernike37 = load_zernike37_model()
+    assert callable(zernike37)
+
+    # Should return a numpy array of length 37 for default input
+    coeffs = zernike37(0.0, 0.0)
+    assert coeffs.size == 37

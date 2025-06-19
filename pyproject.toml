@@ -28,12 +28,15 @@ classifiers = [
 dynamic = ['version', 'readme']
 
 dependencies = [
+  'astropy>=7.0',
+  'astroquery>0.4',
+  'dust_extinction>=1.5',
+  'matplotlib>=3.10',
   'numpy>=2.0',
   'pandas>=2.2',
-  'astropy>=7.0',
-  'matplotlib>=3.10',
-  'dust_extinction>=1.5',
-  'poppy>=1.1'
+  'poppy>=1.1',
+  'scipy>=1.14',
+  'synphot>1.4',
 ]
 
 
@@ -91,6 +94,6 @@ ignore = [
 unfixable = ['ALL']
 
 [tool.ruff.format]
-quote-style = 'single'
+quote-style = 'preserve'
 line-ending = 'lf'
 preview = true
