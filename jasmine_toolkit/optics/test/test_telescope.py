@@ -3,17 +3,16 @@
 ''' Test cases for telescope module '''
 
 
-import pytest
-import astropy.units as u
+from pytest import approx, raises
 
 from ..telescope import JASMINE
 
 
 def test_jasmine_init_defaults():
     j = JASMINE()
-    assert j.xan == pytest.approx(0.0 * u.deg)
-    assert j.yan == pytest.approx(0.0 * u.deg)
-    assert j.defocus == pytest.approx(0.0 * u.mm)
+    assert j.xan.value == approx(0.0)
+    assert j.yan.value == approx(0.0)
+    assert j.defocus.value == approx(0.0)
     assert j.name == 'JASMINE'
     assert j.wfe is not None
 
@@ -51,7 +50,7 @@ def test_jasmine_get_filter_list():
 
 def test_jasmine_synphot_bandpass_invalid():
     j = JASMINE()
-    with pytest.raises(LookupError):
+    with raises(LookupError):
         j._get_synphot_bandpass('INVALID_FILTER')
 
 
@@ -60,5 +59,5 @@ def test_jasmine_filter_setter():
     valid_filter = j.filter_list[0]
     j.filter = valid_filter
     assert j.filter == valid_filter
-    with pytest.raises(ValueError):
+    with raises(ValueError):
         j.filter = 'INVALID_FILTER'

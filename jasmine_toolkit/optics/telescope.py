@@ -5,7 +5,7 @@ import poppy
 import astropy.units as u
 
 from .filter import REGISTRY
-from .pupil import get_pupil, get_wfe_fringe37
+from .pupil import get_pupil, get_wfe_fringe37, WFEfringe37
 from .. import parameters as p
 
 
@@ -28,11 +28,15 @@ class JASMINE(Instrument):
             detector_oversample=4):
         super().__init__(name='JASMINE')
 
-        self._xan = xan
-        self._yan = yan
+        if isinstance(wfe, WFEfringe37):
+            xan = wfe.xan
+            yan = wfe.yan
+
+        self._xan = xan if xan is not None else 0.0 * u.deg
+        self._yan = yan if yan is not None else 0.0 * u.deg
         self._defocus = defocus
         self._wfe = (
-            wfe if wfe is not None else get_wfe_fringe37(xan, yan))
+            wfe if wfe is not None else get_wfe_fringe37(self.xan, self.yan))
 
         self._fovsize = fovsize
         self._simsize = simsize
