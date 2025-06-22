@@ -23,3 +23,4 @@ def test_filter_registry():
 
     assert REGISTRY is not None
     assert isinstance(REGISTRY.jasmine_hw, SpectralElement)
+    assert isinstance(REGISTRY['jasmine_hw'], SpectralElement)

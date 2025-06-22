@@ -105,6 +105,66 @@ def compile_vista_band(name):
 
 @dataclass(frozen=True)
 class FilterRegistry:
+    __mapping__ = {
+        'jasmine_hw': 'jasmine_hw',
+        'twomass_j': 'twomass_j',
+        'twomass_h': 'twomass_h',
+        'twomass_ks': 'twomass_ks',
+        'euclid_y': 'euclid_y',
+        'euclid_j': 'euclid_j',
+        'euclid_h': 'euclid_h',
+        'gaia_g': 'gaia_g',
+        'gaia_gbp': 'gaia_gbp',
+        'gaia_grp': 'gaia_grp',
+        'roman_f087': 'roman_f087',
+        'roman_f106': 'roman_f106',
+        'roman_f129': 'roman_f129',
+        'roman_f158': 'roman_f158',
+        'roman_f184': 'roman_f184',
+        'roman_f213': 'roman_f213',
+        'vista_z': 'vista_z',
+        'vista_y': 'vista_y',
+        'vista_j': 'vista_j',
+        'vista_h': 'vista_h',
+        'vista_ks': 'vista_ks',
+        '2mass_j': 'twomass_j',
+        '2mass_h': 'twomass_h',
+        '2mass_ks': 'twomass_ks',
+        'Hw': 'jasmine_hw',
+        'J': 'twomass_j',
+        'H': 'twomass_h',
+        'Ks': 'twomass_ks',
+    }
+
+    def __contains__(self, item):
+        ''' Check if the filter is in the registry '''
+        return item in self.__mapping__
+
+    def __iter__(self):
+        ''' Iterate over the filter names in the registry '''
+        return iter(self.__mapping__.keys())
+
+    def __len__(self):
+        ''' Get the number of filters in the registry '''
+        return len(self.__mapping__)
+
+    def __getitem__(self, item):
+        ''' Get the filter by name from the registry '''
+        if item not in self.__mapping__:
+            raise KeyError(f'Filter {item} not found in registry')
+        return getattr(self, self.__mapping__[item])
+
+    def items(self):
+        ''' Get all filter names and their corresponding objects '''
+        for key in self: yield (key, self[key])
+
+    def keys(self):
+        ''' Get all filter names in the registry '''
+        for key in self: yield key
+
+    def values(self):
+        ''' Get all filter objects in the registry '''
+        for key in self: yield self[key]
 
     @cached_property
     def jasmine_hw(self):
