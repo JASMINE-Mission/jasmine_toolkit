@@ -34,7 +34,7 @@ def test_parameter_access():
 
         # Unit should be an astropy Unit instance
         assert isinstance(unit, UnitType), \
-            f'Unrecognizible type {type(unit)} assigned to {name}'
+            f'Unrecognizable type {type(unit)} assigned to {name}'
 
         # Reference should be a string (could be empty)
         assert isinstance(reference, str)
@@ -48,20 +48,22 @@ def test_parameter_consistency():
 
     # All parameters should have non-empty names
     names = [item.name for item in __items__]
-    assert all(names), 'All parameters should have non-empty names'
+    assert all([len(name) > 0 for name in names]), \
+        'All parameters should have non-empty names'
 
     # Names should be unique
-    assert len(names) == len(set(names)), 'Parameter names should be unique'
+    assert len(names) == len(set(names)), \
+        'Parameter names should be unique'
 
     # All parameters should have units (astropy Unit instances)
     units = [item.unit for item in __items__]
-    assert all(isinstance(unit, UnitType) for unit in units), (
-        'All units should be Unit, CompositeUnit or IrreducibleUnit instances')
+    assert all(isinstance(unit, UnitType) for unit in units), \
+        'Some items contain unrecognizable unit types'
 
     # All parameters should have references (even if empty string)
     references = [item.reference for item in __items__]
-    assert all(isinstance(ref, str) for ref in references), (
-        'All references should be strings')
+    assert all(isinstance(ref, str) for ref in references), \
+        'Some items contain wrong reference types'
 
 
 def test_items_list_content():
