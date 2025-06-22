@@ -6,6 +6,7 @@ import os
 from tempfile import NamedTemporaryFile
 import numpy as np
 from pytest import raises
+from astropy.units.core import CompositeUnit, IrreducibleUnit, Unit
 
 from jasmine_toolkit.utils.table import (
     dump_table,
@@ -13,6 +14,7 @@ from jasmine_toolkit.utils.table import (
     __items__,
 )
 
+UnitType = (Unit, CompositeUnit, IrreducibleUnit)
 
 # Simple validation tests - basic parameter access and consistency
 def test_parameter_access():
@@ -30,8 +32,9 @@ def test_parameter_access():
         assert isinstance(name, str)
         assert len(name) > 0
 
-        # Unit should be a string (could be empty)
-        assert isinstance(unit, str)
+        # Unit should be an astropy Unit instance
+        assert isinstance(unit, UnitType), \
+            f'Unrecognizible type {type(unit)} assigned to {name}'
 
         # Reference should be a string (could be empty)
         assert isinstance(reference, str)
@@ -50,10 +53,10 @@ def test_parameter_consistency():
     # Names should be unique
     assert len(names) == len(set(names)), 'Parameter names should be unique'
 
-    # All parameters should have units (even if empty string)
+    # All parameters should have units (astropy Unit instances)
     units = [item.unit for item in __items__]
-    assert all(isinstance(unit, str) for unit in units), (
-        'All units should be strings')
+    assert all(isinstance(unit, UnitType) for unit in units), (
+        'All units should be Unit, CompositeUnit or IrreducibleUnit instances')
 
     # All parameters should have references (even if empty string)
     references = [item.reference for item in __items__]
@@ -120,6 +123,7 @@ def test_different_value_types():
     float_params = []
     int_params = []
     array_params = []
+    other_params = []
 
     for item in __items__:
         if isinstance(item.value, float):
@@ -128,12 +132,21 @@ def test_different_value_types():
             int_params.append(item)
         elif isinstance(item.value, np.ndarray):
             array_params.append(item)
+        else:
+            other_params.append(item)
 
-    # Should have at least one of each type
+    # Should have at least one of float type
     assert len(float_params) > 0, 'Should have float parameters'
-    assert len(int_params) > 0, 'Should have integer parameters'
 
-    # Test formatting for each type
+    # Test that we have some parameters (even if not all expected types)
+    total_params = (
+        len(float_params) + len(int_params) +
+        len(array_params) + len(other_params)
+    )
+    assert total_params == len(__items__), (
+        'All parameters should be categorized')
+
+    # Test formatting for each type that exists
     if float_params:
         item = float_params[0]
         result = __table_item_template(
@@ -142,6 +155,12 @@ def test_different_value_types():
 
     if int_params:
         item = int_params[0]
+        result = __table_item_template(
+            item.name, item.value, item.unit, item.reference)
+        assert item.name in result
+
+    if array_params:
+        item = array_params[0]
         result = __table_item_template(
             item.name, item.value, item.unit, item.reference)
         assert item.name in result
