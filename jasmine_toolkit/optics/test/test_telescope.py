@@ -4,6 +4,7 @@
 
 
 from pytest import approx, raises
+from synphot import SpectralElement
 
 from ..telescope import JASMINE
 
@@ -52,6 +53,12 @@ def test_jasmine_synphot_bandpass_invalid():
     j = JASMINE()
     with raises(LookupError):
         j._get_synphot_bandpass('INVALID_FILTER')
+
+
+def test_jasmine_synphot_bandpass_jasmine():
+    j = JASMINE()
+    band = j._get_synphot_bandpass('Hw')
+    assert isinstance(band, SpectralElement)
 
 
 def test_jasmine_filter_setter():

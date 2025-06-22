@@ -136,6 +136,8 @@ class JASMINE(Instrument):
     def _get_filter_list(self):
         mapper = {
             'Hw': 'jasmine_hw',
+            'JASMINE_Hw': 'jasmine_hw',
+            'jasmine_hw': 'jasmine_hw',
             '2MASS_J': '2mass_j',
             '2MASS_H': '2mass_h',
             '2MASS_Ks': '2mass_ks',
