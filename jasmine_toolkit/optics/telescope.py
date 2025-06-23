@@ -116,7 +116,8 @@ class JASMINE(Instrument):
         optics.add_pupil(get_pupil(
             name='entrance pupil',
             xan=self._xan,
-            yan=self._yan
+            yan=self._yan,
+            wfe=self._wfe
         ))
         optics.add_detector(
             pixelscale=self.pixel_scale,

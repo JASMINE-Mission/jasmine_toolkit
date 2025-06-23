@@ -216,7 +216,7 @@ def get_pupil(
             xan=xan, yan=yan, primary_radius=primary_radius)
         wfe = wfe_fringe.wfe
     elif isinstance(wfe, poppy.ZernikeWFE):
-        wfe = wfe.copy()
+        wfe = wfe
     elif isinstance(wfe, WFEfringe37):
         wfe = wfe.wfe
 
