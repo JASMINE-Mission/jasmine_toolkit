@@ -8,6 +8,7 @@ from ..zernike import noll_normalize
 import pytest
 import poppy
 import astropy.units as u
+from pytest import approx
 
 
 @pytest.fixture
@@ -30,18 +31,18 @@ def test_wavefront_error_init():
     wfe = WFEfringe37(
         name='Test WFE',
         fringe_coeff=[0.1, 0.2, 0.3],
-        xan=0.5,
-        yan=0.5,
+        xan=0.5 * u.deg,
+        yan=0.5 * u.deg,
         wavelength=5500 * u.angstrom,
         radius=0.5 * u.m
     )
 
     assert wfe.name == 'Test WFE'
     assert wfe.fringe_coeff == [0.1, 0.2, 0.3]
-    assert wfe.xan == 0.5
-    assert wfe.yan == 0.5
-    assert wfe.wavelength == 5500 * u.angstrom
-    assert wfe.radius == 0.5 * u.m
+    assert wfe.xan.value == approx(0.5)
+    assert wfe.yan.value == approx(0.5)
+    assert wfe.wavelength.value == approx(5500)
+    assert wfe.radius.value == approx(0.5)
 
 
 def test_wavefront_error_coeff(fringe_coeff):
@@ -49,8 +50,8 @@ def test_wavefront_error_coeff(fringe_coeff):
     wfe = WFEfringe37(
         name='Test WFE',
         fringe_coeff=fringe_coeff,
-        xan=0.5,
-        yan=0.5,
+        xan=0.5 * u.deg,
+        yan=0.5 * u.deg,
         wavelength=5500 * u.angstrom,
         radius=0.5 * u.m
     )
@@ -68,8 +69,8 @@ def test_wavefront_error_coeff_no_centering(fringe_coeff):
     wfe = WFEfringe37(
         name='Test WFE',
         fringe_coeff=fringe_coeff,
-        xan=0.5,
-        yan=0.5,
+        xan=0.5 * u.deg,
+        yan=0.5 * u.deg,
         wavelength=5500 * u.angstrom,
         radius=0.5 * u.m,
         centering=False
@@ -88,8 +89,8 @@ def test_wavefront_error_generate_wfe(fringe_coeff):
     wfe = WFEfringe37(
         name='Test WFE',
         fringe_coeff=fringe_coeff,
-        xan=0.5,
-        yan=0.5,
+        xan=0.5 * u.deg,
+        yan=0.5 * u.deg,
         wavelength=5500 * u.angstrom,
         radius=0.5 * u.m
     )
