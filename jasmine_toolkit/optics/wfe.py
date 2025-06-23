@@ -128,7 +128,7 @@ class WFEfringe37:
     xan: Quantity
     yan: Quantity
     wavelength: Quantity
-    radius: Quantity = field(default=p.telescope.pupil_diameter / 2.0)
+    radius: Quantity = field(default=None)
     centering: bool = field(default=True)
 
     @property
@@ -140,7 +140,12 @@ class WFEfringe37:
     @property
     def wfe(self):
         ''' Zernike wavefront error instance '''
+
+        radius = (
+            self.radius if self.radius is not None
+            else p.telescope.pupil_radius)
+
         return ZernikeWFE(
             name=self.name,
-            radius=self.radius,
+            radius=radius,
             coefficients=self.coeff * self.wavelength.to('m'))
