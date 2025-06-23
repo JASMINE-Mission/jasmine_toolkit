@@ -53,7 +53,7 @@ def __get_obscuration(
 
     return poppy.SecondaryObscuration(
       secondary_radius=secondary_radius,
-      n_supports=int(n_supports.value),
+      n_supports=n_supports,
       support_width=support_width,
       support_angle_offset=support_angle_offset.to_value('deg'),
       shift_x=shift_x, shift_y=shift_y)
