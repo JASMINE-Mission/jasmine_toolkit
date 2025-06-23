@@ -202,7 +202,7 @@ def get_pupil(
         pupil_to_m2_distance=pupil_to_m2_distance,
         obscuration_depth=obscuration_depth,
         secondary_radius=secondary_radius,
-        n_supports=n_supports,
+        n_supports=int(n_supports),
         support_width=support_width,
         support_angle_offset=support_angle_offset)
 
