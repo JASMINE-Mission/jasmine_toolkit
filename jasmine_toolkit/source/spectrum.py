@@ -7,9 +7,6 @@ from functools import lru_cache
 
 from ..extinction import NL20
 
-import astropy.units as u
-import numpy as np
-
 
 __spectral_types = {
     'O5V': 'uko5v',
