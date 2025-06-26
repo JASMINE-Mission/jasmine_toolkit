@@ -143,7 +143,7 @@ def __fetch_spectrum(spectral_type):
     return SourceSpectrum.from_file(url)
 
 
-def fetch_spectrum(spectral_type, Av=0.0, extinction_model=NL20()):
+def fetch_spectrum(spectral_type, Av=0.0, extinction_model=None):
     ''' Fetch a stellar spectrum from the ESO IR spectral library.
 
     Arguments:
@@ -158,10 +158,13 @@ def fetch_spectrum(spectral_type, Av=0.0, extinction_model=NL20()):
             The extinction model to use for applying extinction.
             A model should have an `extinguish` method that takes
             a wavelength array and an `Av` parameter.
-            Default is NL20().
+            If not specified, the NL20 model is used.
     '''
 
     spc = __fetch_spectrum(spectral_type)
+
+    if extinction_model is None:
+        extinction_model = NL20()
 
     waveset = spc.waveset
     flux = spc(waveset) * extinction_model.extinguish(waveset, Av=Av)
