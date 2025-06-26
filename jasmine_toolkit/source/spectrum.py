@@ -125,9 +125,10 @@ __spectral_types = {
 
 
 def __template(name):
+    ''' URL template to the ESO IR spectral library '''
     return (
-    'ftp://ftp.eso.org/web/sci/observing/tools'
-    f'/standards/IR_spectral_library/{name}.dat.gz')
+        'ftp://ftp.eso.org/web/sci/observing/tools'
+        f'/standards/IR_spectral_library/{name}.dat.gz')
 
 
 @lru_cache(maxsize=32)
@@ -143,7 +144,22 @@ def __fetch_spectrum(spectral_type):
 
 
 def fetch_spectrum(spectral_type, Av=0.0, extinction_model=NL20()):
-    ''' Fetch a stellar spectrum from the ESO IR spectral library. '''
+    ''' Fetch a stellar spectrum from the ESO IR spectral library.
+
+    Arguments:
+        spectral_type: str
+            The spectral type of the star (e.g., 'G2V').
+
+        Av: float
+            The amount of visual extinction to apply to the spectrum.
+            Default is 0.0 (no extinction).
+
+        extinction_model: Extinction model
+            The extinction model to use for applying extinction.
+            A model should have an `extinguish` method that takes
+            a wavelength array and an `Av` parameter.
+            Default is NL20().
+    '''
 
     spc = __fetch_spectrum(spectral_type)
 
