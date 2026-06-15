@@ -20,13 +20,6 @@ runs:
         python -m pytest -v --forked jasmine_toolkit --cov=jasmine_toolkit --cov-report xml
       shell: bash
 
-    - name: Send Coverage Report to qlty.cloud
-      uses: qltysh/qlty-action/coverage@v1
-      with:
-        token: ${{ env.QLTY_COVERAGE_TOKEN }}
-        files: coverage.xml
-        add-prefix: jasmine_toolkit/
-
     - name: Notice Error
       if: ${{ steps.pytest.outcome == 'failure' }}
       run: exit 1
